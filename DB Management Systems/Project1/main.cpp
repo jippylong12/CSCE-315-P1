@@ -1,12 +1,13 @@
 /* _authors_
 Marcus Salinas
 Brian Ta
-Paul Park
+Deokman Park
 Clifton Sims */
 
 
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <sstream>
 
 using namespace std;
@@ -16,20 +17,27 @@ class Parser
 	string input;
 public:
 	Parser(string);
-	string parse();
+	char * parse();
+	string getInput() {return input;}; 
 
 };
 
 Parser::Parser(string in)
 {
-	cout<<"The in is: " << in <<endl;
-	string input = in;
-	cout<<"The input is " <<input<<endl;
+	input = in;
 }
 
-string Parser::parse()
+char * Parser::parse()
 {
-	cout <<"The input is: "<< input << endl;
+	char * cstring = new char [input.length()+1];
+	strcpy(cstring, input.c_str());
+	char * parsing = strtok(cstring," ");
+	while(parsing!=0)
+	{
+		cout<<parsing <<endl;
+		parsing = strtok(NULL," ");
+	}
+	return cstring;
 }
 
 
@@ -42,7 +50,6 @@ int main()
 	while (true)
 	{
 		getline(cin, mainInput);
-		cout<<"The mainInput is "<<mainInput<< endl;
 		Parser mainParser(mainInput);
 		mainParser.parse();
 	}
