@@ -44,7 +44,7 @@ char * Parser::parse()
 
 int main()
 {
-	cout << "Staring.." << endl;
+	cout << "Starting..." << endl;
 	cout << "Enter command: " << endl;
 	string mainInput;
 	while (true)
