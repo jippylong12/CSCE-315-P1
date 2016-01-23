@@ -13,15 +13,15 @@ using namespace std;
 
 class Parser
 {
-	stringstream input;
+	string input;
 public:
-	Parser(stringstream);
+	Parser(string);
 
 };
 
-Parser::Parser(stringstream in)
+Parser::Parser(string in)
 {
-	input = in;
+	string input = in;
 }
 
 
@@ -31,11 +31,9 @@ int main()
 	cout << "Staring \n" << endl;
 	cout << "Enter command: \n" << endl;
 	string mainInput;
-	stringstream command;
 	while (true)
 	{
-		cin >> mainInput;
-		command << mainInput;
-		Parser mainParser(command)
+		getline(cin, mainInput);
+		Parser mainParser(mainInput);
 	}
 }
