@@ -8,6 +8,7 @@ Clifton Sims */
 #include <string>
 #include <cstring>
 #include <sstream>
+#include "Parser.h"
 
 using namespace std;
 
@@ -32,35 +33,7 @@ using namespace std;
 	void insert_cmd();	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
 	void delete_cmd();	//::= DELETE FROM relation-name WHERE condition
 
-//-------Parser
 
-class Parser
-{
-	string input;
-public:
-	Parser(string);
-	char * parse();
-	string getInput() {return input;}; 
-
-};
-
-Parser::Parser(string in)
-{
-	input = in;
-}
-
-char * Parser::parse()
-{
-	char * cstring = new char [input.length()+1];
-	strcpy(cstring, input.c_str());
-	char * parsing = strtok(cstring," ");
-	while(parsing!=0)
-	{
-		cout<<parsing <<endl;
-		parsing = strtok(NULL," ");
-	}
-	return cstring;
-}
 
 
 
