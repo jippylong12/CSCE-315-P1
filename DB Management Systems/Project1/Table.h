@@ -1,4 +1,4 @@
-#include "vector"
+#include <vector>
 #include <string>
 #include <iostream>
 
@@ -27,10 +27,10 @@ public:
 	int update_cmd(string, string, string, string);	//::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
 	int insert_cmd(string, int , int );	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
 	int delete_cmd(string , int );	//::= DELETE FROM relation-name WHERE condition
-	int getRowLength() { return rowLength;}; 
-	int getColumnLength() { return columnLength;};
-	vector<string> getPrimnaryKey() { return primaryKeys;}; //return key vector
-	void setPrimaryKey(vector<string> setKeys) { primaryKeys = setKeys;}; //set any of the values of the primary key
+	int getRowLength() { return rowLength;} 
+	int getColumnLength() { return columnLength;}
+	vector<string> getPrimnaryKey() { return primaryKeys;} //return key vector
+	void setPrimaryKey(vector<string> setKeys) { primaryKeys = setKeys;} //set any of the values of the primary key
 	
 	
 };

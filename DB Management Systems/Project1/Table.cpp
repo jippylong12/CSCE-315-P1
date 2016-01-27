@@ -1,5 +1,6 @@
 #include "Table.h"
-
+#include <vector>
+#include <string>
 
 using namespace std;
 
@@ -9,7 +10,7 @@ Table::Table(int rows, int columns,vector<string> headers, vector<string> keys) 
 	rowLength = rows; //set the number of rows
 	columnLength = columns; //set the nubmer of columns	
 	table.resize(rows, vector<string>(columns)); //resize the table
-	for(i = 0;i<rows;++i) // set the headers
+	for(int i = 0;i<rows;++i) // set the headers
 	{
 		table[0][i] = headers[i];
 	}
@@ -26,7 +27,7 @@ Table::Table() //defualt constructor
 	primaryKeys[0] = "default"; //set default primary keys
 }
 
-Table* Table::open_cmd(string nameOpen); //bring a table into memory from file 
+Table* Table::open_cmd(string nameOpen) //bring a table into memory from file 
 {
 	//read in from the comma seperated text file
 	//the numbers of rows and columns should be the first two lines of every file
@@ -35,7 +36,7 @@ Table* Table::open_cmd(string nameOpen); //bring a table into memory from file
 	//return 1;
 }
 
-int Table::close_cmd(string nameClosy) //saves and removes table instance from memory
+int Table::close_cmd(string nameClose) //saves and removes table instance from memory
 {
 	//create a new txt file with the name of the file
 	//read in the rowLength and columnLenght of table first
@@ -44,7 +45,7 @@ int Table::close_cmd(string nameClosy) //saves and removes table instance from m
 	//return 1;
 }
 
-int Table:save_cmd(string nameSave) //save the table to file keep in memory
+int Table::save_cmd(string nameSave) //save the table to file keep in memory
 {
 	//create a new txt file with the name of the file
 	//read in the rowLength and columnLenght of table first
@@ -77,28 +78,34 @@ int Table::update_cmd(string nameUpdate, string headerName, string criteria, str
 	//return 1;
 }
 
-
+//Takes in the input of nameInsert and returns an int for error checking.
 int Table::insert_cmd(string nameInsert, int rowInsert, int colInsert)
 {
-   
+	//Check if the rowInsert and colInsert are within the bounds of the table.
     if (rowInsert < rowLength && colInsert < columnLength)
     {
-        table[rowInsert][colInsert] = s;
+        table[rowInsert][colInsert] = nameInsert;
         return 0;
     }
+    //Else returns 1 for failure.
     else
+    {
     
         return 1;
     }
 }
 
+//nameDelete may not be neede depending on the implementation of the Parser.
+//Parser may end up finding the row and may only need one input here.
 int Table::delete_cmd(string nameDelete, int rowDelete)
 {
+	//Check for out of bounds error
     if (rowDelete < rowLength)
     {
         table.erase(table.begin() + rowDelete);
         return 0;
     }
+    //If out of bounds, return 1 for failure.
     else
     {
         return 1;
