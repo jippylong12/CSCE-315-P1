@@ -108,5 +108,3 @@ int Table::update_cmd(string nameUpdate, string headerName, string criteria, str
 	//return 1;
 }
 
-
-
