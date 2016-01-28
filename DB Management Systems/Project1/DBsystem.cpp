@@ -35,16 +35,18 @@ public:
 
 int main()
 {
-	cout << "Starting..." << endl;
-	cout << "Enter command: " << endl;
-	
 	//DBsystem db;
 	vector<string> header1;
 	header1.push_back("test1");
 	vector<string> keys1;
 	keys1.push_back("test1");
-	Table t(1,10,header1,keys1);
-	
+	Table t(1,10,"test", header1,keys1);
+	t.show_cmd("test");
+
+	cout << "Starting main..." << endl;
+	cout << "Enter command: " << endl;
+
+
 	string mainInput;
 	while (true)
 	{
