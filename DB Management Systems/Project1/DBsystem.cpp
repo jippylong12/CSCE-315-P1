@@ -6,6 +6,7 @@ Clifton Sims
 Ivan Rupert */
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <cstring>
 #include <vector>
@@ -17,30 +18,30 @@ Ivan Rupert */
 using namespace std;
 
 
+
 class DBsystem
 {
 	map<string,Table*> database;
 
 public:
-	Table* OPEN(string);
+	//-------Database queries--------//
+	Table* OPEN(string); //bring a table into memory from file 
 	int CLOSE(string);
 	int SAVE(string);
-	int SHOW(string)
-	Table* CREATE(int,int,string,vector<string>,vector<string>);
-	int UPDATE(string,string,string,string);
-	int INSERT(string,int,int);
-	int DELETEs(string,int);
+	int SHOW(string);    	//::== SHOW atomic-expr 
+	Table* CREATE(string, vector<string>);	//::= CREATE TABLE relation-name ( typed-attribute-list ) PRIMARY KEY ( attribute-list )
+	int UPDATE(string, string, string, string);	//::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
+	int INSERT(string, int , int );	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
+	int DELETE(string , int );	//::= DELETE FROM relation-name WHERE condition
 	
-	//Database queries//
-	void SELECT();
-	void PROJECT();
-	void RENAME();
-	void SET_UNION();
-	void SET_DIFFERENCE();
-	void CROSS_PRODUCT();
+	void SELECT(string, vector<string>);    //select table with certain criteria
+	void PROJECT(string, string);
+	void RENAME(string, string);			//
+	void SET_UNION(string, string);			//Union of 2 tables
+	void SET_DIFFERENCE(string, string);	//2 table names
+	void CROSS_PRODUCT(string, string);		//2 table names used to perform cross product
 	void EXIT();
 };
-
 
 Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file 
 {
@@ -58,7 +59,31 @@ int DBsystem::CLOSE(string nameClose) //saves and removes table instance from me
 	//read in row by row into file
 	//remove from memory
 	//return 0;
+	//database["nameClose"]
+	string filename;
+	filename = nameClose + ".txt";
+	ofstream closeFile;
+	closeFile.open(filename);
+	
+	Table t = *database["nameClose"];
+	for (int i = 0; i<t.getRowLength(); ++i)
+	{
+		for (int j = 0; j<t.getColumnLength(); ++j)
+		{
+			closeFile << t.getTable()[i][j];
+		}
+		closeFile<<endl;
+	}
+	
+	closeFile.close();
+	database.erase("nameClose");
+	return 0;
+	
+	
+	
+	
 }
+
 
 int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 {
@@ -67,24 +92,39 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	//read in row by row into file
 	//close file
 	//return 0;
+	
+	string filename;
+	filename = nameSave + ".txt";
+	ofstream saveFile;
+	saveFile.open(filename);
+	Table t = *database["nameSave"];
+	for (int i = 0; i<t.getRowLength(); ++i)
+	{
+		for (int j = 0; j<t.getColumnLength(); ++j)
+		{
+			saveFile << t.getTable()[i][j];
+		}
+		saveFile<<endl;
+	}
+	
+	saveFile.close();
+	return 0;
 }
-	
-	
+
 //Don't think that this needs the input of string either.  If it's accessing the current table in memory, I don' think it needs a string argument.
 int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 {
 	//nested for loop
 	//print each cell in the table
 	//return 0;
-	
 	//First, print the name of the table
 	cout<<nameShow<<endl<<endl;
 	//iterate through the table and print.
-	for (int i = 0; i<rowLength; ++i)
+	for (int i = 0; i<database["nameShow"]->getRowLength(); ++i)
 	{
-		for (int j = 0; j<columnLength; ++j)
+		for (int j = 0; j<database["nameShow"]-?getColumnLength(); ++j)
 		{
-			cout<<table[i][j]<<"  ";
+			cout<<database["nameShow"][i][j]<<"  ";
 		}
 		cout<<endl;
 	}
@@ -97,6 +137,7 @@ Table* DBsystem::CREATE(int rowCreate, int columnCreate, string nameCreate,vecto
 {
 	//intiliaze new Table
 	Table* newTable = new Table(rowCreate, columnCreate,nameCreate,createHeaders, createKeys)
+	*database["nameCreate"] = *newTable; //add the table to the database
 	//return new Table
 	return newTable;
 	
@@ -109,7 +150,14 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 	//search first row for headerName to find column
 	//search that column for the criteria
 	//replace the criteria with replace
-	//return 0;
+	
+	//need to iterate through all columns
+	
+	if (headerName.compare(criteria)==0){ //have to find the criteria
+		*database["criteria"] = replace;   //replace is the name of the criteria to be updated?
+	}
+	return 0; 							  //indicates success
+	
 }
 
 //Takes in the input of nameInsert and returns an int for error checking.
@@ -118,7 +166,7 @@ int DBsystem::INSERT(string nameInsert, int rowInsert, int colInsert)
 	//Check if the rowInsert and colInsert are within the bounds of the table.
     if (rowInsert < rowLength && colInsert < columnLength)
     {
-        table[rowInsert][colInsert] = nameInsert;
+        *database["nameInsert"][rowInsert][colInsert] = nameInsert;
         return 0;
     }
     //Else returns 1 for failure.
@@ -131,12 +179,12 @@ int DBsystem::INSERT(string nameInsert, int rowInsert, int colInsert)
 
 //nameDelete may not be neede depending on the implementation of the Parser.
 //Parser may end up finding the row and may only need one input here.
-int DBsystem::DELETEs(string nameDelete, int rowDelete)
+int DBsystem::DELETE(string nameDelete, int rowDelete)
 {
 	//Check for out of bounds error
     if (rowDelete < rowLength)
     {
-        table.erase(table.begin() + rowDelete);
+        *database["nameShow"].erase(database["nameShow"].begin() + rowDelete);
         return 0;
     }
     //If out of bounds, return 1 for failure.
@@ -145,6 +193,51 @@ int DBsystem::DELETEs(string nameDelete, int rowDelete)
         return 1;
     }
 }
+
+// void DBsystem::SELECT()
+// {
+	
+	
+// }
+
+/*void DBsystem::PROJECT()
+{
+	
+	
+}*/
+
+/*void DBsystem::RENAME()
+{
+	
+	
+}*/
+
+/*void DBsystem::SET_UNION()
+{
+
+
+}*/
+
+/*void DBsystem::SET_DIFFERENCE()
+{
+	
+	
+}*/
+
+/*void DBsystem::CROSS_PRODUCT()
+{
+
+
+}*/
+
+// //exits program and deletes everything not saved
+// void DBsystem::EXIT()
+// {
+// 	for()
+	
+// 	delete Table;
+// 	Table = NULL;
+// }
 
 
 int main()
@@ -169,4 +262,4 @@ int main()
 	    mainParser.parse();
 		
 	}
-} 
+}
