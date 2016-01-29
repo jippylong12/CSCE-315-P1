@@ -29,7 +29,7 @@ public:
 	int CLOSE(string);
 	int SAVE(string);
 	int SHOW(string);    	//::== SHOW atomic-expr 
-	Table* CREATE(string, vector<string>);	//::= CREATE TABLE relation-name ( typed-attribute-list ) PRIMARY KEY ( attribute-list )
+	Table* CREATE(int,int,string,vector<string>,vector<string>); //::= CREATE TABLE relation-name ( typed-attribute-list ) PRIMARY KEY ( attribute-list )
 	int UPDATE(string, string, string, string);	//::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
 	int INSERT(string, int , int );	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
 	int DELETE(string , int );	//::= DELETE FROM relation-name WHERE condition
@@ -122,9 +122,9 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 	//iterate through the table and print.
 	for (int i = 0; i<database["nameShow"]->getRowLength(); ++i)
 	{
-		for (int j = 0; j<database["nameShow"]-?getColumnLength(); ++j)
+		for (int j = 0; j<database["nameShow"]->getColumnLength(); ++j)
 		{
-			cout<<database["nameShow"][i][j]<<"  ";
+			cout<<database["nameShow"]->getTable()[i][j]<<"  ";
 		}
 		cout<<endl;
 	}
@@ -136,8 +136,8 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 Table* DBsystem::CREATE(int rowCreate, int columnCreate, string nameCreate,vector<string> createHeaders, vector<string> createKeys) //create a new table in memory
 {
 	//intiliaze new Table
-	Table* newTable = new Table(rowCreate, columnCreate,nameCreate,createHeaders, createKeys)
-	*database["nameCreate"] = *newTable; //add the table to the database
+	Table* newTable = new Table(rowCreate, columnCreate,nameCreate,createHeaders, createKeys);
+	database["nameCreate"] = newTable; //add the table to the database
 	//return new Table
 	return newTable;
 	
@@ -154,7 +154,7 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 	//need to iterate through all columns
 	
 	if (headerName.compare(criteria)==0){ //have to find the criteria
-		*database["criteria"] = replace;   //replace is the name of the criteria to be updated?
+		//*database["criteria"] = replace;   //replace is the name of the criteria to be updated?
 	}
 	return 0; 							  //indicates success
 	
@@ -164,9 +164,9 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 int DBsystem::INSERT(string nameInsert, int rowInsert, int colInsert)
 {
 	//Check if the rowInsert and colInsert are within the bounds of the table.
-    if (rowInsert < rowLength && colInsert < columnLength)
+    if (rowInsert < database["nameInsert"]->getRowLength() && colInsert < database["nameInsert"]->getColumnLength())
     {
-        *database["nameInsert"][rowInsert][colInsert] = nameInsert;
+        database["nameInsert"]->getTable()[rowInsert][colInsert] = nameInsert;
         return 0;
     }
     //Else returns 1 for failure.
@@ -182,9 +182,9 @@ int DBsystem::INSERT(string nameInsert, int rowInsert, int colInsert)
 int DBsystem::DELETE(string nameDelete, int rowDelete)
 {
 	//Check for out of bounds error
-    if (rowDelete < rowLength)
+    if (rowDelete < database["nameShow"]->getRowLength())
     {
-        *database["nameShow"].erase(database["nameShow"].begin() + rowDelete);
+        database.erase(database["nameShow"].begin() + rowDelete);
         return 0;
     }
     //If out of bounds, return 1 for failure.
@@ -248,7 +248,7 @@ int main()
 	vector<string> keys1;
 	keys1.push_back("test1");
 	Table t(1,10,"test", header1,keys1);
-	t.show_cmd("test");
+	//t.show_cmd("test");
 
 	cout << "Starting main..." << endl;
 	cout << "Enter command: " << endl;
