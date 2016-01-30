@@ -161,7 +161,7 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 }
 
 //Takes in the input of nameInsert and returns an int for error checking.
-int DBsystem::INSERT(string nameInsert, int rowInsert, int colInsert)
+int DBsystem::INSERT(string nameInsert, vector<string> inputs)
 {
 	//Check if the rowInsert and colInsert are within the bounds of the table.
     if (rowInsert < database["nameInsert"]->getRowLength() && colInsert < database["nameInsert"]->getColumnLength())
@@ -172,7 +172,6 @@ int DBsystem::INSERT(string nameInsert, int rowInsert, int colInsert)
     //Else returns 1 for failure.
     else
     {
-    
         return 1;
     }
 }
@@ -181,10 +180,17 @@ int DBsystem::INSERT(string nameInsert, int rowInsert, int colInsert)
 //Parser may end up finding the row and may only need one input here.
 int DBsystem::DELETE(string nameDelete, int rowDelete)
 {
+	vector<vector <string> >* tempTable = new vector<vector<string> >();
+	*tempTable = database["nameDelete"]->getTable();
 	//Check for out of bounds error
-    if (rowDelete < database["nameShow"]->getRowLength())
+    if (rowDelete < database["nameDelete"]->getRowLength())
     {
-        database.erase(database["nameShow"].begin() + rowDelete);
+		for(int i = 0; i<database["nameDelete"]->getRowLength(); ++i)
+		{
+			tempTable[rowDelete].erase(tempTable[rowDelete].begin(),tempTable[rowDelete].end());
+		}
+        database["nameDelete"]->getTable() = *tempTable;
+		delete tempTable;
         return 0;
     }
     //If out of bounds, return 1 for failure.
@@ -247,7 +253,7 @@ int main()
 	header1.push_back("test1");
 	vector<string> keys1;
 	keys1.push_back("test1");
-	Table t(1,10,"test", header1,keys1);
+	Table t(1,1,"test", header1,keys1);
 	//t.show_cmd("test");
 
 	cout << "Starting main..." << endl;
