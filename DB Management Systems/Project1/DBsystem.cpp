@@ -14,6 +14,7 @@ Ivan Rupert */
 #include <map>
 #include "Parser.h"
 #include "DBsystem.h"
+
 using namespace std;
 
 
@@ -148,18 +149,32 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 	//replace the criteria with replace
 	
 	//need to iterate through all columns
+	Table tempTable;
+	int row, col;
 	
-	 //if (rowInsert < database[nameInsert]->getRowLength() && colInsert < database[nameInsert]->getColumnLength())
-  //  {
-  //      database[nameInsert]->getTable()[rowInsert][colInsert] = nameInsert;
-  //      return 0;
-  //  }
-  //  //Else returns 1 for failure.
-  //  else
-  //  {
+	for (int i = 0; i < database[nameUpdate]->getColumnLength(); ++i)
+	{
+		if (database[nameUpdate]->getTable()[0][i] == headerName)
+		{
+			col = i;
+		}
+	}
+	
+	for (int i = 0; i < database[nameUpdate]->getRowLength(); ++i)
+	{
+		if (database[nameUpdate]->getTable()[i][col] == criteria)
+		{
+			row = i;
+		}
+	}
+	
+	database[nameUpdate]->getTable()[row][col] = replace;
+	
+	
+    //Else returns 1 for failure.
+  
     
-  //      return 1;
-  //  }
+    	return 0;
 	
 }
 
