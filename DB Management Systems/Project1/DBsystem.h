@@ -27,7 +27,7 @@ public:
 	//-------Database commands (need definitions)-------//
 	Table* SELECT(string, vector<string>);    //select table with certain criteria
 	Table*  PROJECT(string, string);
-	Table* RENAME(string, string);			
+	Table* RENAME(string, vector<string>, vector<string>);			
 	Table* SET_UNION(string, string);			//Take the union of 2 tables
 	Table* SET_DIFFERENCE(string, string);		//2 table names
 	Table* CROSS_PRODUCT(string, string);		//2 table names used to perform cross product
