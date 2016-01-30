@@ -21,17 +21,14 @@ int main()
 	keys1.push_back("test1");
 	vector<string> types1;
 	types1.push_back("VARCHAR");
-	db.CREATE(1,1,"test", header1,keys1,types1);
+	db.CREATE(1,"test", header1,keys1,types1);
 	vector<vector<string> > insert1;
-	cout<<"here0"<<endl;
 	vector<string> insertHelper;
 	insertHelper.push_back("hello");
 	insert1.push_back(insertHelper);
-	cout<<"here1"<<endl;
 	db.INSERT("test",insert1);
 	//db.CLOSE("test");
 	db.SHOW("test");
-	//t.show_cmd("test");
 
 	cout << "Starting main..." << endl;
 	cout << "Enter command: " << endl;

@@ -115,8 +115,14 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 	//print each cell in the table
 	//return 0;
 	//First, print the name of the table
-	cout<<nameShow<<endl<<endl;
-	//iterate through the table and print.
+	cout<<'*'<<nameShow<<'*'<<endl<<endl;
+	//print headers.
+	for (int i = 0; i< database[nameShow]->getHeaders().size(); ++i)
+	{
+		cout<<"["<<database[nameShow]->getHeaders()[i]<<"] ";
+	}
+	cout<<endl;
+	//print table
 	for (int i = 0; i<database[nameShow]->getRowLength(); ++i)
 	{
 		for (int j = 0; j<database[nameShow]->getColumnLength(); ++j)
@@ -130,10 +136,10 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 	
 }
 
-Table* DBsystem::CREATE(int rowCreate, int columnCreate, string nameCreate,vector<string> createHeaders, vector<string> createKeys, vector<string> createTypes) //create a new table in memory
+Table* DBsystem::CREATE(int columnCreate, string nameCreate,vector<string> createHeaders, vector<string> createKeys, vector<string> createTypes) //create a new table in memory
 {
 	//intiliaze new Table
-	Table* newTable = new Table(rowCreate, columnCreate,nameCreate,createHeaders, createKeys, createTypes);
+	Table* newTable = new Table(columnCreate,nameCreate,createHeaders, createKeys, createTypes);
 	database[nameCreate] = newTable; //add the table to the database
 	//return new Table
 	return newTable;
@@ -185,33 +191,23 @@ int DBsystem::INSERT(string nameInsert, vector<vector<string> > inputs)
 	//add all the items in inputs to the bottom of the able
 	
 	vector<vector<string> > tempTable = database[nameInsert]->getTable();
-	bool ranFirst = 0;
-	if(inputs.size()<1) //if we are just starting out and there is techinally no row length
-	{
-		for(int i = 0; i< database[nameInsert]->getColumnLength(); ++i)//for each column in the insert
-		{
-			tempTable[0].push_back(inputs[0][i]); //add it to the table
-		}		
-		ranFirst =1;
-	}
+	tempTable.push_back(inputs[0]);
+	int tempRow = database[nameInsert]->getRowLength() + 1;
+	database[nameInsert]->setRowLength(tempRow);
 	
+
 	//cout<<"Input Size: "<<inputs.size()<<endl; //error checkking
-	for(int i = 0; i<inputs.size(); ++i)
+	if(inputs.size()> 1)
 	{
-		if(ranFirst) //if we ran the first function first and there were was more than one row to insert at a time then we need to account for that. 
+		for(int i = 1; i<inputs.size(); ++i)
 		{
-			++i;
-			ranFirst = 0;
-		}
-		cout<<"Row Length: "<<database[nameInsert]->getRowLength()<<endl;
-		int tempRow = database[nameInsert]->getRowLength() + 1;
-		database[nameInsert]->setRowLength(tempRow);
-		for(int j = 0; j<database[nameInsert]->getColumnLength(); ++j) //how many columns
-		{
-			tempTable[i].push_back(inputs[i][j]);
+			tempRow = database[nameInsert]->getRowLength() + 1;
+			database[nameInsert]->setRowLength(tempRow);
+			tempTable.push_back(inputs[i]);
 		}
 	}
-	database[nameInsert]->getTable() = tempTable; //set the old table equal to the new table
+
+	database[nameInsert]->setTable(tempTable); //set the old table equal to the new table
 	
 	return 0;
 

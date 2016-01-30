@@ -19,7 +19,7 @@ public:
 	int CLOSE(string);
 	int SAVE(string);
 	int SHOW(string);    	//::== SHOW atomic-expr 
-	Table* CREATE(int,int,string,vector<string>,vector<string>,vector<string>); //::= CREATE TABLE relation-name ( typed-attribute-list ) PRIMARY KEY ( attribute-list )
+	Table* CREATE(int,string,vector<string>,vector<string>,vector<string>); //::= CREATE TABLE relation-name ( typed-attribute-list ) PRIMARY KEY ( attribute-list )
 	int UPDATE(string, string, string, string);	//::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
 	int INSERT(string, vector<vector<string> > );	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
 	int DELETE(string , int );	//::= DELETE FROM relation-name WHERE condition
@@ -31,6 +31,6 @@ public:
 	Table* SET_UNION(string, string);			//Take the union of 2 tables
 	Table* SET_DIFFERENCE(string, string);		//2 table names
 	Table* CROSS_PRODUCT(string, string);		//2 table names used to perform cross product
-	map<string,Table*> getDB();
+	map<string,Table*> getDB() {return database;}
 	
 };
