@@ -23,6 +23,7 @@ public:
 	int UPDATE(string, string, string, string);	//::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
 	int INSERT(string, vector<string> );	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
 	int DELETE(string , int );	//::= DELETE FROM relation-name WHERE condition
+	void EXIT();
 	//-------Database commands (need definitions)-------//
 	Table* SELECT(string, vector<string>);    //select table with certain criteria
 	Table*  PROJECT(string, string);
@@ -30,5 +31,6 @@ public:
 	Table* SET_UNION(string, string);			//Take the union of 2 tables
 	Table* SET_DIFFERENCE(string, string);		//2 table names
 	Table* CROSS_PRODUCT(string, string);		//2 table names used to perform cross product
-	void EXIT();
+	map<string,Table*> getDB();
+	
 };

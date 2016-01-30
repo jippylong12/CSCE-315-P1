@@ -24,7 +24,7 @@ int main()
 	db.CREATE(1,1,"test", header1,keys1,types1);
 	//db.CLOSE("test");
 	//db.INSERT("testtt", 1, 1);
-	db.SHOW("test");
+	//db.SHOW("test");
 	//t.show_cmd("test");
 
 	cout << "Starting main..." << endl;

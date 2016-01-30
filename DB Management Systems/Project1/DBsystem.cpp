@@ -42,12 +42,9 @@ int DBsystem::CLOSE(string nameClose) //saves and removes table instance from me
 	//remove from memory
 	//return 0;
 	//database["nameClose"]
-	
-	
-	
 	//Just call Save Function.
-	this->SAVE("nameClose");
-	database.erase("nameClose");
+	this->SAVE(nameClose);
+	database.erase(nameClose);
 	return 0;
 	
 	
@@ -80,7 +77,7 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	filename = nameSave + ".db";
 	ofstream saveFile;
 	saveFile.open(filename);
-	Table t = *database["nameSave"];
+	Table t = *database[nameSave];
 	
 	saveFile<<"CREATE TABLE " + nameSave + " (";
 	int temp = 0;
@@ -119,11 +116,11 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 	//First, print the name of the table
 	cout<<nameShow<<endl<<endl;
 	//iterate through the table and print.
-	for (int i = 0; i<database["nameShow"]->getRowLength(); ++i)
+	for (int i = 0; i<database[nameShow]->getRowLength(); ++i)
 	{
-		for (int j = 0; j<database["nameShow"]->getColumnLength(); ++j)
+		for (int j = 0; j<database[nameShow]->getColumnLength(); ++j)
 		{
-			cout<<database["nameShow"]->getTable()[i][j]<<"  ";
+			cout<<database[nameShow]->getTable()[i][j]<<"  ";
 		}
 		cout<<endl;
 	}
@@ -136,7 +133,7 @@ Table* DBsystem::CREATE(int rowCreate, int columnCreate, string nameCreate,vecto
 {
 	//intiliaze new Table
 	Table* newTable = new Table(rowCreate, columnCreate,nameCreate,createHeaders, createKeys, createTypes);
-	database["nameCreate"] = newTable; //add the table to the database
+	database[nameCreate] = newTable; //add the table to the database
 	//return new Table
 	return newTable;
 	
@@ -152,9 +149,9 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 	
 	//need to iterate through all columns
 	
-	 //if (rowInsert < database["nameInsert"]->getRowLength() && colInsert < database["nameInsert"]->getColumnLength())
+	 //if (rowInsert < database[nameInsert]->getRowLength() && colInsert < database[nameInsert]->getColumnLength())
   //  {
-  //      database["nameInsert"]->getTable()[rowInsert][colInsert] = nameInsert;
+  //      database[nameInsert]->getTable()[rowInsert][colInsert] = nameInsert;
   //      return 0;
   //  }
   //  //Else returns 1 for failure.
@@ -171,9 +168,9 @@ int DBsystem::INSERT(string nameInsert, vector<string> inputs)
 {
 	//Check if the rowInsert and colInsert are within the bounds of the table.
 	cout << "INSERT test 1";
-    // if (rowInsert < database["nameInsert"]->getRowLength() && colInsert < database["nameInsert"]->getColumnLength())
+    // if (rowInsert < database[nameInsert]->getRowLength() && colInsert < database[nameInsert]->getColumnLength())
     // {
-    //     database["nameInsert"]->getTable()[rowInsert][colInsert] = nameInsert;
+    //     database[nameInsert]->getTable()[rowInsert][colInsert] = nameInsert;
     //     return 0;
     // }
     // //Else returns 1 for failure.
@@ -188,15 +185,15 @@ int DBsystem::INSERT(string nameInsert, vector<string> inputs)
 int DBsystem::DELETE(string nameDelete, int rowDelete)
 {
 	vector<vector <string> >* tempTable = new vector<vector<string> >();
-	*tempTable = database["nameDelete"]->getTable();
+	*tempTable = database[nameDelete]->getTable();
 	//Check for out of bounds error
-    if (rowDelete < database["nameDelete"]->getRowLength())
+    if (rowDelete < database[nameDelete]->getRowLength())
     {
-		for(int i = 0; i<database["nameDelete"]->getRowLength(); ++i)
+		for(int i = 0; i<database[nameDelete]->getRowLength(); ++i)
 		{
 			tempTable[rowDelete].erase(tempTable[rowDelete].begin(),tempTable[rowDelete].end());
 		}
-        database["nameDelete"]->getTable() = *tempTable;
+        database[nameDelete]->getTable() = *tempTable;
 		delete tempTable;
         return 0;
     }
@@ -253,7 +250,5 @@ Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
 
 
 }
-
-
 
 
