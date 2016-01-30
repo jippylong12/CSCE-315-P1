@@ -19,7 +19,7 @@ public:
 
 	/*command ::= ( open-cmd | close-cmd | save-cmd | exit-cmd | show-cmd | create-cmd | update-cmd | insert-cmd | delete-cmd );*/
 	//Table Constructor
-	Table(int,int,string, vector<string>, vector<string>); //constructor	
+	Table(int,int,string, vector<string>, vector<string>, vector<string>); //constructor	
 	Table(); 			//default
 	~Table();
 	Table(const Table &Source); //copy constructor

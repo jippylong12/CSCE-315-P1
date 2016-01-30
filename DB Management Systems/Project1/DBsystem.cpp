@@ -31,14 +31,14 @@ public:
 	int CLOSE(string);
 	int SAVE(string);
 	int SHOW(string);    	//::== SHOW atomic-expr 
-	Table* CREATE(int,int,string,vector<string>,vector<string>); //::= CREATE TABLE relation-name ( typed-attribute-list ) PRIMARY KEY ( attribute-list )
+	Table* CREATE(int,int,string,vector<string>,vector<string>,vector<string>); //::= CREATE TABLE relation-name ( typed-attribute-list ) PRIMARY KEY ( attribute-list )
 	int UPDATE(string, string, string, string);	//::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
-	int INSERT(string, int , int );	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
+	int INSERT(string, vector<string> );	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
 	int DELETE(string , int );	//::= DELETE FROM relation-name WHERE condition
 	//-------Database commands (need definitions)-------//
 	Table* SELECT(string, vector<string>);    //select table with certain criteria
 	Table*  PROJECT(string, string);
-	void RENAME(string, string);			
+	Table* RENAME(string, string);			
 	Table* SET_UNION(string, string);			//Take the union of 2 tables
 	Table* SET_DIFFERENCE(string, string);		//2 table names
 	Table* CROSS_PRODUCT(string, string);		//2 table names used to perform cross product
@@ -75,7 +75,7 @@ int DBsystem::CLOSE(string nameClose) //saves and removes table instance from me
 	
 	
 	//Just call Save Function.
-	this.SAVE()
+	this->SAVE("nameClose");
 	database.erase("nameClose");
 	return 0;
 	
@@ -116,10 +116,10 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	for (int i = 0; i< t.getColumnLength() - 1; ++i)
 	{
 
-		saveFile<< t->getTable()[i] << ", ";
+		//saveFile<< t.getTable()[i] << ", ";
 		temp = i;
 	}
-	saveFile<<t->getTable()[temp]<<")";
+	//saveFile<<t.getTable()[temp]<<")";
 	
 	
 	//Missing the Primary Key part.
@@ -130,7 +130,7 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 		saveFile<<"INSERT INTO " + nameSave + " VALUES FROM (";
 		for (int j = 0; j<t.getColumnLength(); ++j)
 		{
-			saveFile << t->getTable()[i][j];
+			saveFile << t.getTable()[i][j];
 		}
 		saveFile<<endl;
 	}
@@ -181,17 +181,17 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 	
 	//need to iterate through all columns
 	
-	 if (rowInsert < database["nameInsert"]->getRowLength() && colInsert < database["nameInsert"]->getColumnLength())
-    {
-        database["nameInsert"]->getTable()[rowInsert][colInsert] = nameInsert;
-        return 0;
-    }
-    //Else returns 1 for failure.
-    else
-    {
+	 //if (rowInsert < database["nameInsert"]->getRowLength() && colInsert < database["nameInsert"]->getColumnLength())
+  //  {
+  //      database["nameInsert"]->getTable()[rowInsert][colInsert] = nameInsert;
+  //      return 0;
+  //  }
+  //  //Else returns 1 for failure.
+  //  else
+  //  {
     
-        return 1;
-    }
+  //      return 1;
+  //  }
 	
 }
 
@@ -200,16 +200,16 @@ int DBsystem::INSERT(string nameInsert, vector<string> inputs)
 {
 	//Check if the rowInsert and colInsert are within the bounds of the table.
 	cout << "INSERT test 1";
-    if (rowInsert < database["nameInsert"]->getRowLength() && colInsert < database["nameInsert"]->getColumnLength())
-    {
-        database["nameInsert"]->getTable()[rowInsert][colInsert] = nameInsert;
-        return 0;
-    }
-    //Else returns 1 for failure.
-    else
-    {
-        return 1;
-    }
+    // if (rowInsert < database["nameInsert"]->getRowLength() && colInsert < database["nameInsert"]->getColumnLength())
+    // {
+    //     database["nameInsert"]->getTable()[rowInsert][colInsert] = nameInsert;
+    //     return 0;
+    // }
+    // //Else returns 1 for failure.
+    // else
+    // {
+    //     return 1;
+    // }
 }
 
 //nameDelete may not be neede depending on the implementation of the Parser.
@@ -276,12 +276,11 @@ Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
 //exits program and deletes everything not saved
 void DBsystem::EXIT()
  {
-	for(map<String, *Table>::iterator itr = database.begin(); itr != database.end(); itr++){
+ 	
+	for(map<string, Table*>::iterator itr = database.begin(); itr != database.end(); itr++){
 		delete itr->second; //deletes all *Table pointers
 	}
-	else{
-		quick_exit(EXIT_SUCCESS);
-	}
+	quick_exit(EXIT_SUCCESS);
  }
 
 
@@ -295,7 +294,9 @@ int main()
 	header1.push_back("test1");
 	vector<string> keys1;
 	keys1.push_back("test1");
-	t = db.CREATE(1,1,"test", header1,keys1);
+	vector<string> types1;
+	types1.push_back("VARCHAR");
+	t = db.CREATE(1,1,"test", header1,keys1,types1);
 	//db.CLOSE("test");
 	cout << t->getRowLength() << " " << t->getColumnLength() << endl;
 	//db.INSERT("testtt", 1, 1);
