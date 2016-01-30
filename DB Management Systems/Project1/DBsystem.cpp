@@ -13,37 +13,8 @@ Ivan Rupert */
 #include <sstream>
 #include <map>
 #include "Parser.h"
-#include "Table.h"
-
+#include "DBsystem.h"
 using namespace std;
-
-
-
-class DBsystem
-{
-	map<string,Table*> database;
-
-public:
-	DBsystem();
-	
-	//-------Database queries--------//
-	Table* OPEN(string); //bring a table into memory from file 
-	int CLOSE(string);
-	int SAVE(string);
-	int SHOW(string);    	//::== SHOW atomic-expr 
-	Table* CREATE(int,int,string,vector<string>,vector<string>,vector<string>); //::= CREATE TABLE relation-name ( typed-attribute-list ) PRIMARY KEY ( attribute-list )
-	int UPDATE(string, string, string, string);	//::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
-	int INSERT(string, vector<string> );	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
-	int DELETE(string , int );	//::= DELETE FROM relation-name WHERE condition
-	//-------Database commands (need definitions)-------//
-	Table* SELECT(string, vector<string>);    //select table with certain criteria
-	Table*  PROJECT(string, string);
-	Table* RENAME(string, string);			
-	Table* SET_UNION(string, string);			//Take the union of 2 tables
-	Table* SET_DIFFERENCE(string, string);		//2 table names
-	Table* CROSS_PRODUCT(string, string);		//2 table names used to perform cross product
-	void EXIT();
-};
 
 
 DBsystem::DBsystem()
@@ -236,6 +207,16 @@ int DBsystem::DELETE(string nameDelete, int rowDelete)
     }
 }
 
+//exits program and deletes everything not saved
+void DBsystem::EXIT()
+ {
+ 	
+	for(map<string, Table*>::iterator itr = database.begin(); itr != database.end(); itr++){
+		delete itr->second; //deletes all *Table pointers
+	}
+	quick_exit(EXIT_SUCCESS);
+ }
+
 //----------------Database queries---------------//
 
 Table* DBsystem::SELECT(string nameShow, vector<string> attributes) {
@@ -273,46 +254,6 @@ Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
 
 }
 
-//exits program and deletes everything not saved
-void DBsystem::EXIT()
- {
- 	
-	for(map<string, Table*>::iterator itr = database.begin(); itr != database.end(); itr++){
-		delete itr->second; //deletes all *Table pointers
-	}
-	quick_exit(EXIT_SUCCESS);
- }
 
 
-int main()
-{
-	Table* t;		//Testing some stuff
-	
-	
-	DBsystem db;
-	vector<string> header1;
-	header1.push_back("test1");
-	vector<string> keys1;
-	keys1.push_back("test1");
-	vector<string> types1;
-	types1.push_back("VARCHAR");
-	t = db.CREATE(1,1,"test", header1,keys1,types1);
-	//db.CLOSE("test");
-	cout << t->getRowLength() << " " << t->getColumnLength() << endl;
-	//db.INSERT("testtt", 1, 1);
-	db.SHOW("test");
-	//t.show_cmd("test");
 
-	cout << "Starting main..." << endl;
-	cout << "Enter command: " << endl;
-
-
-	string mainInput;
-	while (true)
-	{
-		getline(cin, mainInput);
-		Parser mainParser(mainInput);
-	    mainParser.parse();
-		
-	}
-}
