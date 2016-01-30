@@ -24,6 +24,8 @@ class DBsystem
 	map<string,Table*> database;
 
 public:
+	DBsystem();
+	
 	//-------Database queries--------//
 	Table* OPEN(string); //bring a table into memory from file 
 	int CLOSE(string);
@@ -33,15 +35,24 @@ public:
 	int UPDATE(string, string, string, string);	//::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
 	int INSERT(string, int , int );	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
 	int DELETE(string , int );	//::= DELETE FROM relation-name WHERE condition
-	
-	void SELECT(string, vector<string>);    //select table with certain criteria
-	void PROJECT(string, string);
-	void RENAME(string, string);			//
-	void SET_UNION(string, string);			//Union of 2 tables
-	void SET_DIFFERENCE(string, string);	//2 table names
-	void CROSS_PRODUCT(string, string);		//2 table names used to perform cross product
+	//-------Database commands (need definitions)-------//
+	Table* SELECT(string, vector<string>);    //select table with certain criteria
+	Table*  PROJECT(string, string);
+	void RENAME(string, string);			
+	Table* SET_UNION(string, string);			//Take the union of 2 tables
+	Table* SET_DIFFERENCE(string, string);		//2 table names
+	Table* CROSS_PRODUCT(string, string);		//2 table names used to perform cross product
 	void EXIT();
 };
+
+
+DBsystem::DBsystem()
+{
+	//not sure if we need anything to be done since create will add the 
+	//new tables
+}
+
+
 
 Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file 
 {
@@ -60,22 +71,11 @@ int DBsystem::CLOSE(string nameClose) //saves and removes table instance from me
 	//remove from memory
 	//return 0;
 	//database["nameClose"]
-	string filename;
-	filename = nameClose + ".txt";
-	ofstream closeFile;
-	closeFile.open(filename);
 	
-	Table t = *database["nameClose"];
-	for (int i = 0; i<t.getRowLength(); ++i)
-	{
-		for (int j = 0; j<t.getColumnLength(); ++j)
-		{
-			closeFile << t.getTable()[i][j];
-		}
-		closeFile<<endl;
-	}
 	
-	closeFile.close();
+	
+	//Just call Save Function.
+	this.SAVE()
 	database.erase("nameClose");
 	return 0;
 	
@@ -93,16 +93,44 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	//close file
 	//return 0;
 	
+	
+	
+	//output CREATE TABLE
+	//get table name and concat table name
+	//add (
+	//then use the headers to print out them and the type
+	//);
+	//For each row use INSERT INTO <table name> VALUES FROM (
+	//Then fill in with each row by accessing the table at the that row
+	//then );
+	//Strings need to have "" around them and ints are just numbers
+	
 	string filename;
-	filename = nameSave + ".txt";
+	filename = nameSave + ".db";
 	ofstream saveFile;
 	saveFile.open(filename);
 	Table t = *database["nameSave"];
-	for (int i = 0; i<t.getRowLength(); ++i)
+	
+	saveFile<<"CREATE TABLE " + nameSave + " (";
+	int temp = 0;
+	for (int i = 0; i< t.getColumnLength() - 1; ++i)
 	{
+
+		saveFile<< t->getTable()[i] << ", ";
+		temp = i;
+	}
+	saveFile<<t->getTable()[temp]<<")";
+	
+	
+	//Missing the Primary Key part.
+	
+	
+	for (int i = 1; i<t.getRowLength(); ++i)
+	{
+		saveFile<<"INSERT INTO " + nameSave + " VALUES FROM (";
 		for (int j = 0; j<t.getColumnLength(); ++j)
 		{
-			saveFile << t.getTable()[i][j];
+			saveFile << t->getTable()[i][j];
 		}
 		saveFile<<endl;
 	}
@@ -133,10 +161,10 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 	
 }
 
-Table* DBsystem::CREATE(int rowCreate, int columnCreate, string nameCreate,vector<string> createHeaders, vector<string> createKeys) //create a new table in memory
+Table* DBsystem::CREATE(int rowCreate, int columnCreate, string nameCreate,vector<string> createHeaders, vector<string> createKeys, vector<string> createTypes) //create a new table in memory
 {
 	//intiliaze new Table
-	Table* newTable = new Table(rowCreate, columnCreate,nameCreate,createHeaders, createKeys);
+	Table* newTable = new Table(rowCreate, columnCreate,nameCreate,createHeaders, createKeys, createTypes);
 	database["nameCreate"] = newTable; //add the table to the database
 	//return new Table
 	return newTable;
@@ -153,10 +181,17 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 	
 	//need to iterate through all columns
 	
-	if (headerName.compare(criteria)==0){ //have to find the criteria
-		//*database["criteria"] = replace;   //replace is the name of the criteria to be updated?
-	}
-	return 0; 							  //indicates success
+	 if (rowInsert < database["nameInsert"]->getRowLength() && colInsert < database["nameInsert"]->getColumnLength())
+    {
+        database["nameInsert"]->getTable()[rowInsert][colInsert] = nameInsert;
+        return 0;
+    }
+    //Else returns 1 for failure.
+    else
+    {
+    
+        return 1;
+    }
 	
 }
 
@@ -164,6 +199,7 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 int DBsystem::INSERT(string nameInsert, int rowInsert, int colInsert)
 {
 	//Check if the rowInsert and colInsert are within the bounds of the table.
+	cout << "INSERT test 1";
     if (rowInsert < database["nameInsert"]->getRowLength() && colInsert < database["nameInsert"]->getColumnLength())
     {
         database["nameInsert"]->getTable()[rowInsert][colInsert] = nameInsert;
@@ -184,7 +220,7 @@ int DBsystem::DELETE(string nameDelete, int rowDelete)
 	//Check for out of bounds error
     if (rowDelete < database["nameShow"]->getRowLength())
     {
-        database.erase(database["nameShow"].begin() + rowDelete);
+        //database.erase(database["nameShow"].begin() + rowDelete);
         return 0;
     }
     //If out of bounds, return 1 for failure.
@@ -194,60 +230,70 @@ int DBsystem::DELETE(string nameDelete, int rowDelete)
     }
 }
 
-// void DBsystem::SELECT()
-// {
-	
-	
-// }
+//----------------Database queries---------------//
 
-/*void DBsystem::PROJECT()
+Table* DBsystem::SELECT(string nameShow, vector<string> attributes) {
+	
+	
+}
+
+Table* DBsystem::PROJECT(string t1, string t2)
 {
 	
 	
-}*/
+}
 
-/*void DBsystem::RENAME()
+Table* DBsystem::RENAME(string tableName, string replaceName)
 {
 	
 	
-}*/
+}
 
-/*void DBsystem::SET_UNION()
+Table* DBsystem::SET_UNION(string t1, string t2)
 {
 
 
-}*/
+}
 
-/*void DBsystem::SET_DIFFERENCE()
+Table* DBsystem::SET_DIFFERENCE(string t1, string t2)
 {
 	
 	
-}*/
+}
 
-/*void DBsystem::CROSS_PRODUCT()
+Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
 {
 
 
-}*/
+}
 
-// //exits program and deletes everything not saved
-// void DBsystem::EXIT()
-// {
-// 	for()
-	
-// 	delete Table;
-// 	Table = NULL;
-// }
+//exits program and deletes everything not saved
+void DBsystem::EXIT()
+ {
+	for(map<String, *Table>::iterator itr = database.begin(); itr != database.end(); itr++){
+		delete itr->second; //deletes all *Table pointers
+	}
+	else{
+		quick_exit(EXIT_SUCCESS);
+	}
+ }
 
 
 int main()
 {
-	//DBsystem db;
+	Table* t;		//Testing some stuff
+	
+	
+	DBsystem db;
 	vector<string> header1;
 	header1.push_back("test1");
 	vector<string> keys1;
 	keys1.push_back("test1");
-	Table t(1,10,"test", header1,keys1);
+	t = db.CREATE(1,1,"test", header1,keys1);
+	//db.CLOSE("test");
+	cout << t->getRowLength() << " " << t->getColumnLength() << endl;
+	//db.INSERT("testtt", 1, 1);
+	db.SHOW("test");
 	//t.show_cmd("test");
 
 	cout << "Starting main..." << endl;

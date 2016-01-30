@@ -11,6 +11,8 @@ class Table
     int rowLength; //number of rows
     int columnLength; //number of columns
  	vector<string> primaryKeys; //primary keys
+ 	vector<string> tableHeaders;
+ 	vector<string> headerTypes;
     
 public:
 	//-------Database command functions-------//
@@ -19,6 +21,7 @@ public:
 	//Table Constructor
 	Table(int,int,string, vector<string>, vector<string>); //constructor	
 	Table(); 			//default
+	~Table();
 	Table(const Table &Source); //copy constructor
 	Table& operator= (const Table &Source); //overloading
 	int getRowLength() { return rowLength;} 
@@ -27,6 +30,7 @@ public:
 	void setPrimaryKey(vector<string> setKeys) { primaryKeys = setKeys;} //set any of the values of the primary key
 	string getTableName() { return tableName;}
 	vector< vector<string> > getTable() {return table;}
+	vector<string> getHeaders() {return tableHeaders;}
 	
 };
 
