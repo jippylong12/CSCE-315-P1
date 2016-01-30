@@ -149,7 +149,6 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 	//replace the criteria with replace
 	
 	//need to iterate through all columns
-	Table tempTable;
 	int row, col;
 	
 	for (int i = 0; i < database[nameUpdate]->getColumnLength(); ++i)
@@ -179,20 +178,43 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 }
 
 //Takes in the input of nameInsert and returns an int for error checking.
-int DBsystem::INSERT(string nameInsert, vector<string> inputs)
+int DBsystem::INSERT(string nameInsert, vector<vector<string> > inputs)
 {
-	//Check if the rowInsert and colInsert are within the bounds of the table.
-	cout << "INSERT test 1";
-    // if (rowInsert < database[nameInsert]->getRowLength() && colInsert < database[nameInsert]->getColumnLength())
-    // {
-    //     database[nameInsert]->getTable()[rowInsert][colInsert] = nameInsert;
-    //     return 0;
-    // }
-    // //Else returns 1 for failure.
-    // else
-    // {
-    //     return 1;
-    // }
+	//go to the table request
+	//check that the table is compatable?
+	//add all the items in inputs to the bottom of the able
+	
+	vector<vector<string> > tempTable = database[nameInsert]->getTable();
+	bool ranFirst = 0;
+	if(inputs.size()<1) //if we are just starting out and there is techinally no row length
+	{
+		for(int i = 0; i< database[nameInsert]->getColumnLength(); ++i)//for each column in the insert
+		{
+			tempTable[0].push_back(inputs[0][i]); //add it to the table
+		}		
+		ranFirst =1;
+	}
+	
+	//cout<<"Input Size: "<<inputs.size()<<endl; //error checkking
+	for(int i = 0; i<inputs.size(); ++i)
+	{
+		if(ranFirst) //if we ran the first function first and there were was more than one row to insert at a time then we need to account for that. 
+		{
+			++i;
+			ranFirst = 0;
+		}
+		cout<<"Row Length: "<<database[nameInsert]->getRowLength()<<endl;
+		int tempRow = database[nameInsert]->getRowLength() + 1;
+		database[nameInsert]->setRowLength(tempRow);
+		for(int j = 0; j<database[nameInsert]->getColumnLength(); ++j) //how many columns
+		{
+			tempTable[i].push_back(inputs[i][j]);
+		}
+	}
+	database[nameInsert]->getTable() = tempTable; //set the old table equal to the new table
+	
+	return 0;
+
 }
 
 //nameDelete may not be neede depending on the implementation of the Parser.
@@ -231,7 +253,8 @@ void DBsystem::EXIT()
 
 //----------------Database queries---------------//
 
-Table* DBsystem::SELECT(string nameShow, vector<string> attributes) {
+Table* DBsystem::SELECT(string nameShow, vector<string> attributes) 
+{
 	
 	
 }

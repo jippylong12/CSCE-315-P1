@@ -26,6 +26,8 @@ public:
 	Table& operator= (const Table &Source); //overloading
 	int getRowLength() { return rowLength;} 
 	int getColumnLength() { return columnLength;}
+	void setRowLength(int r) { rowLength =r;}
+	void setColumnLenght(int l) { columnLength = l;}
 	vector<string> getPrimnaryKey() { return primaryKeys;} //return key vector
 	void setPrimaryKey(vector<string> setKeys) { primaryKeys = setKeys;} //set any of the values of the primary key
 	string getTableName() { return tableName;}
