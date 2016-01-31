@@ -49,8 +49,8 @@ int main()
     project_Attributes.push_back("test2HEADERCHANGE");
     
     db.RENAME("test", header1, header2);    //Rename attributes to header2 vector
-    db.SHOW("test");
-    
+    db.SHOW("test");			    //Show the updated table
+					    //Grab the tables with project_Attributes header
     vector<Table*> t1 = db.PROJECT("test", project_Attributes);
     for (int i = 0; i < project_Attributes.size(); ++i){
         cout << "PROJECTED HEADER: " << t1[0]->getHeaders()[i] << endl;
