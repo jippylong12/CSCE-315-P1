@@ -51,4 +51,7 @@ Table::Table() //defualt constructor
 	headerTypes.push_back("default"); //set table header types.
 	
 }
+void Table::setHeader(vector<string> newHeader){
+    this->tableHeaders = newHeader;
+}
 Table::~Table(){}

@@ -15,6 +15,8 @@ class Table
  	vector<string> headerTypes;
     
 public:
+    
+    
 	//-------Database command functions-------//
 
 	/*command ::= ( open-cmd | close-cmd | save-cmd | exit-cmd | show-cmd | create-cmd | update-cmd | insert-cmd | delete-cmd );*/
@@ -34,6 +36,8 @@ public:
 	string getTableName() { return tableName;}
 	vector< vector<string> > getTable() {return table;}
 	vector<string> getHeaders() {return tableHeaders;}
+    void setHeader(vector<string> tableHeaders);
+
 	
 };
 

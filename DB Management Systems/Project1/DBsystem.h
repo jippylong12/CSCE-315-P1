@@ -26,7 +26,7 @@ public:
 	void EXIT();
 	//-------Database commands (need definitions)-------//
 	Table* SELECT(string, vector<string>);    //select table with certain criteria
-	Table*  PROJECT(string, string);
+	vector<Table*>  PROJECT(string, vector<string>);
 	Table* RENAME(string, vector<string>, vector<string>);			
 	Table* SET_UNION(string, string);			//Take the union of 2 tables
 	Table* SET_DIFFERENCE(string, string);		//2 table names

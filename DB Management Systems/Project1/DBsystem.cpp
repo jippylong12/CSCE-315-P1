@@ -11,6 +11,7 @@ Ivan Rupert */
 #include <cstring>
 #include <vector>
 #include <sstream>
+#include <iomanip>
 #include <map>
 #include "Parser.h"
 #include "DBsystem.h"
@@ -115,21 +116,23 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 	//print each cell in the table
 	//return 0;
 	//First, print the name of the table
-	cout<<'*'<<nameShow<<'*'<<endl<<endl;
+    cout << " ---------------------------------------- " <<endl;
+    cout<<' '<<setw(21)<<nameShow<<setw(21)<<' '<<endl;
+    cout << " ---------------------------------------- " <<endl;
 	//print headers.
 	for (int i = 0; i< database[nameShow]->getHeaders().size(); ++i)
 	{
-		cout<<"["<<database[nameShow]->getHeaders()[i]<<"] ";
+        cout << setw(5)<<"["<<database[nameShow]->getHeaders()[i]<<"]" << setw(5);
 	}
-	cout<<endl;
+    cout<<endl;
 	//print table
 	for (int i = 0; i<database[nameShow]->getRowLength(); ++i)
 	{
 		for (int j = 0; j<database[nameShow]->getColumnLength(); ++j)
 		{
-			cout<<database[nameShow]->getTable()[i][j]<<"  ";
+			cout << setw(10) << database[nameShow]->getTable()[i][j]<<setw(10) ;
 		}
-		cout<<endl;
+		cout<<endl<<endl;
 	}
 	return 0;
 	
@@ -244,7 +247,7 @@ void DBsystem::EXIT()
 	for(map<string, Table*>::iterator itr = database.begin(); itr != database.end(); itr++){
 		delete itr->second; //deletes all *Table pointers
 	}
-	quick_exit(EXIT_SUCCESS);
+	exit(EXIT_SUCCESS);
  }
 
 //----------------Database queries---------------//
@@ -255,19 +258,36 @@ Table* DBsystem::SELECT(string nameShow, vector<string> attributes)
 	
 }
 
-Table* DBsystem::PROJECT(string t1, string t2)
+vector<Table*> DBsystem::PROJECT(string t1, vector<string> attributes)
 {
-	
+    vector<Table*> t;
+    int tmp;
+    for (int i = 0; i < database[t1]->getColumnLength(); ++i){      //Go through DB
+        if (database[t1]->getHeaders()[i].compare(attributes[i])==0){//See if and DB header fits attribute
+            t.push_back(database[t1]);                              //grab (push back) all applicable tables
+            //cout << database[t1]->getHeaders()[i] << " vs " << attributes[i] << endl;
+        }else { cout << "No projection done" << endl; }
+    }
+    return t;
 	
 }
 
 Table* DBsystem::RENAME(string tName, vector<string> tableAttributes, vector<string> replaceAttributes)
 {
-	for (int i = 0; i < database[tName]->getColumnLength(); ++i){
-		tableAttributes[i] = replaceAttributes[i];      //Assume that attribute names to be replaced are in the same index
-	}
-	database[tName]->getHeaders() = tableAttributes;
-	return database[tName];
+    Table *t;
+    for (int i = 0; i < database[tName]->getColumnLength(); ++i){
+        if(tableAttributes.size()==replaceAttributes.size()){  //Check if we need to add back existing table headers
+            //replaceAttributes.push_back(tableAttributes[i]);
+            tableAttributes[i] = replaceAttributes[i];      //Assume that attribute names to be replaced are in the same index
+        }else{
+            replaceAttributes.push_back(tableAttributes[max(tableAttributes.size()-1, replaceAttributes.size()-1)]);
+        }
+    }
+    database[tName]->setHeader(replaceAttributes);      //Rename the headers.
+    
+
+    
+    return database[tName];
 }
 
 Table* DBsystem::SET_UNION(string t1, string t2)
