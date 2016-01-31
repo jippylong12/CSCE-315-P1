@@ -261,10 +261,13 @@ Table* DBsystem::PROJECT(string t1, string t2)
 	
 }
 
-Table* DBsystem::RENAME(string tableName, string replaceName)
+Table* DBsystem::RENAME(string tName, vector<string> tableAttributes, vector<string> replaceAttributes)
 {
-	
-	
+	for (int i = 0; i < database[tName]->getColumnLength(); ++i){
+		tableAttributes[i] = replaceAttributes[i];      //Assume that attribute names to be replaced are in the same index
+	}
+	database[tName]->getHeaders() = tableAttributes;
+	return database[tName];
 }
 
 Table* DBsystem::SET_UNION(string t1, string t2)
