@@ -11,39 +11,12 @@ Ivan Rupert */
 #include <cstring>
 #include <vector>
 #include <sstream>
+#include <iomanip>
 #include <map>
 #include "Parser.h"
-#include "Table.h"
+#include "DBsystem.h"
 
 using namespace std;
-
-
-
-class DBsystem
-{
-	map<string,Table*> database;
-
-public:
-	DBsystem();
-	
-	//-------Database queries--------//
-	Table* OPEN(string); //bring a table into memory from file 
-	int CLOSE(string);
-	int SAVE(string);
-	int SHOW(string);    	//::== SHOW atomic-expr 
-	Table* CREATE(int,int,string,vector<string>,vector<string>,vector<string>); //::= CREATE TABLE relation-name ( typed-attribute-list ) PRIMARY KEY ( attribute-list )
-	int UPDATE(string, string, string, string);	//::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
-	int INSERT(string, vector<string> );	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
-	int DELETE(string , int );	//::= DELETE FROM relation-name WHERE condition
-	//-------Database commands (need definitions)-------//
-	Table* SELECT(string, vector<string>);    //select table with certain criteria
-	Table*  PROJECT(string, string);
-	Table* RENAME(string, string);			
-	Table* SET_UNION(string, string);			//Take the union of 2 tables
-	Table* SET_DIFFERENCE(string, string);		//2 table names
-	Table* CROSS_PRODUCT(string, string);		//2 table names used to perform cross product
-	void EXIT();
-};
 
 
 DBsystem::DBsystem()
@@ -71,9 +44,6 @@ int DBsystem::CLOSE(string nameClose) //saves and removes table instance from me
 	//remove from memory
 	//return 0;
 	//database["nameClose"]
-	
-	
-	
 	//Just call Save Function.
 	this->SAVE(nameClose);
 	database.erase(nameClose);
@@ -147,26 +117,34 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 	//print each cell in the table
 	//return 0;
 	//First, print the name of the table
-	cout<<nameShow<<endl<<endl;
-	//iterate through the table and print.
+    cout << " ---------------------------------------- " <<endl;
+    cout<<' '<<setw(21)<<nameShow<<setw(21)<<' '<<endl;
+    cout << " ---------------------------------------- " <<endl;
+	//print headers.
+	for (int i = 0; i< database[nameShow]->getHeaders().size(); ++i)
+	{
+        cout << setw(5)<<"["<<database[nameShow]->getHeaders()[i]<<"]" << setw(5);
+	}
+    cout<<endl;
+	//print table
 	for (int i = 0; i<database[nameShow]->getRowLength(); ++i)
 	{
 		for (int j = 0; j<database[nameShow]->getColumnLength(); ++j)
 		{
-			cout<<database[nameShow]->getTable()[i][j]<<"  ";
+			cout << setw(10) << database[nameShow]->getTable()[i][j]<<setw(10) ;
 		}
-		cout<<endl;
+		cout<<endl<<endl;
 	}
 	return 0;
 	
 	
 }
 
-Table* DBsystem::CREATE(int rowCreate, int columnCreate, string nameCreate,vector<string> createHeaders, vector<string> createKeys, vector<string> createTypes) //create a new table in memory
+Table* DBsystem::CREATE(int columnCreate, string nameCreate,vector<string> createHeaders, vector<string> createKeys, vector<string> createTypes) //create a new table in memory
 {
 	//intiliaze new Table
-	Table* newTable = new Table(rowCreate, columnCreate,nameCreate,createHeaders, createKeys, createTypes);
-	database["nameCreate"] = newTable; //add the table to the database
+	Table* newTable = new Table(columnCreate,nameCreate,createHeaders, createKeys, createTypes);
+	database[nameCreate] = newTable; //add the table to the database
 	//return new Table
 	return newTable;
 	
@@ -181,7 +159,6 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 	//replace the criteria with replace
 	
 	//need to iterate through all columns
-	Table tempTable;
 	int row, col;
 	
 	for (int i = 0; i < database[nameUpdate]->getColumnLength(); ++i)
@@ -201,8 +178,6 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 	}
 	
 	database[nameUpdate]->getTable()[row][col] = replace;
-	
-	
     //Else returns 1 for failure.
   
     
@@ -211,20 +186,33 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 }
 
 //Takes in the input of nameInsert and returns an int for error checking.
-int DBsystem::INSERT(string nameInsert, vector<string> inputs)
+int DBsystem::INSERT(string nameInsert, vector<vector<string> > inputs)
 {
-	//Check if the rowInsert and colInsert are within the bounds of the table.
-	cout << "INSERT test 1";
-    // if (rowInsert < database["nameInsert"]->getRowLength() && colInsert < database["nameInsert"]->getColumnLength())
-    // {
-    //     database["nameInsert"]->getTable()[rowInsert][colInsert] = nameInsert;
-    //     return 0;
-    // }
-    // //Else returns 1 for failure.
-    // else
-    // {
-    //     return 1;
-    // }
+	//go to the table request
+	//check that the table is compatable?
+	//add all the items in inputs to the bottom of the able
+	
+	vector<vector<string> > tempTable = database[nameInsert]->getTable();
+	tempTable.push_back(inputs[0]);
+	int tempRow = database[nameInsert]->getRowLength() + 1;
+	database[nameInsert]->setRowLength(tempRow);
+	
+
+	//cout<<"Input Size: "<<inputs.size()<<endl; //error checkking
+	if(inputs.size()> 1)
+	{
+		for(int i = 1; i<inputs.size(); ++i)
+		{
+			tempRow = database[nameInsert]->getRowLength() + 1;
+			database[nameInsert]->setRowLength(tempRow);
+			tempTable.push_back(inputs[i]);
+		}
+	}
+
+	database[nameInsert]->setTable(tempTable); //set the old table equal to the new table
+	
+	return 0;
+
 }
 
 //nameDelete may not be neede depending on the implementation of the Parser.
@@ -251,23 +239,54 @@ int DBsystem::DELETE(string nameDelete, int rowDelete)
     }
 }
 
+//exits program and deletes everything not saved
+void DBsystem::EXIT()
+ {
+ 	
+	for(map<string, Table*>::iterator itr = database.begin(); itr != database.end(); itr++){
+		delete itr->second; //deletes all *Table pointers
+	}
+	exit(EXIT_SUCCESS);
+ }
+
 //----------------Database queries---------------//
 
-Table* DBsystem::SELECT(string nameShow, vector<string> attributes) {
-	
-	
-}
-
-Table* DBsystem::PROJECT(string t1, string t2)
+Table* DBsystem::SELECT(string nameShow, vector<string> attributes) 
 {
 	
 	
 }
 
-Table* DBsystem::RENAME(string tableName, string replaceName)
+vector<Table*> DBsystem::PROJECT(string t1, vector<string> attributes)
 {
+    vector<Table*> t;
+    int tmp;
+    for (int i = 0; i < database[t1]->getColumnLength(); ++i){      //Go through DB
+        if (database[t1]->getHeaders()[i].compare(attributes[i])==0){//See if and DB header fits attribute
+            t.push_back(database[t1]);                              //grab (push back) all applicable tables
+            //cout << database[t1]->getHeaders()[i] << " vs " << attributes[i] << endl;
+        }else { cout << "No projection done" << endl; }
+    }
+    return t;
 	
-	
+}
+
+Table* DBsystem::RENAME(string tName, vector<string> tableAttributes, vector<string> replaceAttributes)
+{
+    Table *t;
+    for (int i = 0; i < database[tName]->getColumnLength(); ++i){
+        if(tableAttributes.size()==replaceAttributes.size()){  //Check if we need to add back existing table headers
+            //replaceAttributes.push_back(tableAttributes[i]);
+            tableAttributes[i] = replaceAttributes[i];      //Assume that attribute names to be replaced are in the same index
+        }else{
+            replaceAttributes.push_back(tableAttributes[max(tableAttributes.size()-1, replaceAttributes.size()-1)]);
+        }
+    }
+    database[tName]->setHeader(replaceAttributes);      //Rename the headers.
+    
+
+    
+    return database[tName];
 }
 
 Table* DBsystem::SET_UNION(string t1, string t2)
@@ -288,46 +307,4 @@ Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
 
 }
 
-//exits program and deletes everything not saved
-void DBsystem::EXIT()
- {
- 	
-	for(map<string, Table*>::iterator itr = database.begin(); itr != database.end(); itr++){
-		delete itr->second; //deletes all *Table pointers
-	}
-	quick_exit(EXIT_SUCCESS);
- }
 
-
-int main()
-{
-	Table* t;		//Testing some stuff
-	
-	
-	DBsystem db;
-	vector<string> header1;
-	header1.push_back("test1");
-	vector<string> keys1;
-	keys1.push_back("test1");
-	vector<string> types1;
-	types1.push_back("VARCHAR");
-	t = db.CREATE(1,1,"test", header1,keys1,types1);
-	//db.CLOSE("test");
-	cout << t->getRowLength() << " " << t->getColumnLength() << endl;
-	//db.INSERT("testtt", 1, 1);
-	db.SHOW("test");
-	//t.show_cmd("test");
-
-	cout << "Starting main..." << endl;
-	cout << "Enter command: " << endl;
-
-
-	string mainInput;
-	while (true)
-	{
-		getline(cin, mainInput);
-		Parser mainParser(mainInput);
-	    mainParser.parse();
-		
-	}
-}
