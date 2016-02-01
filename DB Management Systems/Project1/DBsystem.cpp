@@ -75,8 +75,8 @@ int DBsystem::CLOSE(string nameClose) //saves and removes table instance from me
 	
 	
 	//Just call Save Function.
-	this->SAVE("nameClose");
-	database.erase("nameClose");
+	this->SAVE(nameClose);
+	database.erase(nameClose);
 	return 0;
 	
 	
@@ -87,7 +87,7 @@ int DBsystem::CLOSE(string nameClose) //saves and removes table instance from me
 
 int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 {
-	//create a new txt file with the name of the file
+//create a new txt file with the name of the file
 	//read in the rowLength and columnLenght of table first
 	//read in row by row into file
 	//close file
@@ -109,17 +109,19 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	filename = nameSave + ".db";
 	ofstream saveFile;
 	saveFile.open(filename);
-	Table t = *database["nameSave"];
+	Table t = *database[nameSave];
 	
 	saveFile<<"CREATE TABLE " + nameSave + " (";
 	int temp = 0;
-	for (int i = 0; i< t.getColumnLength() - 1; ++i)
+	for (int i = 0; i< t.getRowLength(); ++i)
 	{
-
-		//saveFile<< t.getTable()[i] << ", ";
-		temp = i;
+		for (int j = 0; j< t.getColumnLength() - 1; ++j )
+		{
+			saveFile<< t.getTable()[i][j] << ", ";
+			temp = i;
+		}
+		saveFile<<t.getTable()[i][temp+1]<<")";
 	}
-	//saveFile<<t.getTable()[temp]<<")";
 	
 	
 	//Missing the Primary Key part.
@@ -139,7 +141,6 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	return 0;
 }
 
-//Don't think that this needs the input of string either.  If it's accessing the current table in memory, I don' think it needs a string argument.
 int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 {
 	//nested for loop
@@ -148,11 +149,11 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 	//First, print the name of the table
 	cout<<nameShow<<endl<<endl;
 	//iterate through the table and print.
-	for (int i = 0; i<database["nameShow"]->getRowLength(); ++i)
+	for (int i = 0; i<database[nameShow]->getRowLength(); ++i)
 	{
-		for (int j = 0; j<database["nameShow"]->getColumnLength(); ++j)
+		for (int j = 0; j<database[nameShow]->getColumnLength(); ++j)
 		{
-			cout<<database["nameShow"]->getTable()[i][j]<<"  ";
+			cout<<database[nameShow]->getTable()[i][j]<<"  ";
 		}
 		cout<<endl;
 	}
@@ -180,18 +181,32 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 	//replace the criteria with replace
 	
 	//need to iterate through all columns
+	Table tempTable;
+	int row, col;
 	
-	 //if (rowInsert < database["nameInsert"]->getRowLength() && colInsert < database["nameInsert"]->getColumnLength())
-  //  {
-  //      database["nameInsert"]->getTable()[rowInsert][colInsert] = nameInsert;
-  //      return 0;
-  //  }
-  //  //Else returns 1 for failure.
-  //  else
-  //  {
+	for (int i = 0; i < database[nameUpdate]->getColumnLength(); ++i)
+	{
+		if (database[nameUpdate]->getTable()[0][i] == headerName)
+		{
+			col = i;
+		}
+	}
+	
+	for (int i = 0; i < database[nameUpdate]->getRowLength(); ++i)
+	{
+		if (database[nameUpdate]->getTable()[i][col] == criteria)
+		{
+			row = i;
+		}
+	}
+	
+	database[nameUpdate]->getTable()[row][col] = replace;
+	
+	
+    //Else returns 1 for failure.
+  
     
-  //      return 1;
-  //  }
+    	return 0;
 	
 }
 
@@ -217,15 +232,15 @@ int DBsystem::INSERT(string nameInsert, vector<string> inputs)
 int DBsystem::DELETE(string nameDelete, int rowDelete)
 {
 	vector<vector <string> >* tempTable = new vector<vector<string> >();
-	*tempTable = database["nameDelete"]->getTable();
+	*tempTable = database[nameDelete]->getTable();
 	//Check for out of bounds error
-    if (rowDelete < database["nameDelete"]->getRowLength())
+    if (rowDelete < database[nameDelete]->getRowLength())
     {
-		for(int i = 0; i<database["nameDelete"]->getRowLength(); ++i)
+		for(int i = 0; i<database[nameDelete]->getRowLength(); ++i)
 		{
 			tempTable[rowDelete].erase(tempTable[rowDelete].begin(),tempTable[rowDelete].end());
 		}
-        database["nameDelete"]->getTable() = *tempTable;
+        database[nameDelete]->getTable() = *tempTable;
 		delete tempTable;
         return 0;
     }
