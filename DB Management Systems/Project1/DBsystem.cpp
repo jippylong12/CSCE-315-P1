@@ -275,10 +275,13 @@ Table* DBsystem::RENAME(string tName, vector<string> tableAttributes, vector<str
 {
     Table *t;
     for (int i = 0; i < database[tName]->getColumnLength(); ++i){
-        if(tableAttributes.size()==replaceAttributes.size()){  //Check if we need to add back existing table headers
+        if(tableAttributes.size()==replaceAttributes.size())
+        {  //Check if we need to add back existing table headers
             //replaceAttributes.push_back(tableAttributes[i]);
             tableAttributes[i] = replaceAttributes[i];      //Assume that attribute names to be replaced are in the same index
-        }else{
+        }
+        else
+        {
             replaceAttributes.push_back(tableAttributes[max(tableAttributes.size()-1, replaceAttributes.size()-1)]);
         }
     }
@@ -291,19 +294,80 @@ Table* DBsystem::RENAME(string tName, vector<string> tableAttributes, vector<str
 
 Table* DBsystem::SET_UNION(string t1, string t2)
 {
+	//check if the headers are the same size and the same values
+	
+	//push_back the table of one 
+	//push back the rows of the other table
+	//possibly check each time to see if there are any duplicates. 
+	//return new table
+	if(database[t1]->getHeaders().size() == database[t2->getHeaders().size()])
+	{
 
+	string newName; // for the new Table name
+	newName = "Union " + t1 + ' ' + t2; //concat the name
+	//intiliaze new Table for holding the union
+	//create a  new table
+	Table* unionTable = new Table(t1.getColumnLength(),newName , t1.getHeaders(), t1.getPrimaryKey());
+	database[newName] = unionTable; //add the table to the database
+	
+	unionTable->setTable(t1.getTable());// change the header
+	unionTable->setRowLength(t1.getRowLength());//change the row Length
+	
+	
+	vector<vector <string> > = copyTable;
+	copyTable = unionTable->getTable();
+	int count = unionTable->getRowLength();
+	//add all the elements from B 
+	for(int i = 0; i < t2->getRowLength(); ++i)
+	{
+		copyTable.push_back(t2->getTable()[i]);
+		count+=1;
+	}
+	
+	unionTable->setTable(copyTable);
+	unionTable->setRowLength(count);
+	
+	}	
 
+	//return the union
+	return unionTable;
 }
 
-Table* DBsystem::SET_DIFFERENCE(string t1, string t2)
+
+
+Table* DBsystem::SET_DIFFERENCE(string tableName1, string tableName2)
 {
-	
+	//check if the headers are the same size and the same values
+	if(database[tableName1]->getHeaders().size() == database[tableName2->getHeaders().size()])
+	{
+		string newName = "Difference " + tableName1	 + ' ' + t2;
+		Table* differenceTable = new Table(tableName1.getColumnLength(),newName , tableName1.getHeaders(), tableName1.getPrimaryKey());
+		*differenceTable = tableName1; //set them equal
+		for(int i = 0; i< tableName2->getRowLength(); ++i)
+		{
+			for(int j = 0; j < differenceTable->getRowLength(); ++j)
+			{
+				for(int k = 0; k <differenceTable->getColumnLength(); ++k)
+				{
+					if(tableName2->getTable()[i][k] != differenceTable->getTable()[j][k])
+				}
+				
+			}
+		}
+	}
+	//create a  new table
+	//add all of the first table
+	//for each row of the second table
+	//iterate through the rows of A 
+	//if one of the rows match then don't include it
+	//if not then append it. 
+
 	
 }
 
 Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
 {
-
+	
 
 }
 
