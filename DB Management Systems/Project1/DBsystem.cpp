@@ -57,7 +57,7 @@ int DBsystem::CLOSE(string nameClose) //saves and removes table instance from me
 
 int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 {
-	//create a new txt file with the name of the file
+//create a new txt file with the name of the file
 	//read in the rowLength and columnLenght of table first
 	//read in row by row into file
 	//close file
@@ -83,13 +83,15 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	
 	saveFile<<"CREATE TABLE " + nameSave + " (";
 	int temp = 0;
-	for (int i = 0; i< t.getColumnLength() - 1; ++i)
+	for (int i = 0; i< t.getRowLength(); ++i)
 	{
-
-		//saveFile<< t.getTable()[i] << ", ";
-		temp = i;
+		for (int j = 0; j< t.getColumnLength() - 1; ++j )
+		{
+			saveFile<< t.getTable()[i][j] << ", ";
+			temp = i;
+		}
+		saveFile<<t.getTable()[i][temp+1]<<")";
 	}
-	//saveFile<<t.getTable()[temp]<<")";
 	
 	
 	//Missing the Primary Key part.
@@ -109,7 +111,6 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	return 0;
 }
 
-//Don't think that this needs the input of string either.  If it's accessing the current table in memory, I don' think it needs a string argument.
 int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 {
 	//nested for loop
@@ -177,8 +178,6 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 	}
 	
 	database[nameUpdate]->getTable()[row][col] = replace;
-	
-	
     //Else returns 1 for failure.
   
     
