@@ -186,11 +186,27 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 }
 
 //Takes in the input of nameInsert and returns an int for error checking.
-int DBsystem::INSERT(string nameInsert, vector<vector<string> > inputs)
+int DBsystem::INSERT(string nameInsert, vector<string> input)
 {
-	//go to the table request
-	//check that the table is compatable?
-	//add all the items in inputs to the bottom of the able
+	if (input.size() != database[nameInsert]->getHeaders().size())
+	{
+		cout << "Did not insert the correct amount of information." << endl;
+		return -1;
+	}
+
+	vector<vector<string>> tempTable = database[nameInsert]->getTable();
+
+	tempTable.push_back(input);
+
+	cout << tempTable.size() << endl;
+
+	database[nameInsert]->setTable(tempTable);
+
+	int tempRow = database[nameInsert]->getRowLength() + 1;
+	database[nameInsert]->setRowLength(tempRow);
+
+
+	/*
 	
 	vector<vector<string> > tempTable = database[nameInsert]->getTable();
 	tempTable.push_back(inputs[0]);
@@ -211,7 +227,7 @@ int DBsystem::INSERT(string nameInsert, vector<vector<string> > inputs)
 
 	database[nameInsert]->setTable(tempTable); //set the old table equal to the new table
 	
-	return 0;
+	return 0;*/
 
 }
 

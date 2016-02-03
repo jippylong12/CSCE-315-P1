@@ -15,6 +15,43 @@ using namespace std;
 int main()
 {	
 	DBsystem db;
+
+	vector<string> header;
+	header.push_back("name");
+	header.push_back("kind");
+	header.push_back("years");
+
+	vector<string> types;
+	types.push_back("VARCHAR(20)");
+	types.push_back("VARCHAR(8)");
+	types.push_back("INTEGER");
+
+	vector<string> keys;
+	keys.push_back("name");
+	keys.push_back("kind");
+
+
+
+
+	db.CREATE(header.size(),"animals", header, keys, types);
+
+	vector<string> input;
+	input.push_back("Max");
+	input.push_back("dog");
+	input.push_back("10");
+	db.INSERT("animals", input);
+
+	input.clear();
+	input.push_back("Snowball");
+	input.push_back("cat");
+	input.push_back("3");
+	db.INSERT("animals", input);
+
+
+	db.SHOW("animals");
+	
+	
+	/*DBsystem db;
     
 	vector<string> header1;
 	header1.push_back("test1");
@@ -55,6 +92,6 @@ int main()
     for (int i = 0; i < project_Attributes.size(); ++i){
         cout << "PROJECTED HEADER: " << t1[0]->getHeaders()[i] << endl;
     }
-
+	*/
 
 }

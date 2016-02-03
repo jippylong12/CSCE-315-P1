@@ -21,7 +21,7 @@ public:
 	int SHOW(string);    	//::== SHOW atomic-expr 
 	Table* CREATE(int,string,vector<string>,vector<string>,vector<string>); //::= CREATE TABLE relation-name ( typed-attribute-list ) PRIMARY KEY ( attribute-list )
 	int UPDATE(string, string, string, string);	//::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
-	int INSERT(string, vector<vector<string> > );	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
+	int INSERT(string, vector<string> );	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
 	int DELETE(string , int );	//::= DELETE FROM relation-name WHERE condition
 	void EXIT();
 	//-------Database commands (need definitions)-------//
