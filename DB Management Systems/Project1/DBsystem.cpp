@@ -160,15 +160,15 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 	
 	//need to iterate through all columns
 	int row, col;
-	
+	vector<vector<string>> tempTable = database[nameUpdate]->getTable();
+
 	for (int i = 0; i < database[nameUpdate]->getColumnLength(); ++i)
 	{
-		if (database[nameUpdate]->getTable()[0][i] == headerName)
+		if (database[nameUpdate]->getHeaders()[i] == headerName)
 		{
 			col = i;
 		}
 	}
-	
 	for (int i = 0; i < database[nameUpdate]->getRowLength(); ++i)
 	{
 		if (database[nameUpdate]->getTable()[i][col] == criteria)
@@ -177,9 +177,10 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 		}
 	}
 	
-	database[nameUpdate]->getTable()[row][col] = replace;
-    //Else returns 1 for failure.
-  
+	tempTable[row][col] = replace;
+	database[nameUpdate]->setTable(tempTable);
+
+	
     
     	return 0;
 	
@@ -197,8 +198,6 @@ int DBsystem::INSERT(string nameInsert, vector<string> input)
 	vector<vector<string>> tempTable = database[nameInsert]->getTable();
 
 	tempTable.push_back(input);
-
-	cout << tempTable.size() << endl;
 
 	database[nameInsert]->setTable(tempTable);
 

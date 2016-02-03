@@ -30,9 +30,6 @@ int main()
 	keys.push_back("name");
 	keys.push_back("kind");
 
-
-
-
 	db.CREATE(header.size(),"animals", header, keys, types);
 
 	vector<string> input;
@@ -47,6 +44,9 @@ int main()
 	input.push_back("3");
 	db.INSERT("animals", input);
 
+	db.SHOW("animals");
+
+	db.UPDATE("animals","kind", "cat", "dog");
 
 	db.SHOW("animals");
 	
