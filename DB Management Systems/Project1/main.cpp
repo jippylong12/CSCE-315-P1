@@ -32,22 +32,34 @@ int main()
 
 	db.CREATE(header.size(),"animals", header, keys, types);
 
+	
+
 	vector<string> input;
 	input.push_back("Max");
 	input.push_back("dog");
 	input.push_back("10");
 	db.INSERT("animals", input);
 
+	cout << "CREATE table animals with 1 item inserted:" << endl;
+	db.SHOW("animals");
+
 	input.clear();
 	input.push_back("Snowball");
-	input.push_back("cat");
+	input.push_back("dog");
 	input.push_back("3");
 	db.INSERT("animals", input);
 
+	cout << "INSERT 1 more item:" << endl;
 	db.SHOW("animals");
 
-	db.UPDATE("animals","kind", "cat", "dog");
+	db.UPDATE("animals","kind", "dog", "cat");
 
+	cout << "UPDATE item 2:" << endl;
+	db.SHOW("animals");
+
+	db.UPDATE("animals", "name", "Max", "Spot");
+
+	cout << "UPDATE item 1:" << endl;
 	db.SHOW("animals");
 	
 	

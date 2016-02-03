@@ -133,8 +133,9 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 		{
 			cout << setw(10) << database[nameShow]->getTable()[i][j]<<setw(10) ;
 		}
-		cout<<endl<<endl;
+		cout<<endl;
 	}
+	cout << endl;
 	return 0;
 	
 	
@@ -204,29 +205,6 @@ int DBsystem::INSERT(string nameInsert, vector<string> input)
 	int tempRow = database[nameInsert]->getRowLength() + 1;
 	database[nameInsert]->setRowLength(tempRow);
 
-
-	/*
-	
-	vector<vector<string> > tempTable = database[nameInsert]->getTable();
-	tempTable.push_back(inputs[0]);
-	int tempRow = database[nameInsert]->getRowLength() + 1;
-	database[nameInsert]->setRowLength(tempRow);
-	
-
-	//cout<<"Input Size: "<<inputs.size()<<endl; //error checkking
-	if(inputs.size()> 1)
-	{
-		for(int i = 1; i<inputs.size(); ++i)
-		{
-			tempRow = database[nameInsert]->getRowLength() + 1;
-			database[nameInsert]->setRowLength(tempRow);
-			tempTable.push_back(inputs[i]);
-		}
-	}
-
-	database[nameInsert]->setTable(tempTable); //set the old table equal to the new table
-	
-	return 0;*/
 
 }
 
