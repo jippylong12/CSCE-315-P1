@@ -331,7 +331,7 @@ Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
     
     
     
-    //Get the attributes for both rows, concatenate them to be the new headers
+    //Get the attributes for both rows, concatenate them to be the new headers//
     for (int i = 0; i < database[t1]->getHeaders().size() + database[t2]->getHeaders().size(); ++i){
         newHeaders.push_back(database[t1]->getHeaders()[i] + " + " + database[t2]->getHeaders()[i] );
     }
