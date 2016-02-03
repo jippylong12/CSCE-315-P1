@@ -32,6 +32,7 @@ public:
 	void setColumnLenght(int l) { columnLength = l;}
 	void setTable(vector< vector<string> > setTble) { table = setTble;}
 	vector<string> getPrimnaryKey() { return primaryKeys;} //return key vector
+        void setRows(vector<string> rows){ for (int i = 0; i < columnLength; ++i) { this->table[i] = rows;  }
 	void setPrimaryKey(vector<string> setKeys) { primaryKeys = setKeys;} //set any of the values of the primary key
 	string getTableName() { return tableName;}
 	vector< vector<string> > getTable() {return table;}
