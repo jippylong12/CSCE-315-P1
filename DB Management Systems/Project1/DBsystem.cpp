@@ -305,7 +305,7 @@ Table* DBsystem::RENAME(string tName, vector<string> tableAttributes, vector<str
     return database[tName];
 }
 
-Table* DBsystem::SET_UNION(string t1, vector<string> t2)
+Table* DBsystem::SET_UNION(string t1, string t2)
 {
 	//check if the headers are the same size and the same values
 	
@@ -313,106 +313,151 @@ Table* DBsystem::SET_UNION(string t1, vector<string> t2)
 	//push back the rows of the other table
 	//possibly check each time to see if there are any duplicates. 
 	//return new table
-	if(database[t1]->getHeaders().size() == database[t2->getHeaders().size()])
+	if(database[t1]->getHeaders().size() == database[t2]->getHeaders().size())
 	{
 
 	string newName; // for the new Table name
 	newName = "Union " + t1 + ' ' + t2; //concat the name
 	//intiliaze new Table for holding the union
 	//create a  new table
-	Table* unionTable = new Table(t1.getColumnLength(),newName , t1.getHeaders(), t1.getPrimaryKey());
+	Table* unionTable = new Table(database[t1]->getColumnLength(),newName, database[t1]->getHeaders(), database[t1]->getPrimaryKeys(),database[t1]->getHeaderTypes());
 	database[newName] = unionTable; //add the table to the database
 	
-	unionTable->setTable(t1.getTable());// change the header
-	unionTable->setRowLength(t1.getRowLength());//change the row Length
+	unionTable->setTable(database[t1]->getTable());// change the header
+	unionTable->setRowLength(database[t1]->getRowLength());//change the row Length
 	
 	
-	vector<vector <string> > = copyTable;
+	vector< vector <string> > copyTable;
 	copyTable = unionTable->getTable();
 	int count = unionTable->getRowLength();
 	//add all the elements from B 
-	for(int i = 0; i < t2->getRowLength(); ++i)
+	for(int i = 0; i < database[t2]->getRowLength(); ++i)
 	{
-		copyTable.push_back(t2->getTable()[i]);
+		copyTable.push_back(database[t2]->getTable()[i]);
 		count+=1;
 	}
 	
 	unionTable->setTable(copyTable);
 	unionTable->setRowLength(count);
 	
+	return unionTable;
 	}	
+	else
+	{
+		cout<<"The headers aren't the same size.\n";
+		return 0;
+	}
     //Returns a Table of the Union
 	//return the union
-	return unionTable;
+	
 }
 
 
 
 Table* DBsystem::SET_DIFFERENCE(string tableName1, string tableName2)
 {
+	Table* differenceTable = new Table; //to return
+	vector< vector<string> > tempT1; // for doing the difference
+	vector< vector<string> > tempT2;
+	
+	//make a copy of each table
+	tempT1 = database[tableName1]->getTable(); 
+	tempT2 = database[tableName2]->getTable();
+	
+	int rowCount = 0;
 	//check if the headers are the same size and the same values
-	if(database[tableName1]->getHeaders().size() == database[tableName2->getHeaders().size()])
+	if(database[tableName1]->getHeaders().size() == database[tableName2]->getHeaders().size())
 	{
-		string newName = "Difference " + tableName1	 + ' ' + t2;
-		Table* differenceTable = new Table(tableName1.getColumnLength(),newName , tableName1.getHeaders(), tableName1.getPrimaryKey());
-		*differenceTable = tableName1; //set them equal
-		for(int i = 0; i< tableName2->getRowLength(); ++i)
+		string newName = "Difference " + tableName1	 + ' ' + tableName2;
+		*differenceTable = *database[tableName1]; //set them equal not sure why this works. 
+		for(int i = 0; i< database[tableName2]->getRowLength(); ++i) // keep the second table equal 
 		{
-			for(int j = 0; j < differenceTable->getRowLength(); ++j)
+			for(int j = 0; j < differenceTable->getRowLength(); ++j) //for each row in the first table
 			{
-				for(int k = 0; k <differenceTable->getColumnLength(); ++k)
+				for(int k = 0; k <differenceTable->getColumnLength(); ++k) // for each column in the first table
 				{
-					if(tableName2->getTable()[i][k] != differenceTable->getTable()[j][k])
+					if(tempT2[i][k] != tempT1[j][k]) //if there is a mismatch
+					{
+						//erase from table1
+						tempT1.erase(tempT1.begin() + j); //j will be the row
+						//rease from table2
+						tempT2.erase(tempT2.begin() + i); // i will be the row it's found
+						//need adjust for loops to accomodate for the removed rows. 
+						j = 0; //need to search over again
+					}
 				}
 				
 			}
 		}
 	}
-	//create a  new table
-	//add all of the first table
-	//for each row of the second table
-	//iterate through the rows of A 
-	//if one of the rows match then don't include it
-	//if not then append it. 
-
 	
+	//combine the tables into one
+	for(int i = 0; i< tempT2.size(); ++i)
+	{
+		tempT1.push_back(tempT2[i]);
+	}
+	rowCount = tempT1.size();
+	
+	//assign table
+	differenceTable->setTable(tempT1);
+	differenceTable->setRowLength(rowCount);
+	return differenceTable;
 }
 
 Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
 {
     //The cross product of two tables A x B builds a huge virtual table by pairing every row of A with every row of B.
     
-    Table* tempTable;                                   //Table to be produced
+    Table* returnTable;                                   //Table to be produced
     vector<string> newHeaders;
     int t1_rowLength = database[t1]->getRowLength();
     int t1_columnLength = database[t1]->getColumnLength();
+    int rowCounter = 0;
     vector<string> t1Rows;
     int t2_rowLength = database[t2]->getRowLength();
     int t2_columnLength = database[t2]->getColumnLength();
+    vector< vector<string> > tempTable; //for setting later. 
     vector<string> t2Rows;
     vector<string> joinedRows;                          //Store a vector for t1 x t2
     
     
     
     //Get the attributes for both rows, concatenate them to be the new headers//
-    for (int i = 0; i < database[t1]->getHeaders().size() + database[t2]->getHeaders().size(); ++i){
+    for (int i = 0; i < database[t1]->getHeaders().size() + database[t2]->getHeaders().size(); ++i)
+    {
         newHeaders.push_back(database[t1]->getHeaders()[i] + " + " + database[t2]->getHeaders()[i] );
     }
-    tempTable->setHeader(newHeaders);                   //Set the new Table headers
+    
+    //set memeber items for the new table
+    
+    string newName = "Cross Product " + t1	 + ' ' + t2;
+    
+    returnTable->setTableName(newName); // change name
+    returnTable->setColumnLength( database[t1]->getColumnLength());  //columnLength
+    returnTable->setHeader(newHeaders);                   //Set the new Table headers
+    returnTable->setPrimaryKeys(database[t1]->getPrimaryKeys()); //primary keys
+    returnTable->setHeaderTypes(database[t1]->getHeaderTypes()); //header types
    
-    for (int i = 0; i < t1_columnLength; ++i){          //
+    for (int i = 0; i < t1_columnLength; ++i)
+    {          //
         t1Rows = database[t1]->getTable()[i];           //Grab rows from Table 1
-        for (int j = 0; j < t2_columnLength; ++j){
+        for (int j = 0; j < t2_columnLength; ++j)
+        {
             t2Rows = database[t2]->getTable()[j];       //Grab rows from Table 2
             joinedRows = t1Rows;                        //Store 1..i rows from t1 (table 2 column times)
-            for (int k = 0; k < t2Rows.size(); ++k){
+            for (int k = 0; k < t2Rows.size(); ++k)
+            {
                 joinedRows.push_back(t2Rows[k]);        //Push all rows from t2 after the 1..ith row of t1
             }
+            tempTable.push_back(joinedRows); // push back the row into the tempTable
+            rowCounter+=1;
         }
     }
     
-    tempTable->setRows(joinedRows);                     //Rows of the new table
-    return tempTable;
+    returnTable->setTable(tempTable);                     //add the new table
+    returnTable->setRowLength(rowCounter); // change the rows. 
+    
+    return returnTable;
 
 }
 

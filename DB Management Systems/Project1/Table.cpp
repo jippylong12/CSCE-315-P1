@@ -41,11 +41,9 @@ Table::Table(int columns,string name, vector<string> headers, vector<string> key
 
 Table::Table() //defualt constructor
 {
-	rowLength = 1;
+	rowLength = 0;
 	columnLength = 1;
 	tableName = "default";
-	table.resize(1,vector<string>(1)); //default size is 1x1 that can be changed. 
-	table[0][0] = tableName;
 	tableHeaders.push_back("default"); //set default tableHeaders.
 	primaryKeys.push_back("default"); //set primary keys
 	headerTypes.push_back("default"); //set table header types.
