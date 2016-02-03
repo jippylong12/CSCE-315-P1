@@ -53,3 +53,54 @@ void Table::setHeader(vector<string> newHeader){
     this->tableHeaders = newHeader;
 }
 Table::~Table(){}
+
+    bool EQUALS(string field1,string field2)
+    {
+    	if (field1 == field2)
+    	{
+    		return 1;
+    	}
+    	else return 0;
+    	
+    }
+    bool NOT_EQUALS(string field1,string field2)
+    {
+    	 if (field1 != field2)
+    	{
+    		return 1;
+    	}
+    	else return 0;
+    }
+    bool LESS_THAN(string field1,string field2)
+    {
+    	if (field1 < field2)
+    	{
+    		return 1;
+    	}
+    	else return 0;
+    }
+    bool GREATER_THAN(string field1,string field2) //field1 greateer than field 2
+    {
+    	if (field1 > field2)
+    	{
+    		return 1;
+    	}
+    	else return 0;
+    }
+    bool LESS_THEN_EQUALS(string field1,string field2)
+    {
+      	if (field1 <= field2)
+    	{
+    		return 1;
+    	}
+    	else return 0;
+    }
+    bool GREATER_THAN_EQUALS(string field1,string field2)
+    {
+        if (field1 >= field2)
+    	{
+    		return 1;
+    	}
+    	else return 0;	
+    }
+    

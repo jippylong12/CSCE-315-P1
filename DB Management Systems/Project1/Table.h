@@ -26,21 +26,29 @@ public:
 	~Table();
 	Table(const Table &Source); //copy constructor
 	Table& operator= (const Table &Source); //overloading
-	void setTableName(string tName) { tableName = tName;}
+	
 	int getRowLength() { return rowLength;} 
+	void setRowLength(int r) { rowLength = r;}
 	int getColumnLength() { return columnLength;}
-	void setRowLength(int r) { rowLength =r;}
 	void setColumnLength(int l) { columnLength = l;}
 	void setTable(vector< vector<string> > setTble) { table = setTble;}
-	vector<string> getPrimnaryKey() { return primaryKeys;} //return key vector
+	vector< vector<string> > getTable() {return table;}
     //void setRows(vector<string> rows){ for (int i = 0; i < columnLength; ++i) { this->table[i] = rows;  }
+	vector<string> getPrimnaryKey() { return primaryKeys;} //return key vector
 	void setPrimaryKey(vector<string> setKeys) { primaryKeys = setKeys;} //set any of the values of the primary key
 	string getTableName() { return tableName;}
-	vector< vector<string> > getTable() {return table;}
+	void setTableName(string tName) { tableName = tName;}
 	vector<string> getHeaders() {return tableHeaders;}
     void setHeader(vector<string> tableHeaders);
     vector<string> getHeaderTypes() {return headerTypes;}
     void setHeaderTypes(vector<string> tempHeaderType) { headerTypes = tempHeaderType;}
+    
+    bool EQUALS(string,string);
+    bool NOT_EQUALS(string,string);
+    bool LESS_THAN(string,string);
+    bool GREATER_THAN(string,string);
+    bool LESS_THEN_EQUALS(string,string);
+    bool GREATER_THAN_EQUALS(string,string);
 
 	
 };
