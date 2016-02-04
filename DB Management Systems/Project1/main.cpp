@@ -86,10 +86,7 @@ int main()
 	input.push_back("5000");
 	db.INSERT("animals", input);
 
-	db.SHOW("animals");
-	cout<<"Removing 10\n\n";
-	db.DELETE("animals", "name", "Max");
-	db.SHOW("animals");
+	
 	
 	cout<<"Testing SELECT\n";
 
@@ -119,6 +116,11 @@ int main()
       db.PROJECT("dogs", attr);
       db.SHOW("dogs");
     
+	db.SHOW("dogs");
+	cout<<"Removing Max\n\n";
+	db.DELETE("dogs", "NEWname", "Max");
+	db.SHOW("dogs");
+	db.SHOW("animals");
     //db.SET_UNION("dogs", "animals");
     db.CROSS_PRODUCT("animals", "dogs");
     db.SHOW("animals");

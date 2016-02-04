@@ -231,7 +231,7 @@ int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo)
 	
 	for(int i = 0; i<database[nameDelete]->getColumnLength();++i)
 	{
-		if(database[nameDelete]->getHeaders()[i].compare(compareHeader) ) // if we find the matching header
+		if(database[nameDelete]->getHeaders()[i].compare(compareHeader) == 0 ) // if we find the matching header
 		{
 			columnToCheck = i; //keep track of column
 			break; // end for loop
@@ -242,18 +242,20 @@ int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo)
 	        return 1;
 	    }
 	}
-	
+	cout<<"rowLength before loop: "<<database[nameDelete]->getRowLength()<<endl;
 	for(int i = 0; i<database[nameDelete]->getRowLength(); ++i)
 	{
 		tableComparer = tempTable[i][columnToCheck];
-		if(tableComparer.compare(compareTo))
+		if(tableComparer.compare(compareTo) == 0)
 		{
 			tempTable.erase(tempTable.begin() + i); //delete the row
 			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+			--i;
 		}
 	}
 	
-	
+	cout<<"rowLength after loop: "<<database[nameDelete]->getRowLength()<<endl;
     database[nameDelete]->setTable(tempTable);
     return 0;
 
@@ -371,7 +373,8 @@ vector<Table*> DBsystem::PROJECT(string t1, vector<string> attributes)
     vector<int> pos;
     vector< vector <string> > tempT = database[t1]->getTable();
     vector< vector <string> > retT(30, vector<string>(30, "")); //Had to initialize this
- 
+	cout<<"Table col Length: "<<tempTable->getColumnLength();
+	cout<<"Table row Length: "<<tempTable->getRowLength();
     
     cout << t1 << " PROJECTION OF: "  << endl;
     for (int i = 0; i < database[t1]->getColumnLength(); ++i){          //Go through DB
@@ -390,6 +393,7 @@ vector<Table*> DBsystem::PROJECT(string t1, vector<string> attributes)
     }
     tempTable->setHeader(attr);
     tempTable->setTable(retT);
+	tempTable->setColumnLength(database[t1]->getHeaders().size());
     
     return t;
 	
@@ -518,7 +522,7 @@ Table* DBsystem::SET_DIFFERENCE(string tableName1, string tableName2)
 Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
 {
     //The cross product of two tables A x B builds a huge virtual table by pairing every row of A with every row of B.
-    
+
     Table* returnTable = database[t1];                   //Table to be produced
             
     vector<string> newHeaders;
@@ -553,21 +557,25 @@ Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
     returnTable->setPrimaryKeys(database[t1]->getPrimaryKeys()); //primary keys
     returnTable->setHeaderTypes(database[t1]->getHeaderTypes()); //header types
     
-    for (int i = 0; i < t1_columnLength; ++i)
+	
+	
+    for (int i = 0; i < t1_rowLength; ++i)
     {          //
         t1Rows = database[t1]->getTable()[i];           //Grab rows from Table 1
-        for (int j = 0; j < t2_columnLength; ++j)
+        for (int j = 0; j < t2_rowLength; ++j)
         {
             t2Rows = database[t2]->getTable()[j];       //Grab rows from Table 2
             joinedRows = t1Rows;                        //Store 1..i rows from t1 (table 2 column times)
             for (int k = 0; k < t2Rows.size(); ++k)
             {
                 joinedRows.push_back(t2Rows[k]);        //Push all rows from t2 after the 1..ith row of t1
-            }
+				
+			}
             tempTable.push_back(joinedRows); // push back the row into the tempTable
             rowCounter+=1;
         }
     }
+	//cout<<"rowCounter: "<<rowCounter<<endl;
     //rowCounter = 12;
     
     returnTable->setTable(tempTable);                     //add the new table
