@@ -101,6 +101,16 @@ int main()
 	db.addTable(newTable);
 
 	db.SHOW("dogs");
+	
+	//----RENAME test----//
+    	input.clear();
+    	cout << "RENAME attributes of \"dogs\": \n";
+    	input.push_back("NEWname");
+    	input.push_back("NEWkind");
+    	input.push_back("NEWage");
+    	db.RENAME("dogs", header, input);
+    	db.SHOW("dogs");
+    //------------------//
 
 	
 	
