@@ -25,12 +25,14 @@ public:
 	int DELETE(string , int );	//::= DELETE FROM relation-name WHERE condition
 	void EXIT();
 	//-------Database commands (need definitions)-------//
-	Table* SELECT(string, string, string, string);    //select table with certain criteria
+	Table* SELECT(string,string, string, string, string);    //select table with certain criteria
 	vector<Table*>  PROJECT(string, vector<string>);
 	Table* RENAME(string, vector<string>, vector<string>);			
 	Table* SET_UNION(string, string);			//Take the union of 2 tables
 	Table* SET_DIFFERENCE(string, string);		//2 table names
 	Table* CROSS_PRODUCT(string, string);		//2 table names used to perform cross product
-	map<string,Table*> getDB() {return database;}
+	map<string, Table*> getDB() { return database; }
+	void addTable(Table* newTable) { database[newTable->getTableName()] = newTable; }
+	
 	
 };
