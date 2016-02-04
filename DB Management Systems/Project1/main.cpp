@@ -63,9 +63,6 @@ int main()
 	db.SHOW("animals");
 
 	db.UPDATE("animals", "name", "Max", "Spot");
-
-	cout << "UPDATE item 1:" << endl;
-	db.SHOW("animals");
 	
 	cout << "Update item 3:\n";
 	db.UPDATE("animals", "years", "10", "12");
@@ -76,7 +73,7 @@ int main()
 	db.SAVE("animals");
 	
 
-	
+	cout << "INSERT 2 more items:" << endl;
 	input.clear();
 	input.push_back("Max");
 	input.push_back("dog");
@@ -91,6 +88,8 @@ int main()
 
 	db.SHOW("animals");
 
+
+	
 
 	cout << "SELETE only dogs: \n";
 	Table* newTable = db.SELECT("dogs","animals", "kind", "=", "dog");
