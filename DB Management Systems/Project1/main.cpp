@@ -71,14 +71,11 @@ int main()
 	db.UPDATE("animals", "years", "10", "12");
 	db.SHOW("animals");
 	
-	cout<<"Testing SAVE \n\n";
+	cout<<"Save database: \n\n";
 	
 	db.SAVE("animals");
 	
-	cout<<"Testing DELETE \n\n";
-	cout<<"Removing cat\n\n";
-	db.DELETE("animals","kind","cat");
-	db.SHOW("animals");
+
 	
 	input.clear();
 	input.push_back("Max");
@@ -86,14 +83,24 @@ int main()
 	input.push_back("10");
 	db.INSERT("animals", input);
 	
+	input.clear();
+	input.push_back("Spot");
+	input.push_back("dog");
+	input.push_back("5");
+	db.INSERT("animals", input);
+
 	db.SHOW("animals");
 	cout<<"Removing 10\n\n";
 	db.DELETE("animals", "name", "Max");
 	db.SHOW("animals");
 	
 	cout<<"Testing SELECT\n";
-	db.SELECT("animals","age","=","10");
-	db.SHOW("animals");
+	cout << "SELECT only dogs: \n";
+	Table* newTable = db.SELECT("dogs","animals", "kind", "=", "dog");
+	db.addTable(newTable);
+
+	db.SHOW("dogs");
+
 	
 	
 	cout<<"Testing EXIT\n\n";

@@ -272,15 +272,14 @@ void DBsystem::EXIT()
 
 //----------------Database queries---------------//
 
-Table* DBsystem::SELECT(string nameShow, string header ,string comparator, string condition) 
+Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,string comparator, string condition) 
 {
 	//Select multiple columns and join them together by a certain condition
-	Table* tempTable;
-	tempTable = database[nameShow];
+	string newName;
+	Table* tempTable = new Table();
 	vector< vector<string> > origT = database[nameShow]->getTable();
 	vector< vector<string> > returnT;
-	string newName;
-	int rowCount = 0;
+	int newRow = 0;
 	int col = 0;
 	vector<string> tempHeaders = database[nameShow]->getHeaders();
 	
@@ -293,16 +292,14 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 			break;
 		}
 	}
-	
 	if (comparator.compare("=") == 0)
 	{
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i)
 		{
 			if (origT[i][col].compare(condition) == 0)
 			{
-				returnT.push_back(origT[i]);
-				rowCount+=1;
-			}
+				returnT.push_back(origT[i]);			
+				newRow++;
 		}
 	}
 	else if (comparator.compare(">") == 0)
@@ -311,7 +308,7 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 			if (origT[i][col].compare(condition) > 0)
 			{
 				returnT.push_back(origT[i]);
-				rowCount+=1;
+				newRow++;
 			}
 		}
 	}
@@ -320,8 +317,7 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
 			if (origT[i][col].compare(condition) < 0)
 			{
-				returnT.push_back(origT[i]);
-				rowCount+=1;
+				newRow++;
 			}
 		}
 		
@@ -332,7 +328,7 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 			if (origT[i][col].compare(condition) < 0 || origT[i][col].compare(condition) == 0)
 			{
 				returnT.push_back(origT[i]);
-				rowCount+=1;
+				newRow++;
 			}
 		}
 	}
@@ -342,7 +338,7 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 			if (origT[i][col].compare(condition) == 0 || origT[i][col].compare(condition) > 0)
 			{
 				returnT.push_back(origT[i]);
-				rowCount+=1;
+				newRow++;
 			}
 		}
 	}
@@ -351,18 +347,19 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 			if (origT[i][col].compare(condition) != 0)
 			{
 				returnT.push_back(origT[i]);
-				rowCount+=1;
+	
+				newRow++;
 			}
 		}
 	}
-	
+
 	newName = "SELECT " + comparator + " FROM " + nameShow;
-	
-	tempTable->setTable(returnT);
-	tempTable->setRowLength(rowCount);
-	tempTable->setColumnLength(1);
-	database[newName] = tempTable;
-	
+	tempTable->setTableName(newTableName);
+	tempTable->setHeader(database[nameShow]->getHeaders());
+	tempTable->setColumnLength(tempTable->getHeaders().size());
+	tempTable->setRowLength(newRow);
+	tempTable->setTable(returnT)
+
 	return tempTable;
 }
 
@@ -569,7 +566,6 @@ Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
     return returnTable;
 
 }
-
 
 
 
