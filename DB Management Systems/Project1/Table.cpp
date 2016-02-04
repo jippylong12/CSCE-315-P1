@@ -54,9 +54,10 @@ void Table::setHeader(vector<string> newHeader){
 }
 Table::~Table(){}
 
+//************Comparators***************//
     bool EQUALS(string field1,string field2)
     {
-    	if (field1 == field2)
+    	if (field1.compare(field2) == 0)
     	{
     		return 1;
     	}
@@ -65,7 +66,7 @@ Table::~Table(){}
     }
     bool NOT_EQUALS(string field1,string field2)
     {
-    	 if (field1 != field2)
+    	 if (field1.compare(field2) != 0)
     	{
     		return 1;
     	}
@@ -73,7 +74,7 @@ Table::~Table(){}
     }
     bool LESS_THAN(string field1,string field2)
     {
-    	if (field1 < field2)
+    	if (field1.compare(field2) < 0)
     	{
     		return 1;
     	}
@@ -81,7 +82,7 @@ Table::~Table(){}
     }
     bool GREATER_THAN(string field1,string field2) //field1 greateer than field 2
     {
-    	if (field1 > field2)
+    	if (field1.compare(field2) > 0)
     	{
     		return 1;
     	}
@@ -89,7 +90,7 @@ Table::~Table(){}
     }
     bool LESS_THEN_EQUALS(string field1,string field2)
     {
-      	if (field1 <= field2)
+      	if (field1.compare(field2) == 0 || field1.compare(field2) < 0)
     	{
     		return 1;
     	}
@@ -97,7 +98,7 @@ Table::~Table(){}
     }
     bool GREATER_THAN_EQUALS(string field1,string field2)
     {
-        if (field1 >= field2)
+        if (field1.compare(field2) > 0 || field1.compare(field2) == 0)
     	{
     		return 1;
     	}

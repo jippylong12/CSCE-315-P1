@@ -251,8 +251,82 @@ void DBsystem::EXIT()
 
 //----------------Database queries---------------//
 
-Table* DBsystem::SELECT(string nameShow, vector<string> attributes) 
+Table* DBsystem::SELECT(string nameShow, string header ,string comparator, string condition) 
 {
+	//Select multiple columns and join them together by a certain condition
+	Table* tempTable;
+	vector< vector<string> > origT = database[nameShow]->getTable();
+	vector< vector<string> > returnT;
+	int col = 0;
+	vector<string> tempHeaders = database[nameShow]->getHeaders();
+	
+	for (int i = 0; i<tempHeaders.size(); ++i)
+	{
+		if (header.compare(tempHeaders[i]) == 0)
+		{
+			col = i;
+			break;
+		}
+	}
+	
+	if (comparator.compare("=") == 0)
+	{
+		for (int i = 0; i < tempT.getRowLength(); ++i)
+		{
+			if (origT[i][col].compare(condition) == 0)
+			{
+				returnT.push_back(origT[i]);
+			}
+		}
+	}
+	else if (comparator.compare(">") == 0)
+	{
+		for (int i = 0; i < tempT.getRowLength(); ++i){
+			if (origT[i][col].compare(condition) > 0)
+			{
+				returnT.push_back(origT[i]);
+			}
+		}
+	}
+	else if (comparator.compare("<") == 0)
+	{
+			if (origT[i][col].compare(condition) < 0)
+			{
+				returnT.push_back(origT[i]);
+			}
+		
+	}
+	else if (comparator.compare("<=") == 0)
+	{
+			if (origT[i][col].compare(condition) < 0 || origT[i][col].compare(condition) == 0)
+			{
+				returnT.push_back(origT[i]);
+			}
+		
+	}
+	else if (comparator.compare(">=") == 0)
+	{
+		if (origT[i][col].compare(condition) == 0 || origT[i][col].compare(condition) > 0)
+		{
+			returnT.push_back(origT[i]);
+		}
+	}
+	else if (comparator.compare("!=") == 0){
+		if (origT[i][col].compare(condition) != 0)
+		{
+			returnT.push_back(origT[i]);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	for (int i = 0; i < database[nameShow]->getColumnLength(); ++i){
+		
+	}
 	
 	
 }
