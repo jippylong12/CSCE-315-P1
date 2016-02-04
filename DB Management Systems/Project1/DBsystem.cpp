@@ -83,28 +83,39 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	
 	saveFile<<"CREATE TABLE " + nameSave + " (";
 	int temp = 0;
-	for (int i = 0; i< t.getRowLength(); ++i)
+	
+	//Get headers and header types
+	
+	for (int i = 0; i< database[nameSave]->getHeaders().size() - 1; ++i)
 	{
-		for (int j = 0; j< t.getColumnLength() - 1; ++j )
-		{
-			saveFile<< t.getTable()[i][j] << ", ";
-			temp = i;
-		}
-		saveFile<<t.getTable()[i][temp+1]<<")";
+		saveFile<<database[nameSave]->getHeaders()[i]<<" "<<database[nameSave]->getHeaderTypes()[i]<<", ";
+		temp = i;
 	}
+	saveFile<<database[nameSave]->getHeaders()[temp + 1]<<") "<<"PRIMARY KEY(";
+	//Primary Key
+	temp = 0;
+	for (int i = 0; i< database[nameSave]->getPrimaryKeys().size() -1; ++i)
+	{
+		saveFile<<database[nameSave]->getPrimaryKeys()[i]<<", ";
+		temp = i;
+	}
+	saveFile<<database[nameSave]->getPrimaryKeys()[temp + 1]<<");";
+	
+	saveFile<<endl;
 	
 	
-	//Missing the Primary Key part.
 	
 	
-	for (int i = 1; i<t.getRowLength(); ++i)
+	temp = 0;
+	for (int i = 0; i<t.getRowLength(); ++i)
 	{
 		saveFile<<"INSERT INTO " + nameSave + " VALUES FROM (";
-		for (int j = 0; j<t.getColumnLength(); ++j)
+		for (int j = 0; j<t.getColumnLength() - 1; ++j)
 		{
-			saveFile << t.getTable()[i][j];
+			saveFile <<"\""<< t.getTable()[i][j]<<"\""<<", ";
+			temp = j;
 		}
-		saveFile<<endl;
+		saveFile<<t.getTable()[i][temp + 1]<<");"<<endl;
 	}
 	
 	saveFile.close();
@@ -217,17 +228,20 @@ int DBsystem::DELETE(string nameDelete, int rowDelete)
 	//Check for out of bounds error
     if (rowDelete < database[nameDelete]->getRowLength())
     {
-		for(int i = 0; i<database[nameDelete]->getRowLength(); ++i)
-		{
-			tempTable[rowDelete].erase(tempTable[rowDelete].begin(),tempTable[rowDelete].end());
-		}
-        database[nameDelete]->getTable() = *tempTable;
+		// for(int i = 0; i<database[nameDelete]->getRowLength(); ++i)
+		// {
+		// 	tempTable[rowDelete].erase(tempTable[rowDelete].begin(),tempTable[rowDelete].end());
+		// }
+		tempTable->erase(tempTable->begin() + rowDelete); //the rowDelete will go to the correct row
+		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1);
+        database[nameDelete]->setTable(*tempTable);
 		delete tempTable;
         return 0;
     }
     //If out of bounds, return 1 for failure.
     else
     {
+    	cout<<"DELETE: Row is about of bounds.\n";
         return 1;
     }
 }
