@@ -266,6 +266,7 @@ void DBsystem::EXIT()
 	for(map<string, Table*>::iterator itr = database.begin(); itr != database.end(); itr++){
 		delete itr->second; //deletes all *Table pointers
 	}
+	cout<<"Exiting...Goodbye\n";
 	exit(EXIT_SUCCESS);
  }
 
@@ -274,12 +275,14 @@ void DBsystem::EXIT()
 Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,string comparator, string condition) 
 {
 	//Select multiple columns and join them together by a certain condition
+	string newName;
 	Table* tempTable = new Table();
 	vector< vector<string> > origT = database[nameShow]->getTable();
 	vector< vector<string> > returnT;
 	int newRow = 0;
 	int col = 0;
 	vector<string> tempHeaders = database[nameShow]->getHeaders();
+	
 	
 	for (int i = 0; i<tempHeaders.size(); ++i)
 	{
@@ -351,6 +354,7 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 		}
 	}
 
+	newName = "SELECT " + comparator + " FROM " + nameShow;
 	tempTable->setTableName(newTableName);
 	tempTable->setHeader(database[nameShow]->getHeaders());
 	tempTable->setColumnLength(tempTable->getHeaders().size());

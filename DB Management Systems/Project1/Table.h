@@ -55,7 +55,6 @@ public:
     bool LESS_THEN_EQUALS(string,string);
     bool GREATER_THAN_EQUALS(string,string);
 
-	
 };
 
 
