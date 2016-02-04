@@ -318,17 +318,6 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	for (int i = 0; i < database[nameShow]->getColumnLength(); ++i){
-		
-	}
-	
-	
 }
 
 vector<Table*> DBsystem::PROJECT(string t1, vector<string> attributes)
