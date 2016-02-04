@@ -91,6 +91,13 @@ int main()
 	db.DELETE("animals", "name", "Max");
 	db.SHOW("animals");
 	
+	cout<<"Testing SELECT\n";
+	db.SELECT("animals","age","=","10");
+	db.SHOW("animals");
+	
+	
+	cout<<"Testing EXIT\n\n";
+	db.EXIT();
 	/*DBsystem db;
     
 	vector<string> header1;

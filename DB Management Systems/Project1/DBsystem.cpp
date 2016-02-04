@@ -266,6 +266,7 @@ void DBsystem::EXIT()
 	for(map<string, Table*>::iterator itr = database.begin(); itr != database.end(); itr++){
 		delete itr->second; //deletes all *Table pointers
 	}
+	cout<<"Exiting...Goodbye\n";
 	exit(EXIT_SUCCESS);
  }
 
@@ -275,10 +276,14 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 {
 	//Select multiple columns and join them together by a certain condition
 	Table* tempTable;
+	tempTable = database[nameShow];
 	vector< vector<string> > origT = database[nameShow]->getTable();
 	vector< vector<string> > returnT;
+	string newName;
+	int rowCount = 0;
 	int col = 0;
 	vector<string> tempHeaders = database[nameShow]->getHeaders();
+	
 	
 	for (int i = 0; i<tempHeaders.size(); ++i)
 	{
@@ -296,6 +301,7 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 			if (origT[i][col].compare(condition) == 0)
 			{
 				returnT.push_back(origT[i]);
+				rowCount+=1;
 			}
 		}
 	}
@@ -305,6 +311,7 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 			if (origT[i][col].compare(condition) > 0)
 			{
 				returnT.push_back(origT[i]);
+				rowCount+=1;
 			}
 		}
 	}
@@ -314,6 +321,7 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 			if (origT[i][col].compare(condition) < 0)
 			{
 				returnT.push_back(origT[i]);
+				rowCount+=1;
 			}
 		}
 		
@@ -324,6 +332,7 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 			if (origT[i][col].compare(condition) < 0 || origT[i][col].compare(condition) == 0)
 			{
 				returnT.push_back(origT[i]);
+				rowCount+=1;
 			}
 		}
 	}
@@ -333,6 +342,7 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 			if (origT[i][col].compare(condition) == 0 || origT[i][col].compare(condition) > 0)
 			{
 				returnT.push_back(origT[i]);
+				rowCount+=1;
 			}
 		}
 	}
@@ -341,10 +351,19 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 			if (origT[i][col].compare(condition) != 0)
 			{
 				returnT.push_back(origT[i]);
+				rowCount+=1;
 			}
 		}
 	}
 	
+	newName = "SELECT " + comparator + " FROM " + nameShow;
+	
+	tempTable->setTable(returnT);
+	tempTable->setRowLength(rowCount);
+	tempTable->setColumnLength(1);
+	database[newName] = tempTable;
+	
+	return tempTable;
 }
 
 vector<Table*> DBsystem::PROJECT(string t1, vector<string> attributes)
