@@ -25,7 +25,7 @@ public:
 	int DELETE(string , int );	//::= DELETE FROM relation-name WHERE condition
 	void EXIT();
 	//-------Database commands (need definitions)-------//
-	Table* SELECT(string, vector<string>);    //select table with certain criteria
+	Table* SELECT(string, string, string, string);    //select table with certain criteria
 	vector<Table*>  PROJECT(string, vector<string>);
 	Table* RENAME(string, vector<string>, vector<string>);			
 	Table* SET_UNION(string, string);			//Take the union of 2 tables

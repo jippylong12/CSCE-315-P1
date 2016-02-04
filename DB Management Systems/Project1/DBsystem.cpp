@@ -264,7 +264,7 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 	
 	if (comparator.compare("=") == 0)
 	{
-		for (int i = 0; i < tempT.getRowLength(); ++i)
+		for (int i = 0; i < database[nameShow]->getRowLength(); ++i)
 		{
 			if (origT[i][col].compare(condition) == 0)
 			{
@@ -274,7 +274,7 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 	}
 	else if (comparator.compare(">") == 0)
 	{
-		for (int i = 0; i < tempT.getRowLength(); ++i){
+		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
 			if (origT[i][col].compare(condition) > 0)
 			{
 				returnT.push_back(origT[i]);
@@ -283,31 +283,38 @@ Table* DBsystem::SELECT(string nameShow, string header ,string comparator, strin
 	}
 	else if (comparator.compare("<") == 0)
 	{
+		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
 			if (origT[i][col].compare(condition) < 0)
 			{
 				returnT.push_back(origT[i]);
 			}
+		}
 		
 	}
 	else if (comparator.compare("<=") == 0)
 	{
+		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){	
 			if (origT[i][col].compare(condition) < 0 || origT[i][col].compare(condition) == 0)
 			{
 				returnT.push_back(origT[i]);
 			}
-		
+		}
 	}
 	else if (comparator.compare(">=") == 0)
 	{
-		if (origT[i][col].compare(condition) == 0 || origT[i][col].compare(condition) > 0)
-		{
-			returnT.push_back(origT[i]);
+		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){	
+			if (origT[i][col].compare(condition) == 0 || origT[i][col].compare(condition) > 0)
+			{
+				returnT.push_back(origT[i]);
+			}
 		}
 	}
 	else if (comparator.compare("!=") == 0){
-		if (origT[i][col].compare(condition) != 0)
-		{
-			returnT.push_back(origT[i]);
+		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
+			if (origT[i][col].compare(condition) != 0)
+			{
+				returnT.push_back(origT[i]);
+			}
 		}
 	}
 	
