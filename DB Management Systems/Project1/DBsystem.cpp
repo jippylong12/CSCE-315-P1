@@ -133,8 +133,9 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 		{
 			cout << setw(10) << database[nameShow]->getTable()[i][j]<<setw(10) ;
 		}
-		cout<<endl<<endl;
+		cout<<endl;
 	}
+	cout << endl;
 	return 0;
 	
 	
@@ -160,15 +161,15 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 	
 	//need to iterate through all columns
 	int row, col;
-	
+	vector<vector<string>> tempTable = database[nameUpdate]->getTable();
+
 	for (int i = 0; i < database[nameUpdate]->getColumnLength(); ++i)
 	{
-		if (database[nameUpdate]->getTable()[0][i] == headerName)
+		if (database[nameUpdate]->getHeaders()[i] == headerName)
 		{
 			col = i;
 		}
 	}
-	
 	for (int i = 0; i < database[nameUpdate]->getRowLength(); ++i)
 	{
 		if (database[nameUpdate]->getTable()[i][col] == criteria)
@@ -177,41 +178,33 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 		}
 	}
 	
-	database[nameUpdate]->getTable()[row][col] = replace;
-    //Else returns 1 for failure.
-  
+	tempTable[row][col] = replace;
+	database[nameUpdate]->setTable(tempTable);
+
+	
     
     	return 0;
 	
 }
 
 //Takes in the input of nameInsert and returns an int for error checking.
-int DBsystem::INSERT(string nameInsert, vector<vector<string> > inputs)
+int DBsystem::INSERT(string nameInsert, vector<string> input)
 {
-	//go to the table request
-	//check that the table is compatable?
-	//add all the items in inputs to the bottom of the able
-	
-	vector<vector<string> > tempTable = database[nameInsert]->getTable();
-	tempTable.push_back(inputs[0]);
-	int tempRow = database[nameInsert]->getRowLength() + 1;
-	database[nameInsert]->setRowLength(tempRow);
-	
-
-	//cout<<"Input Size: "<<inputs.size()<<endl; //error checkking
-	if(inputs.size()> 1)
+	if (input.size() != database[nameInsert]->getHeaders().size())
 	{
-		for(int i = 1; i<inputs.size(); ++i)
-		{
-			tempRow = database[nameInsert]->getRowLength() + 1;
-			database[nameInsert]->setRowLength(tempRow);
-			tempTable.push_back(inputs[i]);
-		}
+		cout << "Did not insert the correct amount of information." << endl;
+		return -1;
 	}
 
-	database[nameInsert]->setTable(tempTable); //set the old table equal to the new table
-	
-	return 0;
+	vector<vector<string>> tempTable = database[nameInsert]->getTable();
+
+	tempTable.push_back(input);
+
+	database[nameInsert]->setTable(tempTable);
+
+	int tempRow = database[nameInsert]->getRowLength() + 1;
+	database[nameInsert]->setRowLength(tempRow);
+
 
 }
 

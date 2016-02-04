@@ -34,8 +34,13 @@ public:
 	void setTable(vector< vector<string> > setTble) { table = setTble;}
 	vector< vector<string> > getTable() {return table;}
     //void setRows(vector<string> rows){ for (int i = 0; i < columnLength; ++i) { this->table[i] = rows;  }
+<<<<<<< HEAD
+	void setPrimaryKeys(vector<string> setKeys) { primaryKeys = setKeys;} //set any of the values of the primary key
+	vector<string> getPrimaryKeys() {return primaryKeys;}
+=======
 	vector<string> getPrimnaryKey() { return primaryKeys;} //return key vector
 	void setPrimaryKey(vector<string> setKeys) { primaryKeys = setKeys;} //set any of the values of the primary key
+>>>>>>> origin/master
 	string getTableName() { return tableName;}
 	void setTableName(string tName) { tableName = tName;}
 	vector<string> getHeaders() {return tableHeaders;}
