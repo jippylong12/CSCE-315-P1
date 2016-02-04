@@ -76,7 +76,8 @@ int main()
 	db.SAVE("animals");
 	
 	cout<<"Testing DELETE \n\n";
-	db.DELETE("animals",0);
+	cout<<"Removing cat\n\n";
+	db.DELETE("animals","kind","cat");
 	db.SHOW("animals");
 	
 	input.clear();
@@ -86,7 +87,8 @@ int main()
 	db.INSERT("animals", input);
 	
 	db.SHOW("animals");
-	db.DELETE("animals", 0);
+	cout<<"Removing 10\n\n";
+	db.DELETE("animals", "name", "Max");
 	db.SHOW("animals");
 	
 	/*DBsystem db;
