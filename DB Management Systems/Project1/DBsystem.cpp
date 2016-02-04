@@ -371,24 +371,22 @@ vector<Table*> DBsystem::PROJECT(string t1, vector<string> attributes)
     vector<int> pos;
     vector< vector <string> > tempT = database[t1]->getTable();
     vector< vector <string> > retT(30, vector<string>(30, "")); //Had to initialize this
-    int newRow;
-    int newCol;
+ 
     
     cout << t1 << " PROJECTION OF: "  << endl;
     for (int i = 0; i < database[t1]->getColumnLength(); ++i){          //Go through DB
         if (database[t1]->getHeaders()[i].compare(attributes[i])==0){   //See if and DB header fits attribute
-            pos.push_back(i);               //Store corresponding position in vector
+            pos.push_back(i);           				//Store corresponding position in vector
             cout << database[t1]->getHeaders()[i] << " " << endl;
         }else { cout << "Column " << i+1 << " not projected."<< endl; }
     }
     for (int i = 0; i < pos.size(); ++i){
-        attr.push_back(attributes[pos[i]]); //Store the corresponding attribute
+        attr.push_back(attributes[pos[i]])			        //Store the corresponding attribute
     }
     for (int i = 0; i < pos.size(); ++i){
         for (int j = 0; j < database[t1]->getColumnLength(); ++j){
-            retT[j][i] = tempT[j][pos[i]];  //Construct a new table with the proper selected column
+            retT[j][i] = tempT[j][pos[i]]			        //Construct a new table with the proper selected column
         }
-        
     }
     tempTable->setHeader(attr);
     tempTable->setTable(retT);
