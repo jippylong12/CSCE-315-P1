@@ -381,11 +381,11 @@ vector<Table*> DBsystem::PROJECT(string t1, vector<string> attributes)
         }else { cout << "Column " << i+1 << " not projected."<< endl; }
     }
     for (int i = 0; i < pos.size(); ++i){
-        attr.push_back(attributes[pos[i]])			        //Store the corresponding attribute
+        attr.push_back(attributes[pos[i]]);			        //Store the corresponding attribute
     }
     for (int i = 0; i < pos.size(); ++i){
         for (int j = 0; j < database[t1]->getColumnLength(); ++j){
-            retT[j][i] = tempT[j][pos[i]]			        //Construct a new table with the proper selected column
+            retT[j][i] = tempT[j][pos[i]];			        //Construct a new table with the proper selected column
         }
     }
     tempTable->setHeader(attr);
