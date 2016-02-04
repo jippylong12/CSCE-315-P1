@@ -129,7 +129,7 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 	//return 0;
 	//First, print the name of the table
     cout << " ---------------------------------------- " <<endl;
-    cout<<' '<<setw(21)<<nameShow<<setw(21)<<' '<<endl;
+    cout<<' '<<setw(21)<<database[nameShow]->getTableName() <<setw(21)<<' '<<endl;
     cout << " ---------------------------------------- " <<endl;
 	//print headers.
 	for (int i = 0; i< database[nameShow]->getHeaders().size(); ++i)
@@ -366,26 +366,33 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 vector<Table*> DBsystem::PROJECT(string t1, vector<string> attributes)
 {
     vector<Table*> t;
-    Table* tempTable = new Table();
+    Table* tempTable = database[t1];
     vector<string> attr;
     vector<int> pos;
-   
+    vector< vector <string> > tempT = database[t1]->getTable();
+    vector< vector <string> > retT(30, vector<string>(30, "")); //Had to initialize this
+    int newRow;
+    int newCol;
     
-    for (int i = 0; i < database[t1]->getColumnLength(); ++i){      //Go through DB
-        if (database[t1]->getHeaders()[i].compare(attributes[i])==0){//See if and DB header fits attribute
-            pos.push_back(i);
-            //grab (push back) all applicable tables
-            //cout << database[t1]->getHeaders()[i] << " vs " << attributes[i] << endl;
-        }else { cout << "No projection done" << endl; }
+    cout << t1 << " PROJECTION OF: "  << endl;
+    for (int i = 0; i < database[t1]->getColumnLength(); ++i){          //Go through DB
+        if (database[t1]->getHeaders()[i].compare(attributes[i])==0){   //See if and DB header fits attribute
+            pos.push_back(i);               //Store corresponding position in vector
+            cout << database[t1]->getHeaders()[i] << " " << endl;
+        }else { cout << "Column " << i+1 << " not projected."<< endl; }
     }
     for (int i = 0; i < pos.size(); ++i){
-        attr.push_back(attributes[pos[i]]);
-        //cout << pos[i];
+        attr.push_back(attributes[pos[i]]); //Store the corresponding attribute
+    }
+    for (int i = 0; i < pos.size(); ++i){
+        for (int j = 0; j < database[t1]->getColumnLength(); ++j){
+            retT[j][i] = tempT[j][pos[i]];  //Construct a new table with the proper selected column
+        }
+        
     }
     tempTable->setHeader(attr);
-    t.push_back(tempTable);
+    tempTable->setTable(retT);
     
-    //delete tempTable;
     return t;
 	
 }
@@ -514,7 +521,8 @@ Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
 {
     //The cross product of two tables A x B builds a huge virtual table by pairing every row of A with every row of B.
     
-    Table* returnTable;                                   //Table to be produced
+    Table* returnTable = database[t1];                   //Table to be produced
+            
     vector<string> newHeaders;
     int t1_rowLength = database[t1]->getRowLength();
     int t1_columnLength = database[t1]->getColumnLength();
@@ -522,28 +530,31 @@ Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
     vector<string> t1Rows;
     int t2_rowLength = database[t2]->getRowLength();
     int t2_columnLength = database[t2]->getColumnLength();
-    vector< vector<string> > tempTable; //for setting later. 
+    vector< vector<string> > tempTable;                 //for setting later. 
     vector<string> t2Rows;
     vector<string> joinedRows;                          //Store a vector for t1 x t2
     
-    
+    cout << "test1" << endl;
     
     //Get the attributes for both rows, concatenate them to be the new headers//
-    for (int i = 0; i < database[t1]->getHeaders().size() + database[t2]->getHeaders().size(); ++i)
+    for (int i = 0; i < database[t1]->getHeaders().size(); ++i)
     {
-        newHeaders.push_back(database[t1]->getHeaders()[i] + " + " + database[t2]->getHeaders()[i] );
+        newHeaders.push_back(database[t1]->getHeaders()[i]);
+        
+    }
+    for (int i = 0; i < database[t2]->getHeaders().size(); ++i){
+        newHeaders.push_back(database[t2]->getHeaders()[i] );
     }
     
     //set memeber items for the new table
     
     string newName = "Cross Product " + t1	 + ' ' + t2;
-    
     returnTable->setTableName(newName); // change name
-    returnTable->setColumnLength( database[t1]->getColumnLength());  //columnLength
+    returnTable->setColumnLength( t1_columnLength + t2_columnLength);  //columnLength
     returnTable->setHeader(newHeaders);                   //Set the new Table headers
     returnTable->setPrimaryKeys(database[t1]->getPrimaryKeys()); //primary keys
     returnTable->setHeaderTypes(database[t1]->getHeaderTypes()); //header types
-   
+    
     for (int i = 0; i < t1_columnLength; ++i)
     {          //
         t1Rows = database[t1]->getTable()[i];           //Grab rows from Table 1
@@ -559,9 +570,10 @@ Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
             rowCounter+=1;
         }
     }
+    //rowCounter = 12;
     
     returnTable->setTable(tempTable);                     //add the new table
-    returnTable->setRowLength(rowCounter); // change the rows. 
+    returnTable->setRowLength(rowCounter); // change the rows.
     
     return returnTable;
 

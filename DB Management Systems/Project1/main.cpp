@@ -77,13 +77,13 @@ int main()
 	input.clear();
 	input.push_back("Max");
 	input.push_back("dog");
-	input.push_back("10");
+	input.push_back("9000");
 	db.INSERT("animals", input);
 	
 	input.clear();
 	input.push_back("Spot");
 	input.push_back("dog");
-	input.push_back("5");
+	input.push_back("5000");
 	db.INSERT("animals", input);
 
 	db.SHOW("animals");
@@ -102,7 +102,7 @@ int main()
 
 	db.SHOW("dogs");
 	
-	//----RENAME test----//
+        //----RENAME test----//
     	input.clear();
     	cout << "RENAME attributes of \"dogs\": \n";
     	input.push_back("NEWname");
@@ -110,7 +110,18 @@ int main()
     	input.push_back("NEWage");
     	db.RENAME("dogs", header, input);
     	db.SHOW("dogs");
-    //------------------//
+        //------------------//
+    
+      vector<string> attr;
+      attr.push_back("NEWname");
+      attr.push_back("N");
+      attr.push_back("NEWage");
+      db.PROJECT("dogs", attr);
+      db.SHOW("dogs");
+    
+    //db.SET_UNION("dogs", "animals");
+    db.CROSS_PRODUCT("animals", "dogs");
+    db.SHOW("animals");
 
 	
 	
