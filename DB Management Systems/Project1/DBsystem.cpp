@@ -221,29 +221,42 @@ int DBsystem::INSERT(string nameInsert, vector<string> input)
 
 //nameDelete may not be neede depending on the implementation of the Parser.
 //Parser may end up finding the row and may only need one input here.
-int DBsystem::DELETE(string nameDelete, int rowDelete)
+int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo)
 {
-	vector<vector <string> >* tempTable = new vector<vector<string> >();
-	*tempTable = database[nameDelete]->getTable();
-	//Check for out of bounds error
-    if (rowDelete < database[nameDelete]->getRowLength())
-    {
-		// for(int i = 0; i<database[nameDelete]->getRowLength(); ++i)
-		// {
-		// 	tempTable[rowDelete].erase(tempTable[rowDelete].begin(),tempTable[rowDelete].end());
-		// }
-		tempTable->erase(tempTable->begin() + rowDelete); //the rowDelete will go to the correct row
-		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1);
-        database[nameDelete]->setTable(*tempTable);
-		delete tempTable;
-        return 0;
-    }
-    //If out of bounds, return 1 for failure.
-    else
-    {
-    	cout<<"DELETE: Row is about of bounds.\n";
-        return 1;
-    }
+	vector<vector <string> > tempTable;
+	tempTable = database[nameDelete]->getTable();
+	string tableComparer;
+	int rowToDelete;
+	int columnToCheck;
+	
+	for(int i = 0; i<database[nameDelete]->getColumnLength();++i)
+	{
+		if(database[nameDelete]->getHeaders()[i].compare(compareHeader) ) // if we find the matching header
+		{
+			columnToCheck = i; //keep track of column
+			break; // end for loop
+		}
+	    else
+	    {
+	    	cout<<"Not Found in Header.\n";
+	        return 1;
+	    }
+	}
+	
+	for(int i = 0; i<database[nameDelete]->getRowLength(); ++i)
+	{
+		tableComparer = tempTable[i][columnToCheck];
+		if(tableComparer.compare(compareTo))
+		{
+			tempTable.erase(tempTable.begin() + i); //delete the row
+			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+		}
+	}
+	
+	
+    database[nameDelete]->setTable(tempTable);
+    return 0;
+
 }
 
 //exits program and deletes everything not saved
