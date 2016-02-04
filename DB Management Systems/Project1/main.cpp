@@ -95,7 +95,9 @@ int main()
 	db.SHOW("animals");
 	
 	cout<<"Testing SELECT\n";
-	cout << "SELECT only dogs: \n";
+
+
+	cout << "SELETE only dogs: \n";
 	Table* newTable = db.SELECT("dogs","animals", "kind", "=", "dog");
 	db.addTable(newTable);
 
@@ -147,5 +149,8 @@ int main()
         cout << "PROJECTED HEADER: " << t1[0]->getHeaders()[i] << endl;
     }
 	*/
+=======
+
+>>>>>>> fff29e5a6a51082d59146ea488cfe070333784bb
 
 }

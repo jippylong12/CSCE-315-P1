@@ -275,7 +275,10 @@ void DBsystem::EXIT()
 Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,string comparator, string condition) 
 {
 	//Select multiple columns and join them together by a certain condition
+<<<<<<< HEAD
 	string newName;
+=======
+>>>>>>> fff29e5a6a51082d59146ea488cfe070333784bb
 	Table* tempTable = new Table();
 	vector< vector<string> > origT = database[nameShow]->getTable();
 	vector< vector<string> > returnT;
@@ -300,6 +303,10 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 			{
 				returnT.push_back(origT[i]);			
 				newRow++;
+<<<<<<< HEAD
+=======
+			}
+>>>>>>> fff29e5a6a51082d59146ea488cfe070333784bb
 		}
 	}
 	else if (comparator.compare(">") == 0)
@@ -317,6 +324,10 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
 			if (origT[i][col].compare(condition) < 0)
 			{
+<<<<<<< HEAD
+=======
+				returnT.push_back(origT[i]);
+>>>>>>> fff29e5a6a51082d59146ea488cfe070333784bb
 				newRow++;
 			}
 		}
@@ -347,19 +358,29 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 			if (origT[i][col].compare(condition) != 0)
 			{
 				returnT.push_back(origT[i]);
+<<<<<<< HEAD
 	
+=======
+>>>>>>> fff29e5a6a51082d59146ea488cfe070333784bb
 				newRow++;
 			}
 		}
 	}
 
+<<<<<<< HEAD
 	newName = "SELECT " + comparator + " FROM " + nameShow;
+=======
+>>>>>>> fff29e5a6a51082d59146ea488cfe070333784bb
 	tempTable->setTableName(newTableName);
 	tempTable->setHeader(database[nameShow]->getHeaders());
 	tempTable->setColumnLength(tempTable->getHeaders().size());
 	tempTable->setRowLength(newRow);
+<<<<<<< HEAD
 	tempTable->setTable(returnT)
 
+=======
+	tempTable->setTable(returnT);
+>>>>>>> fff29e5a6a51082d59146ea488cfe070333784bb
 	return tempTable;
 }
 
