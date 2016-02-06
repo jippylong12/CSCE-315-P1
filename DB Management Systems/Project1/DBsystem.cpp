@@ -402,6 +402,7 @@ vector<Table*> DBsystem::PROJECT(string t1, vector<string> attributes)
 Table* DBsystem::RENAME(string tName, vector<string> tableAttributes, vector<string> replaceAttributes)
 {
     Table *t;
+    int rowCounter;
     for (int i = 0; i < database[tName]->getColumnLength(); ++i){
         if(tableAttributes.size()==replaceAttributes.size())
         {  //Check if we need to add back existing table headers
@@ -414,7 +415,8 @@ Table* DBsystem::RENAME(string tName, vector<string> tableAttributes, vector<str
         }
     }
     database[tName]->setHeader(replaceAttributes);      //Rename the headers.
-    
+
+    //database[tName]->setColumnLength();
 
     
     return database[tName];
@@ -471,19 +473,20 @@ Table* DBsystem::SET_UNION(string t1, string t2)
 
 Table* DBsystem::SET_DIFFERENCE(string tableName1, string tableName2)
 {
-	Table* differenceTable = new Table; //to return
+	Table* differenceTable = database[tableName1]; //to return
+	
 	vector< vector<string> > tempT1; // for doing the difference
 	vector< vector<string> > tempT2;
 	
 	//make a copy of each table
 	tempT1 = database[tableName1]->getTable(); 
 	tempT2 = database[tableName2]->getTable();
-	
+	string newName = "Difference " + tableName1	 + ' ' + tableName2;
 	int rowCount = 0;
 	//check if the headers are the same size and the same values
 	if(database[tableName1]->getHeaders().size() == database[tableName2]->getHeaders().size())
 	{
-		string newName = "Difference " + tableName1	 + ' ' + tableName2;
+		
 		*differenceTable = *database[tableName1]; //set them equal not sure why this works. 
 		for(int i = 0; i< database[tableName2]->getRowLength(); ++i) // keep the second table equal 
 		{
@@ -506,16 +509,22 @@ Table* DBsystem::SET_DIFFERENCE(string tableName1, string tableName2)
 		}
 	}
 	
+	
 	//combine the tables into one
+	cout << "tempT2 size: " << tempT2.size() << endl; 
 	for(int i = 0; i< tempT2.size(); ++i)
 	{
 		tempT1.push_back(tempT2[i]);
 	}
-	rowCount = tempT1.size();
+	//rowCount = tempT1.size();
 	
-	//assign table
 	differenceTable->setTable(tempT1);
-	differenceTable->setRowLength(rowCount);
+	differenceTable->setTableName(newName);
+
+	//Row length will be at most the sum of both of the Tables' rows
+	differenceTable->setRowLength(database[tableName1]->getRowLength() + database[tableName2]->getRowLength());
+	
+	//differenceTable->setColumnLength(differenceTable()->getColumnLength())
 	return differenceTable;
 }
 
