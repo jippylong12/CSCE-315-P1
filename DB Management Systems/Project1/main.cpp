@@ -15,8 +15,27 @@ using namespace std;
 int main()
 {	
 	DBsystem db;
+	
+	
+	
+	ifstream in("animals.db");
+	stringstream buffer;
+	buffer << in.rdbuf();
+	string fileInput = buffer.str();		//Store all file input into one string
+	
+	
+	
+	Parser p("CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);");
+	//Parser p(fileInput);
 
-	vector<string> header;
+
+
+	
+
+	
+	
+	
+	/*vector<string> header;
 	header.push_back("name");
 	header.push_back("kind");
 	header.push_back("years");
@@ -129,6 +148,6 @@ int main()
 	db.SHOW("animals");
 	
 	cout<<"Testing EXIT\n\n";
-	db.EXIT();
+	db.EXIT();*/
 
 }
