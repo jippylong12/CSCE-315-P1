@@ -18,9 +18,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D8BFB397-1BAF-4544-8B82-1A08B5B31792}</ProjectGuid>
     <RootNamespace>Project1</RootNamespace>
