@@ -25,8 +25,8 @@ int main()
 	
 	
 	
-	Parser p("CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);");
-	//Parser p(fileInput);
+	//Parser p("CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);");
+	Parser p(fileInput);
 
 
 
