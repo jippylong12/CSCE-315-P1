@@ -24,6 +24,7 @@ public:
 	bool isOP();
 	bool isType(string);
 	bool isIdentifier(string);
+	bool isAttributeList();
 	bool isTypedAttributeList();
 	bool isAtomicExpression();
 	
