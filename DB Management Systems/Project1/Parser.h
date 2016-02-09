@@ -31,6 +31,7 @@ public:
 	bool isComparison();
 	bool isOP();
 	bool isType(string);
+	bool isLiteral(string);
 	bool isIdentifier(string);
 	bool isAttributeList();
 	bool isTypedAttributeList();

@@ -221,6 +221,36 @@ bool Parser::isQuery()
 	return true; //if everything passes return trues
 }
 
+bool Parser::isLiteral(string name) //literals
+{
+	if(name[0] == '\"' )
+	{
+		for(int i = 1; i < name.length()-1; i++)
+		{
+			if('A' <= name[i] && name[i] <= 'Z'){}
+			else if('a' <= name[i] && name[i] <= 'z'){}
+			else if('0' <= name[i] && name[i] <= '9'){}
+			else{return false;}
+		}
+		if(name[name.length()-1] != '\"' ){return false;}
+	}
+	else
+	{
+
+		for(int i = 0; i < name.length()-1; i++)
+		{
+			if('0' <= name[i] && name[i] <= '9'){}
+			else {return false;}
+		}
+	}
+	
+	
+	
+	
+	
+	return true;
+}
+
 bool Parser::isIdentifier(string name) //attribute name and relation name
 {
 	for(int i = 0; i < name.length(); i++)
@@ -249,7 +279,7 @@ bool Parser::isType(string type) //checks if INTEGER or VARCHAR
 			tokens.pop();
 			type = tokens.front();
 
-			for(int i = 8; i < type.length()-1; i++)
+			for(int i = 0; i < type.length()-1; i++)
 			{
 				if('0' <= type[i] && type[i] <= '9'){}
 				else {return false;}
@@ -524,7 +554,7 @@ bool Parser::parse_UPDATE()
 				tokens.pop();
 			if (tokens.front().compare("=") != 0)	 {  return false;   }	 //"="
 				tokens.pop();
-			if (!isIdentifier(tokens.front()))		 {  return false;	}    //literal 
+			if (!isLiteral(tokens.front()))		 {  return false;	}    //literal 
 				tokens.pop();
 				
 			if(tokens.front().compare(",") == 0)
@@ -553,7 +583,47 @@ bool Parser::parse_UPDATE()
 
 bool Parser::parse_INSERT()
 {
-
+	if(tokens.front().compare("INTO") != 0)	 {	return false; 	}	 //"INTO"
+		tokens.pop();
+	if(!isIdentifier(tokens.front()))		 {	return false;   }	 //relation name
+		tokens.pop();
+	if(tokens.front().compare("VALUES") != 0)	 {	return false; 	}	 //"VALUES"
+		tokens.pop();
+	if(tokens.front().compare("FROM") != 0)	 {	return false; 	}	 //"FROM"
+		tokens.pop();
+	
+	
+	if(tokens.front().compare("(") == 0)	
+	{	
+		tokens.pop();
+		while(true)
+		{
+			if (!isLiteral(tokens.front()))		 {  return false;	}    //literal 
+				tokens.pop();
+				
+			if(tokens.front().compare(",") == 0)
+			{
+				tokens.pop();
+				continue;
+			}
+			else
+				break;
+		}
+		if(tokens.front().compare(")") != 0)	 {	return false; 	}
+			tokens.pop();
+			
+	}
+	else if(tokens.front().compare("RELATION") != 0)	
+	{	
+		//NEED TO ADD LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			
+	}
+	else
+		return false;
+		
+	if(tokens.front().compare(";") != 0)	 {	return false; 	}
+			tokens.pop();
+		
 	return true;
 }
 

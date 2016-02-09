@@ -32,7 +32,10 @@ int main()
 	cout << endl;
 
 	
-	Parser a("UPDATE ass SET asset = butt, asset = butt, asset = butt WHERE buttSize >= buttLength;");  //Should pass
+	Parser a("UPDATE ass SET asset = \"butt\", asset = \"butt\", asset = \"butt\" WHERE buttSize >= buttLength;");  //Should pass
+	cout << endl;
+	
+	Parser z("INSERT INTO animals VALUES FROM (\"Joe\", \"cat\", 4);"); 
 	cout << endl;
 	/*Parser b("SHOW animals;");  		//Should pass
 	cout << endl;
