@@ -27,6 +27,7 @@ int main()
 	
 	
 	Parser p("CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);");
+	//Parser p("a <- rename (aname, akind) (project (name, kind) animals);");
 	cout << endl;
 	
 	Parser a("UPDATE ass SET asset = butt WHERE buttSize >= buttLength;");  //Should pass

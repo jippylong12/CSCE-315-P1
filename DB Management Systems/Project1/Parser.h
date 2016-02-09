@@ -27,7 +27,7 @@ public:
 	bool isQuery(); 
 	bool isExpression();
 	bool isCondition();
-	bool isConjOrComp();
+	bool isConjunction();
 	bool isComparison();
 	bool isOP();
 	bool isType(string);
@@ -35,6 +35,12 @@ public:
 	bool isAttributeList();
 	bool isTypedAttributeList();
 	bool isAtomicExpression();
+	bool isSelection(string);
+	bool isProjection(string);
+	bool isRenaming(string);
+	bool isSetUnion();
+	bool isSetDifference();
+	bool isCrossProduct();
 	
 	//merging with the DB
 	bool parse_OPEN();			//Parse the OPEN query...etc
