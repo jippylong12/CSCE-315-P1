@@ -26,13 +26,11 @@ int main()
 	//Test the CREATE query
 	
 	
-<<<<<<< HEAD
+
+
 	Parser p("CREATE TABLE animals (name VARCHAR(20), years INTEGER, kind VARCHAR(8)) PRIMARY KEY (name, kind);");
-=======
-	Parser p("CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);");
 	//Parser p("a <- rename (aname, akind) (project (name, kind) animals);");
->>>>>>> 91f4d384f243226a492ce5e014b4d5543ff9e16d
-	cout << endl;
+
 	
 	/*Parser a("UPDATE ass SET asset = butt WHERE buttSize >= buttLength;");  //Should pass
 	cout << endl;

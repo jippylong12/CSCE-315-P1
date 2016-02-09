@@ -61,15 +61,16 @@ void Parser::parse()
 	int tokenSize = tokens.size();
 	for(int i = 0; i<tokenSize; ++i)
 	{
-		if(tokens.front() != "")
+		if(tokens.front() == ", ")
+		{
+			temp.push(",");
+			tokens.pop();
+			
+		}
+		else if(tokens.front() != "")
 		{
 			temp.push(tokens.front());
 			cout<<tokens.front()<<endl;
-			tokens.pop();
-		}
-		else if(tokens.front() == ", ")
-		{
-			temp.push(",");
 			tokens.pop();
 		}
 		else
@@ -236,7 +237,10 @@ bool Parser::isType(string type) //checks if INTEGER or VARCHAR
 {
 	cout << type << endl;
 	if(type.compare("INTEGER") == 0)
+	{
+		tokens.pop();
 		return true;
+	}
 	else if(type.compare("VARCHAR") == 0)
 	{
 		tokens.pop();
@@ -273,51 +277,26 @@ bool Parser::isType(string type) //checks if INTEGER or VARCHAR
 
 bool Parser::isAttributeList()
 {
-	string tok = tokens.front();
-	if(tok.compare('(') == 0)
+	if(tokens.front().compare("("))
 		return false;
-	
 	while(true)
 	{
-		string t =  tokens.front();
-		char first = t[0];
-		char last = t[t.length()-1];
+		tokens.pop();
 		
-		if(first == '(')
-		{
-			t = t.erase(0,1);
-		}
-			
+		if(!isIdentifier(tokens.front()))
+			return false;
+		tokens.pop();
 
-		if(last == ';')
+		if(tokens.front().compare(",") == 0 )
 		{
-			t = t.erase(t.length()-1,1);
-			last = t[t.length()-1];
-			
-			if(last == ')')
-			{
-				
-				t = t.erase(t.length()-1,1);
-				if(!isIdentifier(t))
-					return false;
-					
-				break;
-			}
-			else
-				return false;
+			continue;
 		}
-		else if(last == ',')
+		else if(tokens.front().compare(")") == 0)
 		{
-			t = t.erase(t.length()-1,1);
-			if(!isIdentifier(t))
-					return false;
-					
-			tokens.pop();
+			return true;
 		}
+		
 	}
-
-
-	return true;
 }
 	
 
@@ -338,20 +317,18 @@ bool Parser::isTypedAttributeList()
 		if(!isType(tokens.front()))
 			return false;
 		
-		cout << "front: " << tokens.front() << endl;
-		if(tokens.front().compare(","))
+		if(tokens.front().compare(",") == 0 )
 		{
-			cout << "2.4" << endl;
 			continue;
 		}
-		if(tokens.front().compare(")"))
+		else if(tokens.front().compare(")") == 0)
 		{
-			break;
+			return true;
 		}
 		
 	}
 	
-	return true;
+
 }
 
 
@@ -483,7 +460,7 @@ bool Parser::parse_CREATE()
 		return false;
 	tokens.pop();	
 	
-	cout << 2 << endl;
+	cout << 3 << endl;
 	if(tokens.front().compare("PRIMARY") != 0)
 		return false;
 	tokens.pop();
@@ -491,6 +468,8 @@ bool Parser::parse_CREATE()
 	if(tokens.front().compare("KEY") != 0)
 		return false;	
 	tokens.pop();
+	
+	cout << 4 << endl;
 	
 	if(!isAttributeList())
 		return false;
