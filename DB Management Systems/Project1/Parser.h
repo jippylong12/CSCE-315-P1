@@ -36,9 +36,9 @@ public:
 	bool isAttributeList();
 	bool isTypedAttributeList();
 	bool isAtomicExpression();
-	bool isSelection(string);
-	bool isProjection(string);
-	bool isRenaming(string);
+	bool isSelection();
+	bool isProjection();
+	bool isRenaming();
 	bool isSetUnion();
 	bool isSetDifference();
 	bool isCrossProduct();

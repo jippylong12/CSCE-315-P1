@@ -35,15 +35,19 @@ int main()
 	Parser a("UPDATE ass SET asset = \"butt\", asset = \"butt\", asset = \"butt\" WHERE buttSize >= buttLength;");  //Should pass
 	cout << endl;
 	
-	Parser z("INSERT INTO animals VALUES FROM (\"Joe\", \"cat\", 4);"); 
+	Parser ab("INSERT INTO animals VALUES FROM (\"Joe\", \"cat\", 4);"); 
 	cout << endl;
-	/*Parser b("SHOW animals;");  		//Should pass
+	
+	Parser b("OPEN animals;");  		//Should pass
 	cout << endl;
-	Parser c("OPEN ?animals;");
+	
+	Parser c("SHOW animals;");
 	cout << endl;
 	Parser d("SAVE animals;");
 	cout << endl;
 	Parser e("sAVe animals;");		//Should fail
+	cout << endl;
+	Parser ef("CLOSE animals;");	
 	cout << endl;
 	Parser f("DELETE FROM animals WHERE age > 0;");
 	cout << endl;
@@ -51,7 +55,8 @@ int main()
 	cout << endl;
 	
 	Parser i("dogs <- select (kind == \"dog\") animals;");
-	cout << endl;*/
+	//Parser i("dogs <- select (kind == \"dog\") (select (kind == \"dog\") animals);");
+	cout << endl;
 
 	
 
