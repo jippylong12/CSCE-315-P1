@@ -29,9 +29,9 @@ int main()
 	Parser p("CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);");
 	cout << endl;
 	
-	Parser a("UPDATE ass SET asset = butt WHERE buttSize >= buttLength;");
+	Parser a("UPDATE ass SET asset = butt WHERE buttSize >= buttLength;");  //Should pass
 	cout << endl;
-	Parser b("SHOW animals;");  	//Should pass
+	Parser b("SHOW animals;");  		//Should pass
 	cout << endl;
 	Parser c("OPEN ?animals;");
 	cout << endl;
@@ -41,18 +41,14 @@ int main()
 	cout << endl;
 	Parser f("DELETE FROM animals WHERE age > 0;");
 	cout << endl;
-	Parser g("DELETE fram animalz WHERE age > 0;");
+	Parser g("DELETE fram animalz WHERE age > 0;");	//Should fail
 	cout << endl;
 
 	
-	/*INSERT INTO animals VALUES FROM ("Joe", "cat", 4);
-      INSERT INTO animals VALUES FROM ("Spot", "dog", 10);
-	*/
+
 	
 	
-	
-	
-	
+
 	
 	
 	
