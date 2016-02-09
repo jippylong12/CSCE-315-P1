@@ -26,10 +26,10 @@ int main()
 	//Test the CREATE query
 	
 	
-	Parser p("CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);");
+	Parser p("CREATE TABLE animals (name VARCHAR(20), years INTEGER, kind VARCHAR(8)) PRIMARY KEY (name, kind);");
 	cout << endl;
 	
-	Parser a("UPDATE ass SET asset = butt WHERE buttSize >= buttLength;");  //Should pass
+	/*Parser a("UPDATE ass SET asset = butt WHERE buttSize >= buttLength;");  //Should pass
 	cout << endl;
 	Parser b("SHOW animals;");  		//Should pass
 	cout << endl;
@@ -45,7 +45,7 @@ int main()
 	cout << endl;
 	
 	Parser i("dogs <- select (kind == \"dog\") animals;");
-	cout << endl;
+	cout << endl;*/
 
 	
 

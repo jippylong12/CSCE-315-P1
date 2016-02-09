@@ -226,20 +226,37 @@ bool Parser::isIdentifier(string name) //attribute name and relation name
 
 bool Parser::isType(string type) //checks if INTEGER or VARCHAR
 {
+	cout << type << endl;
 	if(type.compare("INTEGER") == 0)
 		return true;
-	else if(type.compare(0,7,"VARCHAR") == 0)
+	else if(type.compare("VARCHAR") == 0)
 	{
-		if(type.compare(7,1,"(") == 0 && type.compare(type.length()-1,1,")") == 0)
+		tokens.pop();
+		type = tokens.front();
+		cout << 2.2 << endl;
+		if(type.compare("(") == 0)
 		{
+			tokens.pop();
+			type = tokens.front();
+			cout << 2.3 << endl;
+			
 			for(int i = 8; i < type.length()-1; i++)
 			{
 				if('0' <= type[i] && type[i] <= '9'){}
 				else {return false;}
 			}
+			
+			
+			tokens.pop();
+			type = tokens.front();
+			if(type.compare(")") == 0)
+			{
+				tokens.pop();
+				return true;
+			}
 				
 		}
-		return true;
+	
 	}
 	
 	return false;
@@ -298,43 +315,31 @@ bool Parser::isAttributeList()
 
 bool Parser::isTypedAttributeList()
 {
-	if(tokens.front()[0] != '(')
+	if(tokens.front().compare("("))
 		return false;
 	while(true)
 	{
-		string t =  tokens.front();
-		char first = t[0];
-		char last = t[t.length()-1];
-		
-		if(first == '(')
-		{
-			if(!isIdentifier(t.erase(0,1)))
-				return false;
-		}
-		else if(!isIdentifier(tokens.front()))
-				return false;
-		
 		tokens.pop();
 		
-		
-		t =  tokens.front();
-		first = t[0];
-		last = t[t.length()-1];
-
-		if(!isType(t.erase(t.length()-1,1)))
+		if(!isIdentifier(tokens.front()))
 			return false;
-				
-		if(last == ',')
-		{	
-			tokens.pop();
+		tokens.pop();
+		
+
+		if(!isType(tokens.front()))
+			return false;
+		
+		cout << "front: " << tokens.front() << endl;
+		if(tokens.front().compare(","))
+		{
+			cout << "2.4" << endl;
 			continue;
 		}
-		else if(last == ')')
+		if(tokens.front().compare(")"))
 		{
 			break;
 		}
-		else
-			return false;
+		
 	}
 	
 	return true;
@@ -415,15 +420,18 @@ bool Parser::parse_CREATE()
 	if(tokens.front().compare("TABLE") != 0)
 		return false;
 	tokens.pop();
-
+	
+	
 	if(!isIdentifier(tokens.front()))
 		return false;
 	tokens.pop();
-
+	
+	cout << 1 << endl;
 	if(!isTypedAttributeList())
 		return false;
 	tokens.pop();	
-
+	
+	cout << 2 << endl;
 	if(tokens.front().compare("PRIMARY") != 0)
 		return false;
 	tokens.pop();
