@@ -19,16 +19,52 @@ Parser::Parser(string in)
 char * Parser::parse()
 {
 	
+	int stringCount = 0;
+	int splitStart = 0;
+	int splitEnd = 0;
+	vector<string> tokens;
+	string subString;
+	
 	char * cstring = new char [input.length()+1];
 	strcpy(cstring, input.c_str());
-	char * parsing = strtok(cstring," ");
-	while(parsing!=0)
+	
+	istringstream iss(cstring);
+	while(iss.get() != -1)
 	{
-		tokens.push(parsing);
-		cout<<parsing <<endl;
-		parsing = strtok(NULL," ");
+		cout<<cstring[stringCount];
+		if(input[stringCount] == ' ' || input[stringCount] == '(' 
+			|| input[stringCount] == ')' || input[stringCount] == ',')
+		{
+			if (input[stringCount] != ' ')
+			{
+				if (subString != "")
+				{
+					tokens.push(subString);
+				}
+				subString = input[stringCount];
+				tokens.push(subString);
+				subString = "";
+			}
+			else
+			{
+				tokens.push(subString);
+				subString = "";
+			}
+
+		}
+		else
+		{
+			subString.push_back(input[stringCount]);
+		}
+		++stringCount;		
 	}
-	return cstring;
+
+	// for (int i = 0; i < tokens.size(); ++i)
+	// {
+	// 	if (tokens[i] == "")
+	// 		tokens.erase(tokens.begin() + i);
+	// }
+	return tokens;
 }
 
 bool Parser::isCommand()
@@ -336,7 +372,7 @@ bool Parser::isComparison()
 	tokens.pop();
 	
 	string op = tokens.front();
-	if(!isOP(op))
+	if(!isOP())
 		return false;
 	tokens.pop();
 		
