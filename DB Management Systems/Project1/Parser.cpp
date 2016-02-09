@@ -16,13 +16,12 @@ Parser::Parser(string in)
 
 
 
-char * Parser::parse()
+void Parser::parse()
 {
 	
 	int stringCount = 0;
 	int splitStart = 0;
 	int splitEnd = 0;
-	vector<string> tokens;
 	string subString;
 	
 	char * cstring = new char [input.length()+1];
@@ -31,7 +30,6 @@ char * Parser::parse()
 	istringstream iss(cstring);
 	while(iss.get() != -1)
 	{
-		cout<<cstring[stringCount];
 		if(input[stringCount] == ' ' || input[stringCount] == '(' 
 			|| input[stringCount] == ')' || input[stringCount] == ',')
 		{
@@ -58,13 +56,29 @@ char * Parser::parse()
 		}
 		++stringCount;		
 	}
-
+	
+	queue<string> temp;
+	int tokenSize = tokens.size();
+	for(int i = 0; i<tokenSize; ++i)
+	{
+		if(tokens.front() != "")
+		{
+			temp.push(tokens.front());
+			cout<<tokens.front()<<endl;
+			tokens.pop();
+		}
+		else
+		{
+			tokens.pop();
+		}
+	}
+	
+	tokens = temp;
 	// for (int i = 0; i < tokens.size(); ++i)
 	// {
 	// 	if (tokens[i] == "")
 	// 		tokens.erase(tokens.begin() + i);
 	// }
-	return tokens;
 }
 
 bool Parser::isCommand()

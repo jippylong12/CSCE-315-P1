@@ -2,6 +2,7 @@
 #include <cstring>
 #include <queue>
 #include <stack>
+#include <sstream>
 using namespace std;
 
 
@@ -13,7 +14,7 @@ class Parser
 	bool parsedCorrect = false;
 public:
 	Parser(string);
-	char * parse();
+	void parse();
 	string getInput() {return input;}; 
 	
 	//Adding possible functions for the parser
