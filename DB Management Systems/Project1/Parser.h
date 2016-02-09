@@ -30,6 +30,7 @@ public:
 	
 	bool parse_OPEN();			//Parse the OPEN query...etc
 	bool parse_SAVE();
+	bool parse_CLOSE();
 	bool parse_SHOW();
 	bool parse_CREATE();
 	bool parse_UPDATE();

@@ -17,21 +17,44 @@ int main()
 	DBsystem db;
 	
 	
-	
 	ifstream in("animals.db");
 	stringstream buffer;
 	buffer << in.rdbuf();
 	string fileInput = buffer.str();		//Store all file input into one string
+	//Parser p(fileInput);					//Parse on "animals.db"
+	
+	//Test the CREATE query
+	
+	
+	Parser p("CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);");
+	cout << endl;
+	
+	Parser a("UPDATE ass SET asset = butt WHERE buttSize >= buttLength;");
+	cout << endl;
+	Parser b("SHOW animals;");  	//Should pass
+	cout << endl;
+	Parser c("OPEN ?animals;");
+	cout << endl;
+	Parser d("SAVE animals;");
+	cout << endl;
+	Parser e("sAVe animals;");		//Should fail
+	cout << endl;
+	Parser f("DELETE FROM animals WHERE age > 0;");
+	cout << endl;
+	Parser g("DELETE fram animalz WHERE age > 0;");
+	cout << endl;
+
+	
+	/*INSERT INTO animals VALUES FROM ("Joe", "cat", 4);
+      INSERT INTO animals VALUES FROM ("Spot", "dog", 10);
+	*/
 	
 	
 	
-	//Parser p("CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);");
-	Parser p(fileInput);
-
-
-
 	
-
+	
+	
+	
 	
 	
 	
