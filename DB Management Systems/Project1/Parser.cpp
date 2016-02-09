@@ -67,8 +67,14 @@ void Parser::parse()
 			cout<<tokens.front()<<endl;
 			tokens.pop();
 		}
+		else if(tokens.front() == ", ")
+		{
+			temp.push(",");
+			tokens.pop();
+		}
 		else
 		{
+			
 			tokens.pop();
 		}
 	}
@@ -154,62 +160,64 @@ bool Parser::isExpression()
 {
 	string firstToken = tokens.front();
 	
-	if(firstToken.compare("select") == 0)
+	if(isSelection(firstToken))
 	{
-		cout << 1 << endl;
-		tokens.pop();
+		return true;	
+	}
+	else if(isProjection(firstToken))
+	{
+		return true;
 		
 	}
-	else if(firstToken.compare("PROJECT") == 0)
+	else if(isRenaming(firstToken))
 	{
-		tokens.pop();
-		
-	}
-	else if(firstToken.compare("RENAME") == 0)
-	{
-		tokens.pop();
+		return true;
 	
 	}
-	else if(firstToken.compare("SET_UNION") == 0)
+	else if(isSetUnion())
 	{
-		tokens.pop();
+		return true;
 		
 	}
-	else if(firstToken.compare("SET_DIFFERENCE") == 0)
+	else if(isSetDifference())
 	{
-		tokens.pop();
+		return true;
 		
 	}
-	else if(firstToken.compare("CROSS_PRODUCT") == 0)
+	else if(isCrossProduct())
 	{
-		tokens.pop();
+		return true;
 		
+	}
+	else if(isAtomicExpression())
+	{
+		return true;
 	}
 	
 	else{
 		cout << "Error: Query not found!" << endl;
 		return false;
 	}
-	
-	return true;
 }
 
 bool Parser::isQuery()
 {
-	string firstToken = tokens.front();
-	if(!isIdentifier(firstToken))
-		return false;
-	tokens.pop();
+	//check for relation name
+	string firstToken = tokens.front(); //get the name
+	if(!isIdentifier(firstToken)) //check 
+		return false; //return false if not
+	tokens.pop(); //pop it off the top
 	
-	firstToken = tokens.front();
-	if(firstToken.compare("<-"))
-		return false;
-	tokens.pop();
+	firstToken = tokens.front(); //check for <-
+	if(firstToken.compare("<-")) //check
+		return false; //return if false
+	tokens.pop(); //remove if passed
 	
+	//check if expression
 	if(!isExpression())
-		return false;
+		return false; //return if not
 	
-	return true;
+	return true; //if everything passes return trues
 }
 
 bool Parser::isIdentifier(string name) //attribute name and relation name
@@ -265,7 +273,8 @@ bool Parser::isType(string type) //checks if INTEGER or VARCHAR
 
 bool Parser::isAttributeList()
 {
-	if(tokens.front()[0] != '(')
+	string tok = tokens.front();
+	if(tok.compare('(') == 0)
 		return false;
 	
 	while(true)
@@ -348,18 +357,6 @@ bool Parser::isTypedAttributeList()
 
 bool Parser::isAtomicExpression() //checks if selection, projection, renaming, union, difference, or product
 {								  //Can also be a relation name (which is an identifier)
-				
-	// if(tokens.front().compare("selection") == 0){return true;}
-	// else if(tokens.front().compare("projection") == 0){return true;}
-	// else if(tokens.front().compare("renaming") == 0){return true;}
-	// else if(tokens.front().compare("union") == 0){return true;}
-	// else if(tokens.front().compare("difference") == 0){return true;}
-	// else if(tokens.front().compare("product") == 0){return true;}
-	// else if(isIdentifier(tokens.front()) || tokens.front()[tokens.front().size()-1] == ';'){ return true; }
-	// else{ 
-	// 	cout << "error in syntax, not an atomic expression" << endl; 
-	// 	return false;
-	// }
 	
 	string next = tokens.front(); //get the next input
 	if(isIdentifier(next)) //if it is a relation name
@@ -413,6 +410,61 @@ bool Parser::isOP() //checks if == | != | < | > | <= | >=
 	
 	return true;
 }
+
+bool Parser::isConjunction()
+{
+	return true;
+}
+
+
+bool Parser::isCondition()
+{
+	return true;
+}
+
+bool Parser::isSelection(string tok)
+{
+	//checking to see what tok is.
+	if(tok.compare("select") != 0) return false;
+	//if it is pop off and check for (
+	tokens.pop();
+	//the next token should be a parenthesis. 
+	if(tokens.front() != "(") return false;
+	else // it is open
+	{
+		tokens.pop(); //get rid of (
+		if(!isCondition()) return false; //if this doesn't pass return false
+		if(tokens.front() != ")") return false; //there should be a panrenthesis
+		else
+		{
+			tokens.pop(); //get rid of )
+			if(!isAtomicExpression()) return false;
+			else return true; //return true if we passed all these things
+		}
+	}
+}
+
+bool Parser::isProjection(string tok)
+{
+	return true;
+}
+bool Parser::isRenaming(string tok)
+{
+	return true;
+}
+bool Parser::isSetUnion()
+{
+	return true;
+}
+bool Parser::isSetDifference()
+{
+	return true;
+}
+bool Parser::isCrossProduct()
+{
+	return true;
+}
+
 
 
 bool Parser::parse_CREATE()
