@@ -188,37 +188,44 @@ bool Parser::isExpression()
 		else{ cout << "rename - invalid command." << endl; } 
 	
 	}
-	else if(firstToken.compare("CREATE") == 0)
+	else if(isAtomicExpression())
 	{
-		tokens.pop();
-		parsedCorrect = parse_CREATE();
-		if (parsedCorrect){ cout << "union - valid command." << endl; } 
-		else{ cout << "union - invalid command." << endl; } 
-		
+			tokens.pop();
+			firstToken = tokens.front();
+			
+			if(firstToken.compare("+") == 0)
+			{
+				tokens.pop();
+				parsedCorrect = parse_SET_UNION();
+				if (parsedCorrect){ cout << "union - valid command." << endl; } 
+				else{ cout << "union - invalid command." << endl; } 
+				
+			}
+			else if(firstToken.compare("-") == 0)
+			{
+				tokens.pop();
+				parsedCorrect = parse_SET_DIFFERENCE();
+				if (parsedCorrect){ cout << "difference - valid command." << endl; } 
+				else{ cout << "difference - invalid command." << endl; } 
+				
+			}
+			else if(firstToken.compare("*") == 0)
+			{
+				tokens.pop();
+				parsedCorrect = parse_CROSS_PRODUCT();
+				if (parsedCorrect){ cout << "cross product - valid command." << endl; } 
+				else{ cout << "cross product - invalid command." << endl; } 
+				
+			}
+			else if(firstToken.compare("CREATE") == 0)
+			{
+				tokens.pop();
+				parsedCorrect = parse_CREATE();
+				if (parsedCorrect){ cout << "atomic-expr - valid command." << endl; } 
+				else{ cout << "atomic-expr - invalid command." << endl; } 
+		}
 	}
-	else if(firstToken.compare("CREATE") == 0)
-	{
-		tokens.pop();
-		parsedCorrect = parse_CREATE();
-		if (parsedCorrect){ cout << "difference - valid command." << endl; } 
-		else{ cout << "difference - invalid command." << endl; } 
-		
-	}
-	else if(firstToken.compare("CREATE") == 0)
-	{
-		tokens.pop();
-		parsedCorrect = parse_CREATE();
-		if (parsedCorrect){ cout << "cross product - valid command." << endl; } 
-		else{ cout << "cross product - invalid command." << endl; } 
-		
-	}
-	else if(firstToken.compare("CREATE") == 0)
-	{
-		tokens.pop();
-		parsedCorrect = parse_CREATE();
-		if (parsedCorrect){ cout << "atomic-expr - valid command." << endl; } 
-		else{ cout << "atomic-expr - invalid command." << endl; } 
-	}
+	
 	
 	else{
 		cout << "Error: Expression not found!" << endl;
@@ -291,6 +298,7 @@ bool Parser::isIdentifier(string name) //attribute name and relation name
 		if('A' <= name[i] && name[i] <= 'Z'){}
 		else if('a' <= name[i] && name[i] <= 'z'){}
 		else if('0' <= name[i] && name[i] <= '9'){}
+		else if(name[i] == '_'){}
 		else{return false;}
 	}
 	return true;
@@ -337,22 +345,22 @@ bool Parser::isType(string type) //checks if INTEGER or VARCHAR
 
 bool Parser::isAttributeList()
 {
-	if(tokens.front().compare("("))
-		return false;
+	cout << 1 << endl;
+	cout << tokens.front() << endl;
 	while(true)
 	{
-		tokens.pop();
-		
 		if(!isIdentifier(tokens.front()))
 			return false;
 		tokens.pop();
-
+		
 		if(tokens.front().compare(",") == 0 )
 		{
+			tokens.pop();
 			continue;
 		}
-		else if(tokens.front().compare(")") == 0)
+		else
 		{
+			cout << 2 << endl;
 			return true;
 		}
 		
@@ -528,9 +536,18 @@ bool Parser::parse_CREATE()
 		return false;	
 	tokens.pop();
 	
-
+	if(tokens.front().compare("(") != 0)
+		return false;	
+	tokens.pop();
+	
 	if(!isAttributeList())
 		return false;
+	
+	
+	
+	cout << tokens.front() << endl;
+	if(tokens.front().compare(")") != 0)
+		return false;	
 	tokens.pop();
 	
 	if(tokens.front().compare(";") != 0)
@@ -709,64 +726,57 @@ bool Parser::parse_SELECT()
 
 bool Parser::parse_PROJECT()
 { 
+	if(tokens.front().compare("(") != 0)	 {	return false; 	}
+		tokens.pop();
+	
+	if(!isAttributeList()) { return false; }
+
+	if(tokens.front().compare(")") != 0)	 {	return false; 	}
+		tokens.pop();
+	
+	if(!isAtomicExpression()) {	return false; }
+		tokens.pop();
 	
 	return true; 
 }
 
 bool Parser::parse_RENAME()
 { 
+	if(tokens.front().compare("(") != 0)	 {	return false; 	}
+		tokens.pop();
+	
+	if(!isAttributeList()) { return false; }
+	
+	if(tokens.front().compare(")") != 0)	 {	return false; 	}
+		tokens.pop();
+	
+	if(!isAtomicExpression()) {	return false; }
+		tokens.pop();
 	
 	return true; 
 } 
 
 bool Parser::parse_SET_UNION()
 { 
-/*	if(isAtomicExpression(tokens.front()))
-	{
-		tokens.pop();
-		if(isAtomicExpression(tokens.front()))
-		{
-			//add the functions
-			return true;
-		}
-		else{cout << "not two atomic-expressions" << endl; return false;}
-	}
-	else{cout << "not two atomic-expressions" << endl; return false;}*/
+	if(!isAtomicExpression()) {return false;}
+	tokens.pop();
 	
 	return true; 
 }
 
 bool Parser::parse_SET_DIFFERENCE()
 { 
-/*	if(isAtomicExpression(tokens.front()))
-	{
+	if(!isAtomicExpression()) {return false;}
 		tokens.pop();
-		if(isAtomicExpression(tokens.front())
-		{
-			//subtract the functions
-			return true;
-		}
-		else{cout << "not two atomic-expressions" << endl; return false;}
-	}
-	else{cout << "not two atomic-expressions" << endl; return false;}*/
-
+	
 	return true; 
 }
 
 bool Parser::parse_CROSS_PRODUCT()
 { 
-	/*if(isAtomicExpression(tokens.front()))
-	{
-		tokens.pop();
-		if(isAtomicExpression(tokens.front()))
-		{
-			//multiply the functions
-			return true;
-		}
-		else{cout << "not two atomic-expressions" << endl; return false;}
-	}
-	else{cout << "not two atomic-expressions" << endl; return false;}*/
-
+	if(!isAtomicExpression()) {return false;}
+	tokens.pop();
+	
 	return true; 
 }
 

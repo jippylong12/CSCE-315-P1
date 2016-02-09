@@ -55,10 +55,22 @@ int main()
 	cout << endl;
 	
 	Parser i("dogs <- select (kind == \"dog\") animals;");
-	//Parser i("dogs <- select (kind == \"dog\") (select (kind == \"dog\") animals);");
+	cout << endl;
+	
+	Parser j("common_names <- project (name) (select (aname == name && akind != kind) animals);");
+	cout << endl;
+	
+	Parser k("a <- rename (aname, akind) (project (name, kind) animals);");
+	cout << endl;
+	
+	Parser l("a <- a + animals;");
+	cout << endl;
+	
+	Parser m("a <- somethingTable - (select (aname == name && akind != kind) animals);");
 	cout << endl;
 
-	
+	Parser n("b <- (project (name) (select (aname == name && akind != kind) animals)) * (select (aname == name && akind != kind) animals);");
+	cout << endl;
 
 	
 	
