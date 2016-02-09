@@ -31,7 +31,7 @@ void Parser::parse()
 	while(iss.get() != -1)
 	{
 		if(input[stringCount] == ' ' || input[stringCount] == '(' 
-			|| input[stringCount] == ')' || input[stringCount] == ',')
+			|| input[stringCount] == ')' || input[stringCount] == ','  || input[stringCount] == ';')
 		{
 			if (input[stringCount] != ' ')
 			{
@@ -235,7 +235,6 @@ bool Parser::isIdentifier(string name) //attribute name and relation name
 
 bool Parser::isType(string type) //checks if INTEGER or VARCHAR
 {
-	cout << type << endl;
 	if(type.compare("INTEGER") == 0)
 	{
 		tokens.pop();
@@ -245,13 +244,11 @@ bool Parser::isType(string type) //checks if INTEGER or VARCHAR
 	{
 		tokens.pop();
 		type = tokens.front();
-		cout << 2.2 << endl;
 		if(type.compare("(") == 0)
 		{
 			tokens.pop();
 			type = tokens.front();
-			cout << 2.3 << endl;
-			
+
 			for(int i = 8; i < type.length()-1; i++)
 			{
 				if('0' <= type[i] && type[i] <= '9'){}
@@ -270,7 +267,7 @@ bool Parser::isType(string type) //checks if INTEGER or VARCHAR
 		}
 	
 	}
-	
+	 
 	return false;
 		
 }
@@ -357,21 +354,7 @@ bool Parser::isAtomicExpression() //checks if selection, projection, renaming, u
 }
 
 
-bool Parser::isComparison() 
-{
-	string operand = tokens.front();
-	if(!isIdentifier(operand))
-		return false;
-	tokens.pop();
-	
-	string op = tokens.front();
-	if(!isOP())
-		return false;
-	tokens.pop();
-		
-	
-	return true;
-}
+
 
 
 bool Parser::isOP() //checks if == | != | < | > | <= | >=
@@ -388,14 +371,60 @@ bool Parser::isOP() //checks if == | != | < | > | <= | >=
 	return true;
 }
 
+bool Parser::isComparison() 
+{
+	
+	if(!isIdentifier(tokens.front()))
+		return false;
+	tokens.pop();
+	
+	
+	if(!isOP())
+		return false;
+	tokens.pop();
+	
+	if(!isIdentifier(tokens.front()))
+		return false;
+	tokens.pop();
+	return true;
+}
+
 bool Parser::isConjunction()
 {
+	while(true)
+	{
+		if(!isComparison())
+			return false;
+			
+		if(tokens.front().compare("&&")==0)
+		{
+			tokens.pop();
+			continue;
+		}
+		else
+			break;
+	}
+		
 	return true;
 }
 
 
 bool Parser::isCondition()
 {
+	while(true)
+	{
+		if(!isConjunction())
+			return false;
+			
+		if(tokens.front().compare("||")==0)
+		{
+			tokens.pop();
+			continue;
+		}
+		else
+			break;
+	}
+	
 	return true;
 }
 
@@ -455,12 +484,10 @@ bool Parser::parse_CREATE()
 		return false;
 	tokens.pop();
 	
-	cout << 1 << endl;
 	if(!isTypedAttributeList())
 		return false;
 	tokens.pop();	
 	
-	cout << 3 << endl;
 	if(tokens.front().compare("PRIMARY") != 0)
 		return false;
 	tokens.pop();
@@ -469,10 +496,13 @@ bool Parser::parse_CREATE()
 		return false;	
 	tokens.pop();
 	
-	cout << 4 << endl;
-	
+
 	if(!isAttributeList())
 		return false;
+	tokens.pop();
+	
+	if(tokens.front().compare(";") != 0)
+		return false;	
 	tokens.pop();
 	
 	return true;
@@ -480,35 +510,44 @@ bool Parser::parse_CREATE()
 
 bool Parser::parse_UPDATE()
 {
-	 //update-cmd 
-	 //cout << "front: " << tokens.front() << endl;
 
 		if(!isIdentifier(tokens.front()))		 {	return false;   }	 //relation name
 			tokens.pop();
 		if(tokens.front().compare("SET") != 0)	 {	return false; 	}	 //"SET"
 			tokens.pop();
 			
-	//------------- Needs to be able to do multiple of these--------------//
 	//------------- This will update Attribute name(s)--------------------//
-		if(!isIdentifier(tokens.front()))		 {  return false;   }	 //Attribute name 
-			tokens.pop();
-		if (tokens.front().compare("=") != 0)	 {  return false;   }	 //"="
-			tokens.pop();
-		if (!isIdentifier(tokens.front()))		 {  return false;	}    //literal 
-			tokens.pop();
+	
+		while(true)
+		{
+			if(!isIdentifier(tokens.front()))		 {  return false;   }	 //Attribute name 
+				tokens.pop();
+			if (tokens.front().compare("=") != 0)	 {  return false;   }	 //"="
+				tokens.pop();
+			if (!isIdentifier(tokens.front()))		 {  return false;	}    //literal 
+				tokens.pop();
+				
+			if(tokens.front().compare(",") == 0)
+			{
+				tokens.pop();
+				continue;
+			}
+			else
+				break;
+		}
 	//--------------------------------------------------------------------//
 	
 		if(tokens.front().compare("WHERE") != 0) {	return false;	}    //WHERE
 			tokens.pop();
-		if (!isIdentifier(tokens.front()))		 {  return false;   }    //Conditon: operand 1
-			tokens.pop();
-		if(!isOP())								 {  return false;   }    //operator
-			tokens.pop();
-		if(!isIdentifier(tokens.front()) && tokens.front()[tokens.front().size()-1] != ';' )		 {  return false;  	}    //operand 2
-			tokens.pop();
+	
+		if(!isCondition())
+			return false;
+			
+		if(tokens.front().compare(";") != 0)
+			return false;	
+		tokens.pop();
 		
-	//::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition
-		
+
 		return true;		
 }
 

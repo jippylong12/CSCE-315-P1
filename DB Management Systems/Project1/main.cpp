@@ -28,13 +28,13 @@ int main()
 	
 
 
-	Parser p("CREATE TABLE animals (name VARCHAR(20), years INTEGER, kind VARCHAR(8)) PRIMARY KEY (name, kind);");
-	//Parser p("a <- rename (aname, akind) (project (name, kind) animals);");
+	Parser p("CREATE TABLE animals (name VARCHAR(20), years INTEGER, kind VARCHAR(8)) PRIMARY KEY (name);");
+	cout << endl;
 
 	
-	/*Parser a("UPDATE ass SET asset = butt WHERE buttSize >= buttLength;");  //Should pass
+	Parser a("UPDATE ass SET asset = butt, asset = butt, asset = butt WHERE buttSize >= buttLength;");  //Should pass
 	cout << endl;
-	Parser b("SHOW animals;");  		//Should pass
+	/*Parser b("SHOW animals;");  		//Should pass
 	cout << endl;
 	Parser c("OPEN ?animals;");
 	cout << endl;

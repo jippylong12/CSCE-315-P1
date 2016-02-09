@@ -4,6 +4,7 @@ all: database
 
 database: Table.o Parser.o DBsystem.o main.o
 	g++ -std=c++11  -o database Table.o Parser.o DBsystem.o main.o
+	clear
 
 main.o:	main.cpp
 	g++ -c -std=c++11 main.cpp
