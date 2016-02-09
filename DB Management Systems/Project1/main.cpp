@@ -71,6 +71,9 @@ int main()
 
 	Parser n("b <- (project (name) (select (aname == name && akind != kind) animals)) * (select (aname == name && akind != kind) animals);");
 	cout << endl;
+	
+	Parser o("b <- (project (name) (select (aname == name && akind != kind) animals));");
+	cout << endl;
 
 	
 	

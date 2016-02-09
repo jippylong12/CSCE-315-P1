@@ -217,13 +217,11 @@ bool Parser::isExpression()
 				else{ cout << "cross product - invalid command." << endl; } 
 				
 			}
-			else if(firstToken.compare("CREATE") == 0)
+			else if(firstToken.compare(";") != 0)
 			{
-				tokens.pop();
-				parsedCorrect = parse_CREATE();
-				if (parsedCorrect){ cout << "atomic-expr - valid command." << endl; } 
-				else{ cout << "atomic-expr - invalid command." << endl; } 
-		}
+				return false;
+			
+			}
 	}
 	
 	
