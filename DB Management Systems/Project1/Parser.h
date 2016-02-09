@@ -21,6 +21,13 @@ public:
 	
 	void lexer(string input);	//LEX the input string into tokens
 	
+	//checking syntax
+	bool isCommand();
+	bool isQuery(); 
+	bool isExpression();
+	bool isCondition();
+	bool isConjOrComp();
+	bool isComparison();
 	bool isOP();
 	bool isType(string);
 	bool isIdentifier(string);
@@ -28,6 +35,7 @@ public:
 	bool isTypedAttributeList();
 	bool isAtomicExpression();
 	
+	//merging with the DB
 	bool parse_OPEN();			//Parse the OPEN query...etc
 	bool parse_SAVE();
 	bool parse_CLOSE();
@@ -36,7 +44,7 @@ public:
 	bool parse_UPDATE();
 	bool parse_INSERT();
 	bool parse_DELETE();
-
+	//merging with the DB
 	bool parse_SELECT();
 	bool parse_PROJECT();
 	bool parse_RENAME();

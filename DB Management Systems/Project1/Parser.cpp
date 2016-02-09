@@ -8,50 +8,9 @@ Parser::Parser(string in)
 	input = in;
 	parse();
 	
-	string firstToken = tokens.front();
-	tokens.pop();
-	if(firstToken.compare("CREATE") == 0)
-	{
-		parsedCorrect = parse_CREATE();
-		if (parsedCorrect){ cout << "CREATE - valid query." << endl; } 
-		else{ cout << "CREATE - invalid query." << endl; } 
-	}
-	else if(firstToken.compare("UPDATE") == 0)
-	{
-		parsedCorrect = parse_UPDATE();
-		if (parsedCorrect){ cout << "UPDATE - valid query." << endl; } 
-		else{ cout << "UPDATE - invalid query." << endl; } 
-	}
-	else if(firstToken.compare("INSERT") == 0)
-	{
-		parsedCorrect = parse_INSERT();
-	}
-	else if(firstToken.compare("SHOW") == 0)
-	{
-		parsedCorrect = parse_SHOW();
-	}
-	else if(firstToken.compare("OPEN") == 0)
-	{
-		parsedCorrect = parse_OPEN();
-	}
-	else if(firstToken.compare("SAVE") == 0)
-	{
-		parsedCorrect = parse_SAVE();
-	}
-	else if(firstToken.compare("CLOSE") == 0)
-	{
-		parsedCorrect = parse_CLOSE();	
-	}
-	else if(firstToken.compare("DELETE") == 0)
-	{
-		parsedCorrect = parse_DELETE();
-		if (parsedCorrect){ cout << "DELETE - valid query." << endl; } 
-		else{ cout << "DELETE - invalid query." << endl; } 
-		
-	}
-	else{
-		cout << "Error: Command not found!" << endl;
-	}
+	if(isCommand()){ }
+	else { isQuery(); }
+	
 	
 }
 
@@ -70,6 +29,137 @@ char * Parser::parse()
 		parsing = strtok(NULL," ");
 	}
 	return cstring;
+}
+
+bool Parser::isCommand()
+{
+	string firstToken = tokens.front();
+	
+	if(firstToken.compare("CREATE") == 0)
+	{
+		tokens.pop();
+		parsedCorrect = parse_CREATE();
+		if (parsedCorrect){ cout << "CREATE - valid command." << endl; } 
+		else{ cout << "CREATE - invalid command." << endl; } 
+	}
+	else if(firstToken.compare("UPDATE") == 0)
+	{
+		tokens.pop();
+		parsedCorrect = parse_UPDATE();
+		if (parsedCorrect){ cout << "UPDATE - valid command." << endl; } 
+		else{ cout << "UPDATE - invalid command." << endl; } 
+	}
+	else if(firstToken.compare("INSERT") == 0)
+	{
+		tokens.pop();
+		parsedCorrect = parse_INSERT();
+		if (parsedCorrect){ cout << "INSERT - valid command." << endl; } 
+		else{ cout << "INSERT - invalid command." << endl; } 
+	}
+	else if(firstToken.compare("SHOW") == 0)
+	{
+		tokens.pop();
+		parsedCorrect = parse_SHOW();
+		if (parsedCorrect){ cout << "SHOW - valid command." << endl; } 
+		else{ cout << "SHOW - invalid command." << endl; } 
+	}
+	else if(firstToken.compare("OPEN") == 0)
+	{
+		tokens.pop();
+		parsedCorrect = parse_OPEN();
+		if (parsedCorrect){ cout << "OPEN - valid command." << endl; } 
+		else{ cout << "OPEN - invalid command." << endl; } 
+	}
+	else if(firstToken.compare("SAVE") == 0)
+	{
+		tokens.pop();
+		parsedCorrect = parse_SAVE();
+		if (parsedCorrect){ cout << "SAVE - valid command." << endl; } 
+		else{ cout << "SAVE - invalid command." << endl; } 
+	}
+	else if(firstToken.compare("CLOSE") == 0)
+	{
+		tokens.pop();
+		parsedCorrect = parse_CLOSE();	
+		if (parsedCorrect){ cout << "CLOSE - valid command." << endl; } 
+		else{ cout << "CLOSE - invalid command." << endl; } 
+	}
+	else if(firstToken.compare("DELETE") == 0)
+	{
+		tokens.pop();
+		parsedCorrect = parse_DELETE();
+		if (parsedCorrect){ cout << "DELETE - valid command." << endl; } 
+		else{ cout << "DELETE - invalid command." << endl; } 
+		
+	}
+	else{
+		cout << "Error: Command not found!" << endl;
+		return false;
+	}
+	
+	return true;
+}
+
+bool Parser::isExpression()
+{
+	string firstToken = tokens.front();
+	
+	if(firstToken.compare("select") == 0)
+	{
+		cout << 1 << endl;
+		tokens.pop();
+		
+	}
+	else if(firstToken.compare("PROJECT") == 0)
+	{
+		tokens.pop();
+		
+	}
+	else if(firstToken.compare("RENAME") == 0)
+	{
+		tokens.pop();
+	
+	}
+	else if(firstToken.compare("SET_UNION") == 0)
+	{
+		tokens.pop();
+		
+	}
+	else if(firstToken.compare("SET_DIFFERENCE") == 0)
+	{
+		tokens.pop();
+		
+	}
+	else if(firstToken.compare("CROSS_PRODUCT") == 0)
+	{
+		tokens.pop();
+		
+	}
+	
+	else{
+		cout << "Error: Query not found!" << endl;
+		return false;
+	}
+	
+	return true;
+}
+
+bool Parser::isQuery()
+{
+	string firstToken = tokens.front();
+	if(!isIdentifier(firstToken))
+		return false;
+	tokens.pop();
+	
+	firstToken = tokens.front();
+	if(firstToken.compare("<-"))
+		return false;
+	tokens.pop();
+	
+	if(!isExpression())
+		return false;
+	
+	return true;
 }
 
 bool Parser::isIdentifier(string name) //attribute name and relation name
@@ -204,17 +294,52 @@ bool Parser::isTypedAttributeList()
 bool Parser::isAtomicExpression() //checks if selection, projection, renaming, union, difference, or product
 {								  //Can also be a relation name (which is an identifier)
 				
-	if(tokens.front().compare("selection") == 0){return true;}
-	else if(tokens.front().compare("projection") == 0){return true;}
-	else if(tokens.front().compare("renaming") == 0){return true;}
-	else if(tokens.front().compare("union") == 0){return true;}
-	else if(tokens.front().compare("difference") == 0){return true;}
-	else if(tokens.front().compare("product") == 0){return true;}
-	else if(isIdentifier(tokens.front()) || tokens.front()[tokens.front().size()-1] == ';'){ return true; }
-	else{ 
-		cout << "error in syntax, not an atomic expression" << endl; 
+	// if(tokens.front().compare("selection") == 0){return true;}
+	// else if(tokens.front().compare("projection") == 0){return true;}
+	// else if(tokens.front().compare("renaming") == 0){return true;}
+	// else if(tokens.front().compare("union") == 0){return true;}
+	// else if(tokens.front().compare("difference") == 0){return true;}
+	// else if(tokens.front().compare("product") == 0){return true;}
+	// else if(isIdentifier(tokens.front()) || tokens.front()[tokens.front().size()-1] == ';'){ return true; }
+	// else{ 
+	// 	cout << "error in syntax, not an atomic expression" << endl; 
+	// 	return false;
+	// }
+	
+	string next = tokens.front(); //get the next input
+	if(isIdentifier(next)) //if it is a relation name
+	{
+		return true;
+	}
+	else if(tokens.front()[0] == '(') //it is an expression
+	{
+		tokens.pop(); //remove the (
+		if(isExpression()) //test to see if expression
+		{
+			tokens.pop(); //remove the )
+			return true;
+		}
+	}
+	else //if ti's not an expression or a relation name it's improper syntax 
+	{
 		return false;
 	}
+	
+}
+
+
+bool Parser::isComparison() 
+{
+	string operand = tokens.front();
+	if(!isIdentifier(operand))
+		return false;
+	tokens.pop();
+	
+	string op = tokens.front();
+	if(!isOP(op))
+		return false;
+	tokens.pop();
+		
 	
 	return true;
 }
@@ -312,12 +437,12 @@ bool Parser::parse_SHOW() //SHOW atomic-expr
 		
 		if(isAtomicExpression())
 		{
-			cout << "SHOW - parsed correctly" << endl;
+			//cout << "SHOW - parsed correctly" << endl;
 			return true;
 		}
 		else
 		{
-			cout << "SHOW - error in syntax " << endl;
+			//cout << "SHOW - error in syntax " << endl;
 			return false;
 		}
 
@@ -335,12 +460,12 @@ bool Parser::parse_OPEN() //OPEN relation-name
 		//cout << "z:" << z << endl;
 		if(isIdentifier(z))
 		{
-			cout << "OPEN - parsed correctly" << endl;
+			//cout << "OPEN - parsed correctly" << endl;
 			return true;
 		}
 		else
 		{
-			cout << "OPEN - error in syntax " << endl; 
+			//cout << "OPEN - error in syntax " << endl; 
 			return false;
 		}
 		
@@ -371,12 +496,12 @@ bool Parser::parse_SAVE() //SAVE relation-name
 	   //	cout << "z:" << z << endl;
 		if(isIdentifier(z))
 		{
-			cout << "SAVE - parsed correctly" << endl;
+			//cout << "SAVE - parsed correctly" << endl;
 			return true;
 		}
 		else
 		{
-			cout << "SAVE - error in syntax " << endl; 
+			//cout << "SAVE - error in syntax " << endl; 
 			return false;
 		}
 		
@@ -390,12 +515,12 @@ bool Parser::parse_CLOSE(){ //CLOSE relation-name
 	   //	cout << "z:" << z << endl;
 		if(isIdentifier(z))
 		{
-			cout << "CLOSE - parsed correctly" << endl;
+			//cout << "CLOSE - parsed correctly" << endl;
 			return true;
 		}
 		else
 		{
-			cout << "CLOSE - error in syntax " << endl; 
+			//cout << "CLOSE - error in syntax " << endl; 
 			return false;
 		}
 		
@@ -446,37 +571,80 @@ bool Parser::parse_DELETE() //DELETE FROM relation-name WHERE condition
 
 }
 
-/*	
 
-	bool Parser::parse_SELECT(){ 
-		
-		return true; 
-	}
+
+bool Parser::parse_SELECT()
+{ 
+	/*
+		if(isExp)
 	
-	bool Parser::parse_PROJECT(){ 
-		
-		return true; 
-	}
-
-	bool Parser::parse_RENAME(){ 
-		
-		return true; 
-	} 
 	
-	bool Parser::parse_SET_UNION(){ 
-		
-		return true; 
-	}
+	*/	
+	return true; 
+}
 
-	bool Parser::parse_SET_DIFFERENCE(){ 
+bool Parser::parse_PROJECT()
+{ 
 	
-		return true; 
-	}
+	return true; 
+}
 
-	bool Parser::parse_CROSS_PRODUCT(){ 
+bool Parser::parse_RENAME()
+{ 
 	
-		return true; 
-	}
+	return true; 
+} 
 
-*/
+bool Parser::parse_SET_UNION()
+{ 
+/*	if(isAtomicExpression(tokens.front()))
+	{
+		tokens.pop();
+		if(isAtomicExpression(tokens.front()))
+		{
+			//add the functions
+			return true;
+		}
+		else{cout << "not two atomic-expressions" << endl; return false;}
+	}
+	else{cout << "not two atomic-expressions" << endl; return false;}*/
+	
+	return true; 
+}
+
+bool Parser::parse_SET_DIFFERENCE()
+{ 
+/*	if(isAtomicExpression(tokens.front()))
+	{
+		tokens.pop();
+		if(isAtomicExpression(tokens.front())
+		{
+			//subtract the functions
+			return true;
+		}
+		else{cout << "not two atomic-expressions" << endl; return false;}
+	}
+	else{cout << "not two atomic-expressions" << endl; return false;}*/
+
+	return true; 
+}
+
+bool Parser::parse_CROSS_PRODUCT()
+{ 
+	/*if(isAtomicExpression(tokens.front()))
+	{
+		tokens.pop();
+		if(isAtomicExpression(tokens.front()))
+		{
+			//multiply the functions
+			return true;
+		}
+		else{cout << "not two atomic-expressions" << endl; return false;}
+	}
+	else{cout << "not two atomic-expressions" << endl; return false;}*/
+
+	return true; 
+}
+
+
 

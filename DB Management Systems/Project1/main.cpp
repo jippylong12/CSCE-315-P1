@@ -43,6 +43,9 @@ int main()
 	cout << endl;
 	Parser g("DELETE fram animalz WHERE age > 0;");
 	cout << endl;
+	
+	Parser i("dogs <- select (kind == \"dog\") animals;");
+	cout << endl;
 
 	
 	/*INSERT INTO animals VALUES FROM ("Joe", "cat", 4);
