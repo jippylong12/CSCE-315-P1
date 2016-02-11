@@ -13,7 +13,6 @@ Ivan Rupert */
 #include <sstream>
 #include <iomanip>
 #include <map>
-#include "Parser.h"
 #include "DBsystem.h"
 
 using namespace std;
@@ -152,10 +151,10 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 	
 }
 
-Table* DBsystem::CREATE(int columnCreate, string nameCreate,vector<string> createHeaders, vector<string> createKeys, vector<string> createTypes) //create a new table in memory
+Table* DBsystem::CREATE(int columnCreate, string nameCreate,vector<string> createHeaders, vector<string> createKeys, vector<string> createTypes, vector<int> sizes) //create a new table in memory
 {
 	//intiliaze new Table
-	Table* newTable = new Table(columnCreate,nameCreate,createHeaders, createKeys, createTypes);
+	Table* newTable = new Table(columnCreate,nameCreate,createHeaders, createKeys, createTypes,sizes);
 	database[nameCreate] = newTable; //add the table to the database
 	//return new Table
 	return newTable;
@@ -437,7 +436,8 @@ Table* DBsystem::SET_UNION(string t1, string t2)
 	newName = "Union " + t1 + ' ' + t2; //concat the name
 	//intiliaze new Table for holding the union
 	//create a  new table
-	Table* unionTable = new Table(database[t1]->getColumnLength(),newName, database[t1]->getHeaders(), database[t1]->getPrimaryKeys(),database[t1]->getHeaderTypes());
+	Table* unionTable = new Table(database[t1]->getColumnLength(),newName, database[t1]->getHeaders(),
+		database[t1]->getPrimaryKeys(),database[t1]->getHeaderTypes(),database[t1]->getHeaderSizes());
 	database[newName] = unionTable; //add the table to the database
 	
 	unionTable->setTable(database[t1]->getTable());// change the header

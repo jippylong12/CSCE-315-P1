@@ -13,6 +13,7 @@ class Table
  	vector<string> primaryKeys; //primary keys
  	vector<string> tableHeaders;
  	vector<string> headerTypes;
+ 	vector<int> headerSizes; //for VARCHARS
     
 public:
     
@@ -21,7 +22,7 @@ public:
 
 	/*command ::= ( open-cmd | close-cmd | save-cmd | exit-cmd | show-cmd | create-cmd | update-cmd | insert-cmd | delete-cmd );*/
 	//Table Constructor
-	Table(int,string, vector<string>, vector<string>, vector<string>); //constructor	
+	Table(int,string, vector<string>, vector<string>, vector<string>,vector<int>); //constructor	
 	Table(); 			//default
 	~Table();
 	Table(const Table &Source); //copy constructor
@@ -47,6 +48,9 @@ public:
     void setHeader(vector<string> tableHeaders);
     vector<string> getHeaderTypes() {return headerTypes;}
     void setHeaderTypes(vector<string> tempHeaderType) { headerTypes = tempHeaderType;}
+    //headerSizes functions
+    vector<int> getHeaderSizes() {return headerSizes;}
+    void setHeaderSizes(vector<int> sizes) {headerSizes = sizes;}
     
     bool EQUALS(string,string);
     bool NOT_EQUALS(string,string);

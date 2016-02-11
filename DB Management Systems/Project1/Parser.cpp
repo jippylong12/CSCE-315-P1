@@ -85,11 +85,6 @@ void Parser::parse()
 	}
 	
 	tokens = temp;
-	// for (int i = 0; i < tokens.size(); ++i)
-	// {
-	// 	if (tokens[i] == "")
-	// 		tokens.erase(tokens.begin() + i);
-	// }
 }
 
 bool Parser::isCommand()
@@ -302,35 +297,42 @@ bool Parser::isIdentifier(string name) //attribute name and relation name
 	return true;
 }
 
+//only used by CREATE
 bool Parser::isType(string type) //checks if INTEGER or VARCHAR
 {
 	if(type.compare("INTEGER") == 0)
 	{
-		tokens.pop();
+		parserHeaderTypes.push_back(tokens.front()); //add the type
+		parserHeaderSizes.push_back(-1); //-1 because int
+		tokens.pop(); //remove it
 		return true;
 	}
 	else if(type.compare("VARCHAR") == 0)
 	{
+		parserHeaderTypes.push_back(tokens.front()); //add the type
 		tokens.pop();
 		type = tokens.front();
 		if(type.compare("(") == 0)
 		{
-			tokens.pop();
+			tokens.pop(); //remove (
 			type = tokens.front();
-
+			
+			//check if it is a digit
 			for(int i = 0; i < type.length()-1; i++)
 			{
 				if('0' <= type[i] && type[i] <= '9'){}
 				else {return false;}
 			}
 			
-			
-			tokens.pop();
-			type = tokens.front();
+			int varcharLength = stoi(type); //make it an int
+			parserHeaderSizes.push_back(varcharLength); //push back value
+			tokens.pop(); //we don't need it anymore
+			type = tokens.front(); //check for )
 			if(type.compare(")") == 0)
 			{
+				//remove the ) from queue
 				tokens.pop();
-				return true;
+				return true; //go back
 			}
 				
 		}
@@ -367,17 +369,18 @@ bool Parser::isAttributeList()
 	
 
 
-bool Parser::isTypedAttributeList()
+bool Parser::isTypedAttributeList() //only used by CREATE apparently
 {
 	if(tokens.front().compare("(") != 0)
 		return false;
 	while(true)
 	{
-		tokens.pop();
+		tokens.pop(); //remove (
 		
-		if(!isIdentifier(tokens.front()))
+		if(!isIdentifier(tokens.front())) //looking for Headers
 			return false;
-		tokens.pop();
+		parserHeaders.push_back(tokens.front()); //pushback header name
+		tokens.pop(); //remove header from queue
 		
 
 		if(!isType(tokens.front()))
@@ -515,22 +518,25 @@ bool Parser::parse_CREATE()
 {
 	if(tokens.front().compare("TABLE") != 0)
 		return false;
-	tokens.pop();
+	tokens.pop(); // at this point we should check relation names
+	//which is isIdentifier()
 	
 	
 	if(!isIdentifier(tokens.front()))
 		return false;
+	//this should be the table name
+	parserTableName = tokens.front(); //assing it
 	tokens.pop();
 	
-	if(!isTypedAttributeList())
+	if(!isTypedAttributeList()) //adds type and headerSize
 		return false;
 	tokens.pop();	
 	
-	if(tokens.front().compare("PRIMARY") != 0)
+	if(tokens.front().compare("PRIMARY") != 0) //get rid of that
 		return false;
 	tokens.pop();
 	
-	if(tokens.front().compare("KEY") != 0)
+	if(tokens.front().compare("KEY") != 0) //get rid of that
 		return false;	
 	tokens.pop();
 	
@@ -538,7 +544,7 @@ bool Parser::parse_CREATE()
 		return false;	
 	tokens.pop();
 	
-	if(!isAttributeList())
+	if(!isAttributeList()) // check this
 		return false;
 	
 	

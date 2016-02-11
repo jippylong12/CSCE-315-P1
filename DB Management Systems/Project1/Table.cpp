@@ -14,6 +14,7 @@ Table::Table(const Table &Source)
 	primaryKeys = Source.primaryKeys;
 	tableHeaders = Source.tableHeaders;
 	headerTypes = Source.headerTypes;
+	headerSizes = Source.headerSizes;
 }
 
 Table& Table::operator= (const Table &Source)
@@ -25,10 +26,11 @@ Table& Table::operator= (const Table &Source)
 	primaryKeys = Source.primaryKeys;
 	tableHeaders = Source.tableHeaders;
 	headerTypes = Source.headerTypes;
+	headerSizes = Source.headerSizes;
 	return *this;
 }
 
-Table::Table(int columns,string name, vector<string> headers, vector<string> keys, vector<string> types) //constructor
+Table::Table(int columns,string name, vector<string> headers, vector<string> keys, vector<string> types, vector<int> sizes) //constructor
 {
 	rowLength = 0; //set the number of rows
 	columnLength = columns; //set the nubmer of columns	
@@ -37,6 +39,7 @@ Table::Table(int columns,string name, vector<string> headers, vector<string> key
 	//need to fiil the rest of the table.
 	primaryKeys = keys; //set the primary keys
 	headerTypes = types;
+	headerSizes = sizes;
 }
 
 Table::Table() //defualt constructor

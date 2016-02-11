@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <vector>
 #include <queue>
 #include <stack>
 #include <sstream>
@@ -12,17 +13,30 @@ class Parser
 	string input;
 	queue<string> tokens;
 	bool parsedCorrect = false;
+	string parserTableName;
+	vector<string> parserKeys;
+	vector<string> parserHeaders;
+	vector<string> parserHeaderTypes;
+	vector<int> parserHeaderSizes; //for VARCHAR INTEGERS are -1
+	
 public:
-	Parser(string);
+	Parser(string); //constructor
+	Parser() { input = "";} //default
+	
+	//Parser functions
 	void parse();
-	string getInput() {return input;}; 
+	void sendNewInput(string in) { input = in;}
+	string getInput() {return input;}
+	string getParserTableName() {return parserTableName;}
+	vector<string> getParserKeys() {return parserKeys;}
+	vector<string> getParserHeaders() {return parserHeaders;}
+	vector<string> getParserHeaderTypes() {return parserHeaderTypes;}
+	vector<int> getParserHeaderSizes() {return parserHeaderSizes;}
 	
-	//Adding possible functions for the parser
 	
 	
-	void lexer(string input);	//LEX the input string into tokens
-	
-	//checking syntax
+	//Recursive Parser functions
+	//Query functions
 	bool isCommand();
 	bool isQuery(); 
 	bool isExpression();
@@ -43,6 +57,7 @@ public:
 	bool isSetDifference();
 	bool isCrossProduct();
 	
+	//Command functions
 	//merging with the DB
 	bool parse_OPEN();			//Parse the OPEN query...etc
 	bool parse_SAVE();
@@ -52,7 +67,7 @@ public:
 	bool parse_UPDATE();
 	bool parse_INSERT();
 	bool parse_DELETE();
-	//merging with the DB
+	bool parse_EXIT();
 	bool parse_SELECT();
 	bool parse_PROJECT();
 	bool parse_RENAME();

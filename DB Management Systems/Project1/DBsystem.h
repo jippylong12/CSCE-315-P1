@@ -6,20 +6,25 @@
 #include <sstream>
 #include <map>
 #include "Table.h"
+#include "Parser.h"
 
 class DBsystem
 {
 	map<string,Table*> database;
+	Parser DBParser;
 
 public:
 	DBsystem();
+	
+	//Parser
+	Parser getParser() {return DBParser;}
 	
 	//-------Database queries--------//
 	Table* OPEN(string); //bring a table into memory from file 
 	int CLOSE(string);
 	int SAVE(string);
 	int SHOW(string);    	//::== SHOW atomic-expr 
-	Table* CREATE(int,string,vector<string>,vector<string>,vector<string>); //::= CREATE TABLE relation-name ( typed-attribute-list ) PRIMARY KEY ( attribute-list )
+	Table* CREATE(int,string,vector<string>,vector<string>,vector<string>,vector<int>); //::= CREATE TABLE relation-name ( typed-attribute-list ) PRIMARY KEY ( attribute-list )
 	int UPDATE(string, string, string, string);	//::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
 	int INSERT(string, vector<string> );	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
 	int DELETE(string , string, string );	//::= DELETE FROM relation-name WHERE condition
