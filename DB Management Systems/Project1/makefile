@@ -16,8 +16,8 @@ DBsystem.o: DBsystem.cpp DBsystem.h main.cpp
 Table.o: Table.h Table.cpp
 	g++ -c  -std=c++11 Table.h Table.cpp
 	
-Parser.o: Parser.h Parser.cpp
-	g++ -c -std=c++11 Parser.h Parser.cpp
+Parser.o: Parser.h Parser.cpp Container.h
+	g++ -c -std=c++11 Parser.h Parser.cpp Container.h
 
 clean:
 	rm *.o database

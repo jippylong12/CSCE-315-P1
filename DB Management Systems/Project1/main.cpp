@@ -13,22 +13,36 @@ using namespace std;
 
 int main()
 {	
-	DBsystem db;
+	string input0;
+	
+	while(1)
+	{
+		DBsystem db;
+		
+		cout<<"What is the command?"<<endl;
+		getline (cin,input0); //take the command
+		db.getParser().sendNewInput(input0);
+		//db.execute(); //not implemented yet but will take the command and use switch statement to know what to run
+		//db.getParser().clear(); Not implementted yet but will reset all things in container to 0
+		
+	}
+
 	
 	
-	ifstream in("animals.db");
-	stringstream buffer;
-	buffer << in.rdbuf();
-	string fileInput = buffer.str();		//Stores all file input into one string
+	//DBsystem db;
 	
-	db.getParser().sendNewInput("CREATE TABLE animals (name VARCHAR(20), years INTEGER, kind VARCHAR(8)) PRIMARY KEY (name);");
-	cout<<endl;
+	// db.getParser().sendNewInput("CREATE TABLE animals (name VARCHAR(20), years INTEGER, kind VARCHAR(8)) PRIMARY KEY (name);");
+	// cout<<endl;
 	//if(db.getParser().parse_CREATE() == true){
 	//	cout << "Creating..." << endl;
 	//}
 	
-	cout << "Parser in: " << db.getParser().getInput() << endl;
+	//cout << "Parser in: " << db.getParser().getInput() << endl;
 	
+	// ifstream in("animals.db");
+	// stringstream buffer;
+	// buffer << in.rdbuf();
+	// string fileInput = buffer.str();		//Stores all file input into one string
 	
 	// Parser a("UPDATE ass SET asset = \"butt\", asset = \"butt\", asset = \"butt\" WHERE buttSize >= buttLength;");  //Should pass
 	// cout << endl;

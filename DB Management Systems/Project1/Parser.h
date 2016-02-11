@@ -4,6 +4,7 @@
 #include <queue>
 #include <stack>
 #include <sstream>
+#include "Container.h"
 using namespace std;
 
 
@@ -13,11 +14,7 @@ class Parser
 	string input;
 	queue<string> tokens;
 	bool parsedCorrect = false;
-	string parserTableName;
-	vector<string> parserKeys;
-	vector<string> parserHeaders;
-	vector<string> parserHeaderTypes;
-	vector<int> parserHeaderSizes; //for VARCHAR INTEGERS are -1
+	Container contain;
 	
 public:
 	Parser(string); //constructor
@@ -25,13 +22,9 @@ public:
 	
 	//Parser functions
 	void parse();
-	void sendNewInput(string in) { input = in;}
+	void sendNewInput(string);
 	string getInput() {return input;}
-	string getParserTableName() {return parserTableName;}
-	vector<string> getParserKeys() {return parserKeys;}
-	vector<string> getParserHeaders() {return parserHeaders;}
-	vector<string> getParserHeaderTypes() {return parserHeaderTypes;}
-	vector<int> getParserHeaderSizes() {return parserHeaderSizes;}
+	
 	
 	
 	

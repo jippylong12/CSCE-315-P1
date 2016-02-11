@@ -8,18 +8,14 @@ Parser::Parser(string in)
 	input = in;
 	parse();
 	
-	if(isCommand()){}
-	else if(isQuery()){}
-	else
-	{
-		cout << "Error: Command or Query not found!" << endl;
-	}
-	
 	
 }
 
-
-
+void Parser::sendNewInput(string in)
+{
+	input = in;
+	parse();
+}
 void Parser::parse()
 {
 	
@@ -85,6 +81,14 @@ void Parser::parse()
 	}
 	
 	tokens = temp;
+	
+	//begin parsing
+	if(isCommand()){}
+	else if(isQuery()){}
+	else
+	{
+		cout << "Error: Command or Query not found!" << endl;
+	}
 }
 
 bool Parser::isCommand()
@@ -302,14 +306,14 @@ bool Parser::isType(string type) //checks if INTEGER or VARCHAR
 {
 	if(type.compare("INTEGER") == 0)
 	{
-		parserHeaderTypes.push_back(tokens.front()); //add the type
-		parserHeaderSizes.push_back(-1); //-1 because int
+		contain.parserHeaderTypes.push_back(tokens.front()); //add the type
+		contain.parserHeaderSizes.push_back(-1); //-1 because int
 		tokens.pop(); //remove it
 		return true;
 	}
 	else if(type.compare("VARCHAR") == 0)
 	{
-		parserHeaderTypes.push_back(tokens.front()); //add the type
+		contain.parserHeaderTypes.push_back(tokens.front()); //add the type
 		tokens.pop();
 		type = tokens.front();
 		if(type.compare("(") == 0)
@@ -325,7 +329,7 @@ bool Parser::isType(string type) //checks if INTEGER or VARCHAR
 			}
 			
 			int varcharLength = stoi(type); //make it an int
-			parserHeaderSizes.push_back(varcharLength); //push back value
+			contain.parserHeaderSizes.push_back(varcharLength); //push back value
 			tokens.pop(); //we don't need it anymore
 			type = tokens.front(); //check for )
 			if(type.compare(")") == 0)
@@ -379,7 +383,7 @@ bool Parser::isTypedAttributeList() //only used by CREATE apparently
 		
 		if(!isIdentifier(tokens.front())) //looking for Headers
 			return false;
-		parserHeaders.push_back(tokens.front()); //pushback header name
+		contain.parserHeaders.push_back(tokens.front()); //pushback header name
 		tokens.pop(); //remove header from queue
 		
 
@@ -525,7 +529,7 @@ bool Parser::parse_CREATE()
 	if(!isIdentifier(tokens.front()))
 		return false;
 	//this should be the table name
-	parserTableName = tokens.front(); //assing it
+	contain.parserTableName = tokens.front(); //assing it
 	tokens.pop();
 	
 	if(!isTypedAttributeList()) //adds type and headerSize

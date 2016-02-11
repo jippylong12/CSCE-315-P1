@@ -16,6 +16,8 @@ class DBsystem
 public:
 	DBsystem();
 	
+	void execute(); //connect Parser containers to DB functions
+	
 	//Parser
 	Parser getParser() {return DBParser;}
 	
