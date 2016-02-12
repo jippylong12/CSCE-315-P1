@@ -28,10 +28,16 @@ int main()
 	}
 
 	
+	// ifstream in("animals.db");
+	// stringstream buffer;
+	// buffer << in.rdbuf();
+	// string fileInput = buffer.str();		//Stores all file input into one string
+
+	// DBsystem db;
+
 	
-	//DBsystem db;
-	
-	// db.getParser().sendNewInput("CREATE TABLE animals (name VARCHAR(20), years INTEGER, kind VARCHAR(8)) PRIMARY KEY (name);");
+	// db.getParser().sendNewInput("INSERT INTO species VALUES FROM RELATION project (kind) animals;");
+	// //db.getParser().sendNewInput("INSERT INTO animals VALUES FROM (\"Joe\", \"cat\", 4);");
 	// cout<<endl;
 	//if(db.getParser().parse_CREATE() == true){
 	//	cout << "Creating..." << endl;
@@ -39,10 +45,7 @@ int main()
 	
 	//cout << "Parser in: " << db.getParser().getInput() << endl;
 	
-	// ifstream in("animals.db");
-	// stringstream buffer;
-	// buffer << in.rdbuf();
-	// string fileInput = buffer.str();		//Stores all file input into one string
+
 	
 	// Parser a("UPDATE ass SET asset = \"butt\", asset = \"butt\", asset = \"butt\" WHERE buttSize >= buttLength;");  //Should pass
 	// cout << endl;

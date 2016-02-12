@@ -97,6 +97,7 @@ bool Parser::isCommand()
 	
 	if(firstToken.compare("CREATE") == 0)
 	{
+		contain.functionName = tokens.front(); //so we know it's CREATE
 		tokens.pop();
 		parsedCorrect = parse_CREATE();
 		if (parsedCorrect){ cout << "CREATE - valid command." << endl; } 
@@ -104,6 +105,7 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("UPDATE") == 0)
 	{
+		contain.functionName = tokens.front(); //so we know it's UPDATE
 		tokens.pop();
 		parsedCorrect = parse_UPDATE();
 		if (parsedCorrect){ cout << "UPDATE - valid command." << endl; } 
@@ -111,6 +113,7 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("INSERT") == 0)
 	{
+		contain.functionName = tokens.front(); //so we know it's INSERT
 		tokens.pop();
 		parsedCorrect = parse_INSERT();
 		if (parsedCorrect){ cout << "INSERT - valid command." << endl; } 
@@ -118,6 +121,7 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("SHOW") == 0)
 	{
+		contain.functionName = tokens.front(); //so we know it's SHOW
 		tokens.pop();
 		parsedCorrect = parse_SHOW();
 		if (parsedCorrect){ cout << "SHOW - valid command." << endl; } 
@@ -125,6 +129,7 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("OPEN") == 0)
 	{
+		contain.functionName = tokens.front(); //so we know it's OPEN
 		tokens.pop();
 		parsedCorrect = parse_OPEN();
 		if (parsedCorrect){ cout << "OPEN - valid command." << endl; } 
@@ -132,6 +137,7 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("SAVE") == 0)
 	{
+		contain.functionName = tokens.front(); //so we know it's SAVE
 		tokens.pop();
 		parsedCorrect = parse_SAVE();
 		if (parsedCorrect){ cout << "SAVE - valid command." << endl; } 
@@ -139,6 +145,7 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("CLOSE") == 0)
 	{
+		contain.functionName = tokens.front(); //so we know it's CLOSE
 		tokens.pop();
 		parsedCorrect = parse_CLOSE();	
 		if (parsedCorrect){ cout << "CLOSE - valid command." << endl; } 
@@ -146,6 +153,7 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("DELETE") == 0)
 	{
+		contain.functionName = tokens.front(); //so we know it's DELETE
 		tokens.pop();
 		parsedCorrect = parse_DELETE();
 		if (parsedCorrect){ cout << "DELETE - valid command." << endl; } 
@@ -166,6 +174,7 @@ bool Parser::isExpression()
 	
 	if(firstToken.compare("select") == 0)
 	{
+		contain.functionName = tokens.front(); //so we know it's select
 		tokens.pop();
 		parsedCorrect = parse_SELECT();
 		if (parsedCorrect){ cout << "select - valid command." << endl; } 
@@ -173,6 +182,7 @@ bool Parser::isExpression()
 	}
 	else if(firstToken.compare("project") == 0)
 	{
+		contain.functionName = tokens.front(); //so we know it's project
 		tokens.pop();
 		parsedCorrect = parse_PROJECT();
 		if (parsedCorrect){ cout << "projection - valid command." << endl; } 
@@ -181,6 +191,7 @@ bool Parser::isExpression()
 	}
 	else if(firstToken.compare("rename") == 0)
 	{
+		contain.functionName = tokens.front(); //so we know it's rename
 		tokens.pop();
 		parsedCorrect = parse_RENAME();
 		if (parsedCorrect){ cout << "rename - valid command." << endl; } 
@@ -610,6 +621,7 @@ bool Parser::parse_UPDATE()
 
 bool Parser::parse_INSERT()
 {
+	
 	if(tokens.front().compare("INTO") != 0)	 {	return false; 	}	 //"INTO"
 		tokens.pop();
 	if(!isIdentifier(tokens.front()))		 {	return false;   }	 //relation name
@@ -618,13 +630,16 @@ bool Parser::parse_INSERT()
 		tokens.pop();
 	if(tokens.front().compare("FROM") != 0)	 {	return false; 	}	 //"FROM"
 		tokens.pop();
+		
+
 	
+	if(tokens.front().compare("(") == 0) { //Checking for literals
+		
 	
-	if(tokens.front().compare("(") == 0)	
-	{	
 		tokens.pop();
-		while(true)
+		while(true)		
 		{
+			
 			if (!isLiteral(tokens.front()))		 {  return false;	}    //literal 
 				tokens.pop();
 				
@@ -636,14 +651,17 @@ bool Parser::parse_INSERT()
 			else
 				break;
 		}
+	
 		if(tokens.front().compare(")") != 0)	 {	return false; 	}
 			tokens.pop();
 			
 	}
-	else if(tokens.front().compare("RELATION") != 0)	
+	else if(tokens.front().compare("RELATION") == 0) //Check for RELATION
+	//Should be true for other INSERT command ^ we had a !=
 	{	
-		//NEED TO ADD LATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			
+		tokens.pop();
+		
+		if(!isExpression()) return false;
 	}
 	else
 		return false;
