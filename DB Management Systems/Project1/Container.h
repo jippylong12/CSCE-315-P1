@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -18,9 +19,11 @@ struct Container
 	vector<string> parserHeaderTypes;
 	
 	vector<int> parserHeaderSizes; //for VARCHAR INTEGERS are -1  
-	
-	
-	
-	//Container functions
-	void clear(); //clear all items in the 
+
+	void clear() // this well erase all the vectors to empty again. s
+	{
+		cout<<"I am working"<<endl;
+	}
+
 };
+

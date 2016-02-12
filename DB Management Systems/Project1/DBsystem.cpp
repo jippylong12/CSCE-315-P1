@@ -25,6 +25,11 @@ DBsystem::DBsystem()
 }
 
 
+//lots of switch statements based on functionName in Container. 
+void DBsystem::execute()
+{
+	
+}
 
 Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file 
 {

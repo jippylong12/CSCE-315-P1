@@ -23,6 +23,7 @@ public:
 	void parse();
 	void sendNewInput(string);
 	string getInput() {return input;}
+	Container getContainer() {return contain;}
 	
 	
 	
