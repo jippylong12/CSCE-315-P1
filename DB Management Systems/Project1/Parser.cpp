@@ -439,7 +439,9 @@ bool Parser::isAtomicExpression()
 {			
 	if(isIdentifier(tokens.front())) //just a table
 	{
+
 		contain.parserTableName = tokens.front(); //get the name for SHOW, also query
+
 	}
 	else
 	{
