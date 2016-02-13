@@ -33,7 +33,7 @@ void DBsystem::execute()
     
     if (DBParser.contain.functionName.compare("CLOSE") == 0){
         //run CLOSE
-        string nameClose = DBParser.contain.relationName; //Grab relation name from parser
+        string nameClose = DBParser.contain.parserTableName; //Grab relation name from parser
        //CLOSE(nameClose);
         
         

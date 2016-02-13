@@ -8,10 +8,6 @@ using namespace std;
 struct Container
 {
 	
-    string relationName;
-    
-    
-    
     //items
     string functionName; //what to run
     string parserTableName; //table Name
@@ -72,6 +68,11 @@ struct Container
 		//I think we need to set the functionName to "" because for a query 
 		//there is no function
 		functionName = "";
+		
+		//reset bool values just in case. 
+		isUnion = 0;
+		isDifference = 0;
+		isProduct = 0;
 	}
 
 };
