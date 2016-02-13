@@ -22,10 +22,7 @@ public:
 	void parse();
 	void sendNewInput(string);
 	string getInput() {return input;}
-<<<<<<< HEAD
-	
-=======
->>>>>>> c20633bea7eb2986dd5c8912b3649cab37b84012
+
 	Container contain;
 	
 	
