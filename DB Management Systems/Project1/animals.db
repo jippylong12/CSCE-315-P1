@@ -1,3 +1,1 @@
-CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY(name, kind);
-INSERT INTO animals VALUES FROM ("Spot", "dog", 12);
-INSERT INTO animals VALUES FROM ("Snowball", "cat", 3);
+CLOSE animals;

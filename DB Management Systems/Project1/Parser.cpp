@@ -100,6 +100,13 @@ bool Parser::isCommand()
 		contain.functionName = tokens.front(); //so we know it's CREATE
 		tokens.pop();
 		parsedCorrect = parse_CREATE();
+        
+        //Set the relationName for the container
+        contain.relationName = "CREATE";
+        
+        
+        
+        
 		if (parsedCorrect){ cout << "CREATE - valid command." << endl; } 
 		else{ cout << "CREATE - invalid command." << endl; } 
 	}
@@ -144,12 +151,17 @@ bool Parser::isCommand()
 		else{ cout << "SAVE - invalid command." << endl; } 
 	}
 	else if(firstToken.compare("CLOSE") == 0)
-	{
-		contain.functionName = tokens.front(); //so we know it's CLOSE
+    {   cout << "Tokens front: " <<  tokens.front() << endl;
+		//contain.functionName = tokens.front(); //so we know it's CLOSE
+        contain.functionName = "CLOSE";
 		tokens.pop();
-		parsedCorrect = parse_CLOSE();	
+		parsedCorrect = parse_CLOSE();
+         //cout << "contain.functionName: " << tokens.front() << endl;
+        
 		if (parsedCorrect){ cout << "CLOSE - valid command." << endl; } 
-		else{ cout << "CLOSE - invalid command." << endl; } 
+		else{ cout << "CLOSE - invalid command." << endl; }
+        
+        
 	}
 	else if(firstToken.compare("DELETE") == 0)
 	{
@@ -159,9 +171,15 @@ bool Parser::isCommand()
 		if (parsedCorrect){ cout << "DELETE - valid command." << endl; } 
 		else{ cout << "DELETE - invalid command." << endl; } 
 		
-	}
+    }else if(firstToken.compare("EXIT") == 0){   //so we know it's EXIT
+        contain.functionName = tokens.front();
+        tokens.pop();
+        parsedCorrect = parse_EXIT();
+        if(parsedCorrect) { cout << "EXIT - valid command." << endl; }
+        else {cout << "EXIT - invalid command." << endl; }
+    }
 	else{
-		
+    
 		return false;
 	}
 	
@@ -529,6 +547,13 @@ bool Parser::isCondition()
 
 
 
+
+//------------------------------Commands and Queries--------------------------------//
+
+
+
+
+
 bool Parser::parse_CREATE()
 {
 	if(tokens.front().compare("TABLE") != 0)
@@ -701,8 +726,16 @@ if (!isIdentifier(tokens.front()))		 {  return false;	}    //relation name
 
 bool Parser::parse_CLOSE()
 { 
-	if (!isIdentifier(tokens.front()))		 {  return false;	}    //relation name 
-		tokens.pop();
+	if (!isIdentifier(tokens.front())){
+        tokens.pop();
+        return false;                       //relation name
+		
+    }
+    else {
+        contain.relationName = tokens.front();  //Give the container the relation name
+        cout << "Relation Name: " << contain.relationName << endl;
+        tokens.pop();
+    }
 	if(tokens.front().compare(";") != 0)	 {	return false; 	}
 		tokens.pop();
 				
@@ -730,6 +763,17 @@ bool Parser::parse_DELETE() //DELETE FROM relation-name WHERE condition
 	return true;
 
 }
+bool Parser::parse_EXIT(){
+    
+    if(tokens.front().compare(";") != 0) { return false; }
+       tokens.pop();
+
+    return true;
+}
+
+
+
+
 
 
 
