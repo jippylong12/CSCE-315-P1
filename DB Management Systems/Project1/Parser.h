@@ -13,7 +13,6 @@ class Parser
 	string input;
 	queue<string> tokens;
 	bool parsedCorrect = false;
-	Container contain;
 	
 public:
 	Parser(string); //constructor
@@ -23,7 +22,8 @@ public:
 	void parse();
 	void sendNewInput(string);
 	string getInput() {return input;}
-	Container getContainer() {return contain;}
+	
+	Container contain;
 	
 	
 	

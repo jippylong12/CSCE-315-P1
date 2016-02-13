@@ -26,72 +26,74 @@ DBsystem::DBsystem()
 }
 
 
-enum commandFunctions {
-    OPEN, CLOSE, SAVE, SHOW, CREATE, UPDATE, INSERT, DELETE
-};
-//lots of switch statements based on functionName in Container. 
+//if statements based on functionName in Container. 
 void DBsystem::execute()
 {
+    cout << "Function name to be run: " << DBParser.contain.functionName << endl;
     
-    
-    cout << "Func Name: " << DBParser.getContainer().functionName << endl;
-    
-    if (getParser().getContainer().functionName.compare("CLOSE") == 0){
+    //-----------------------COMMANDS----------------------//
+	
+	
+	if(DBParser.contain.functionName.compare("OPEN") == 0){
+		//run OPEN
+		string nameOpen = DBParser.contain.parserTableName;
+	}
+	
+	
+	if (DBParser.contain.functionName.compare("CLOSE") == 0){
         //run CLOSE
-        string nameClose = getParser().getContainer().relationName; //Grab relation name from parser
-        CLOSE(nameClose);
+        string nameClose = DBParser.contain.parserTableName; //Grab relation name from parser
+       //CLOSE(nameClose);
         
         
     }
-    if (getParser().getContainer().functionName.compare("SAVE") == 0){
+    if (DBParser.contain.functionName.compare("SAVE") == 0){
         //run SAVE
         
         
         
     }
-    if (getParser().getContainer().functionName.compare("SHOW") == 0){
+    if (DBParser.contain.functionName.compare("SHOW") == 0){
         //run SHOW
         
         
         
     }
-    if (getParser().getContainer().functionName.compare("UPDATE") == 0){
+    if (DBParser.contain.functionName.compare("UPDATE") == 0){
         //run UPDATE
         
         
         
     }
-    if (getParser().getContainer().functionName.compare("INSERT") == 0){
+    if (DBParser.contain.functionName.compare("INSERT") == 0){
         //run INSERT
         
         
         
     }
-    if (getParser().getContainer().functionName.compare("DELETE") == 0){
+    if (DBParser.contain.functionName.compare("DELETE") == 0){
         //run DELETE
         
         
         
     }
-    if (getParser().getContainer().functionName.compare("EXIT") == 0){
+    if (DBParser.contain.functionName.compare("EXIT") == 0){
         //run EXIT
         
         EXIT();
     }
-   
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+	
+	
+	//---------------------QUERIES------------------------//
+	if (DBParser.contain.isSetUnion){
+		//do Union
+	}
+	if (DBParser.contain.isSetDifference){
+		//do Union
+	}
+	if (DBParser.contain.isCrossProduct){
+		//do Union
+	}
     
 }
 
@@ -108,6 +110,7 @@ Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file
 		cout<<"String: "<<inputLine<<endl;
 		DBParser.sendNewInput(inputLine); //send it to the parser
 		execute(); //run the stuff. 
+		DBParser.contain.clear(); //wipe the vectors clean. 
 	}
 	
 	dbFile.close();
@@ -236,7 +239,7 @@ Table* DBsystem::CREATE(int columnCreate, string nameCreate,vector<string> creat
 int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, string replace)
 {
 	//go to table nameUpdate
-	//search first row for headerName to find column
+	//search headervector for headerName to find column
 	//search that column for the criteria
 	//replace the criteria with replace
 	
@@ -291,7 +294,7 @@ int DBsystem::INSERT(string nameInsert, vector<string> input)
 
 //nameDelete may not be neede depending on the implementation of the Parser.
 //Parser may end up finding the row and may only need one input here.
-int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo)
+int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo, string deleteOP)
 {
 	vector<vector <string> > tempTable;
 	tempTable = database[nameDelete]->getTable();

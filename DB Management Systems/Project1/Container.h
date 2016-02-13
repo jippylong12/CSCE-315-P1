@@ -8,10 +8,6 @@ using namespace std;
 struct Container
 {
 	
-    string relationName;
-    
-    
-    
     //items
     string functionName; //what to run
     string parserTableName; //table Name
@@ -24,16 +20,18 @@ struct Container
 	vector<int> parserHeaderSizes; //for VARCHAR INTEGERS are -1  
     
     //update
-    string updateHeaderName;
-    string updateCriteria;
-    string updateReplace;
+    vector<string> updateHeaderName; //vector of header names
+    string updateCriteria;			 //WHERE condition
+    vector<string> updateReplace;	 //replace with
     
     //insert
-	vector<string> insertInput;
+	vector<string> insertInput;	//vector of inputs
+	string insertExpr;			//expr for relation
 	
 	//delete
 	string deleteCompareHeader;
 	string deleteCompareTo;
+	string deleteOP;
 	
 	//select
 	string selectHeader;
@@ -46,6 +44,11 @@ struct Container
 	//rename
 	vector<string> renameTableAttributes;
 	vector<string> renameReplaceAttributes;
+	
+	//queries
+	bool isSetUnion;
+	bool isSetDifference;
+	bool isCrossProduct;
 	
 	
 	
@@ -64,6 +67,15 @@ struct Container
 		projectAttributes.clear();
 		renameTableAttributes.clear();
 		renameReplaceAttributes.clear();
+		
+		//I think we need to set the functionName to "" because for a query 
+		//there is no function
+		functionName = "";
+		
+		//reset bool values just in case. 
+		isSetUnion = 0;
+		isSetDifference = 0;
+		isCrossProduct = 0;
 	}
 
 };
