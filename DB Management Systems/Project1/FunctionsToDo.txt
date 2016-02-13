@@ -1,0 +1,15 @@
+Close 
+Save 
+Show 
+Create 
+Update 
+Insert 
+Delete 
+Exit 
+Select
+Project 
+Rename 
+Union 
+Difference 
+Cross product 
+XOpen 

@@ -47,6 +47,10 @@ struct Container
 	vector<string> renameTableAttributes;
 	vector<string> renameReplaceAttributes;
 	
+	//queries
+	bool isUnion;
+	bool isDifference;
+	bool isProduct;
 	
 	
 	
@@ -67,6 +71,7 @@ struct Container
 		
 		//I think we need to set the functionName to "" because for a query 
 		//there is no function
+		functionName = "";
 	}
 
 };

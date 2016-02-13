@@ -73,6 +73,7 @@ void DBsystem::execute()
         
         EXIT();
     }
+    
 }
 
 Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file 
