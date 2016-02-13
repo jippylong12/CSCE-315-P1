@@ -10,21 +10,55 @@ struct Container
 	//items
     string functionName; //what to run
     string parserTableName; //table Name
-    string updateHeaderName;
-	
-	
-	
+    string secondTableName; //for functions with two tables
+    
+    //create	
 	vector<string> parserKeys; //keys
 	vector<string> parserHeaders;
 	vector<string> parserHeaderTypes;
-	
 	vector<int> parserHeaderSizes; //for VARCHAR INTEGERS are -1  
+    
+    //update
+    string updateHeaderName;
+    string updateCriteria;
+    string updateReplace;
+    
+    //insert
+	vector<string> insertInput;
+	
+	//delete
+	string deleteCompareHeader;
+	string deleteCompareTo;
+	
+	//select
+	string selectHeader;
+	string selectComparator;
+	string selectCondition;
+	
+	//project
+	vector<string> projectAttributes;
+	
+	//rename
+	vector<string> renameTableAttributes;
+	vector<string> renameReplaceAttributes;
+	
+	
+	
+	
+
 
 	//I don't know how to declare this outside the struct
 	//it will say its redeclared
 	void clear() // this well erase all the vectors to empty again. 
 	{
-		cout<<"I am working"<<endl;
+		parserKeys.clear();
+		parserHeaders.clear();
+		parserHeaderTypes.clear();
+		parserHeaderSizes.clear();
+		insertInput.clear();
+		projectAttributes.clear();
+		renameTableAttributes.clear();
+		renameReplaceAttributes.clear();
 	}
 
 };

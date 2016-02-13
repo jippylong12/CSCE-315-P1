@@ -52,19 +52,10 @@ Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file
 
 int DBsystem::CLOSE(string nameClose) //saves and removes table instance from memory
 {
-	//create a new txt file with the name of the file
-	//read in the rowLength and columnLenght of table first
-	//read in row by row into file
-	//remove from memory
-	//return 0;
-	//database["nameClose"]
 	//Just call Save Function.
 	this->SAVE(nameClose);
 	database.erase(nameClose);
 	return 0;
-	
-	
-	
 	
 }
 
