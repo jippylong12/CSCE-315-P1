@@ -7,7 +7,12 @@ using namespace std;
 
 struct Container
 {
-	//items
+	
+    string relationName;
+    
+    
+    
+    //items
     string functionName; //what to run
     string parserTableName; //table Name
     string secondTableName; //for functions with two tables

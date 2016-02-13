@@ -29,11 +29,51 @@ DBsystem::DBsystem()
 //lots of switch statements based on functionName in Container. 
 void DBsystem::execute()
 {
-	//this gets from the parser what to run. 
-	string function = DBParser.getContainer().functionName;
-	
-	//remember that commands are capitaized and queries are lowercase
-	
+
+    cout << "Func Name: " << DBParser.getContainer().functionName << endl;
+    
+    if (getParser().getContainer().functionName.compare("CLOSE") == 0){
+        //run CLOSE
+        string nameClose = getParser().getContainer().relationName; //Grab relation name from parser
+        CLOSE(nameClose);
+        
+        
+    }
+    if (getParser().getContainer().functionName.compare("SAVE") == 0){
+        //run SAVE
+        
+        
+        
+    }
+    if (getParser().getContainer().functionName.compare("SHOW") == 0){
+        //run SHOW
+        
+        
+        
+    }
+    if (getParser().getContainer().functionName.compare("UPDATE") == 0){
+        //run UPDATE
+        
+        
+        
+    }
+    if (getParser().getContainer().functionName.compare("INSERT") == 0){
+        //run INSERT
+        
+        
+        
+    }
+    if (getParser().getContainer().functionName.compare("DELETE") == 0){
+        //run DELETE
+        
+        
+        
+    }
+    if (getParser().getContainer().functionName.compare("EXIT") == 0){
+        //run EXIT
+        
+        EXIT();
+    }
 }
 
 Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file 
@@ -60,7 +100,9 @@ int DBsystem::CLOSE(string nameClose) //saves and removes table instance from me
 	//Just call Save Function.
 	this->SAVE(nameClose);
 	database.erase(nameClose);
+    cout << nameClose << " successfully closed." << endl;
 	return 0;
+    
 	
 }
 
@@ -436,7 +478,7 @@ Table* DBsystem::SET_UNION(string t1, string t2)
 {
 	//check if the headers are the same size and the same values
 	
-	//push_back the table of one 
+	//push_back the table ofone 
 	//push back the rows of the other table
 	//possibly check each time to see if there are any duplicates. 
 	//return new table

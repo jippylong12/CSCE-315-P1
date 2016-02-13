@@ -12,6 +12,7 @@ class DBsystem
 {
 	map<string,Table*> database;
 	Parser DBParser;
+    
 
 public:
 	DBsystem();
