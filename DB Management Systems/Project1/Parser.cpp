@@ -682,6 +682,7 @@ bool Parser::parse_SHOW() //SHOW atomic-expr
 bool Parser::parse_OPEN() //OPEN relation-name
 {
 	if (!isIdentifier(tokens.front()))		 {  return false;	}    //relation name 
+		contain.parserTableName = tokens.front(); 
 		tokens.pop();
 	if(tokens.front().compare(";") != 0)	 {	return false; 	}
 		tokens.pop();

@@ -59,6 +59,10 @@ struct Container
 		projectAttributes.clear();
 		renameTableAttributes.clear();
 		renameReplaceAttributes.clear();
+		
+		//I think we need to set the functionName to "" because for a query 
+		//there is no function
+		functionName = "";
 	}
 
 };

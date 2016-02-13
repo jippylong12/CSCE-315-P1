@@ -29,6 +29,10 @@ DBsystem::DBsystem()
 //lots of switch statements based on functionName in Container. 
 void DBsystem::execute()
 {
+	//this gets from the parser what to run. 
+	string function = DBParser.getContainer().functionName;
+	
+	//remember that commands are capitaized and queries are lowercase
 	
 }
 
@@ -45,6 +49,7 @@ Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file
 		cout<<"String: "<<inputLine<<endl;
 		DBParser.sendNewInput(inputLine); //send it to the parser
 		execute(); //run the stuff. 
+		DBParser.getContainer().clear(); //wipe the vectors clean. 
 	}
 	
 	dbFile.close();
