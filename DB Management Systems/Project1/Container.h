@@ -21,16 +21,18 @@ struct Container
 	vector<int> parserHeaderSizes; //for VARCHAR INTEGERS are -1  
     
     //update
-    string updateHeaderName;
-    string updateCriteria;
-    string updateReplace;
+    vector<string> updateHeaderName; //vector of header names
+    string updateCriteria;			 //WHERE condition
+    vector<string> updateReplace;	 //replace with
     
     //insert
-	vector<string> insertInput;
+	vector<string> insertInput;	//vector of inputs
+	string insertExpr;			//expr for relation
 	
 	//delete
 	string deleteCompareHeader;
 	string deleteCompareTo;
+	string deleteOP;
 	
 	//select
 	string selectHeader;

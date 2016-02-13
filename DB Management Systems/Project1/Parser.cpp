@@ -297,7 +297,7 @@ bool Parser::isQuery()
 
 bool Parser::isLiteral(string name) //literals
 {
-	if(name[0] == '\"' )
+	if(name[0] == '\"' ) 
 	{
 		for(int i = 1; i < name.length()-1; i++)
 		{
@@ -485,19 +485,22 @@ bool Parser::isComparison()
 	{
 		if(!isLiteral(tokens.front()))
 			return false;
+		
 		tokens.pop();
 	}
 	else
 	{
 		if(!isIdentifier(tokens.front()))
 			return false;
+		contain.deleteCompareHeader = tokens.front(); //get header
 		tokens.pop();
 	}
 	
 
 	if(!isOP())
 		return false;
-	tokens.pop();
+	contain.deleteOP = tokens.front(); //get operation
+	tokens.pop(); //
 	
 	if(tokens.front()[0] == '\"')
 	{
@@ -509,6 +512,7 @@ bool Parser::isComparison()
 	{
 		if(!isIdentifier(tokens.front()))
 			return false;
+		contain.deleteCompareTo = tokens.front(); //get the other side
 		tokens.pop();
 	}
 	
@@ -524,7 +528,7 @@ bool Parser::isConjunction()
 			
 		if(tokens.front().compare("&&")==0)
 		{
-			tokens.pop();
+			tokens.pop(); //gets rid of &&
 			continue;
 		}
 		else
@@ -544,7 +548,7 @@ bool Parser::isCondition()
 			
 		if(tokens.front().compare("||")==0)
 		{
-			tokens.pop();
+			tokens.pop(); ///gets rid of ||
 			continue;
 		}
 		else
@@ -615,19 +619,23 @@ bool Parser::parse_UPDATE()
 {
 
 		if(!isIdentifier(tokens.front()))		 {	return false;   }	 //relation name
+			contain.parserTableName = tokens.front();
 			tokens.pop();
 		if(tokens.front().compare("SET") != 0)	 {	return false; 	}	 //"SET"
 			tokens.pop();
+			
 			
 	//------------- This will update Attribute name(s)--------------------//
 	
 		while(true)
 		{
 			if(!isIdentifier(tokens.front()))		 {  return false;   }	 //Attribute name 
+				contain.updateHeaderName.push_back(tokens.front());
 				tokens.pop();
 			if (tokens.front().compare("=") != 0)	 {  return false;   }	 //"="
 				tokens.pop();
 			if (!isLiteral(tokens.front()))		 {  return false;	}    //literal 
+				contain.updateReplace.push_back(tokens.front());
 				tokens.pop();
 				
 			if(tokens.front().compare(",") == 0)
@@ -641,6 +649,7 @@ bool Parser::parse_UPDATE()
 	//--------------------------------------------------------------------//
 	
 		if(tokens.front().compare("WHERE") != 0) {	return false;	}    //WHERE
+			contain.updateCriteria = tokens.front();
 			tokens.pop();
 	
 		if(!isCondition())
@@ -660,6 +669,7 @@ bool Parser::parse_INSERT()
 	if(tokens.front().compare("INTO") != 0)	 {	return false; 	}	 //"INTO"
 		tokens.pop();
 	if(!isIdentifier(tokens.front()))		 {	return false;   }	 //relation name
+		contain.parserTableName = tokens.front();
 		tokens.pop();
 	if(tokens.front().compare("VALUES") != 0)	 {	return false; 	}	 //"VALUES"
 		tokens.pop();
@@ -676,6 +686,7 @@ bool Parser::parse_INSERT()
 		{
 			
 			if (!isLiteral(tokens.front()))		 {  return false;	}    //literal 
+				contain.insertInput.push_back(tokens.front());
 				tokens.pop();
 				
 			if(tokens.front().compare(",") == 0)
@@ -694,6 +705,7 @@ bool Parser::parse_INSERT()
 	else if(tokens.front().compare("RELATION") == 0) //Check for RELATION
 	//Should be true for other INSERT command ^ we had a !=
 	{	
+		contain.insertExpr = tokens.front();
 		tokens.pop();
 		
 		if(!isExpression()) return false;
@@ -761,6 +773,7 @@ bool Parser::parse_DELETE() //DELETE FROM relation-name WHERE condition
 	
 	
 	if(!isIdentifier(tokens.front())) { return false; }
+		contain.parserTableName = tokens.front();
 		tokens.pop();
 	
 	if(tokens.front().compare("WHERE") != 0) { return false; }

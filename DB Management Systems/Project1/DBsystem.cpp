@@ -87,7 +87,8 @@ void DBsystem::execute()
         string nameDelete = DBParser.contain.parserTableName;
         string compareHeader = DBParser.contain.deleteCompareHeader;
         string compareTo = DBParser.contain.deleteCompareTo;
-        
+		string deleteOP = DBParser.contain.deleteOP;
+		DELETE(nameDelete,compareHeader,compareTo, deleteOP);
         
     }
     if (DBParser.contain.functionName.compare("EXIT") == 0){
@@ -284,7 +285,7 @@ Table* DBsystem::CREATE(int columnCreate, string nameCreate,vector<string> creat
 int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, string replace)
 {
 	//go to table nameUpdate
-	//search first row for headerName to find column
+	//search headervector for headerName to find column
 	//search that column for the criteria
 	//replace the criteria with replace
 	
@@ -339,7 +340,7 @@ int DBsystem::INSERT(string nameInsert, vector<string> input)
 
 //nameDelete may not be neede depending on the implementation of the Parser.
 //Parser may end up finding the row and may only need one input here.
-int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo)
+int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo, string deleteOP)
 {
 	vector<vector <string> > tempTable;
 	tempTable = database[nameDelete]->getTable();
