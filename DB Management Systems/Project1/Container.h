@@ -67,7 +67,6 @@ struct Container
 		
 		//I think we need to set the functionName to "" because for a query 
 		//there is no function
-		functionName = "";
 	}
 
 };

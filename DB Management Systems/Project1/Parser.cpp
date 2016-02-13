@@ -103,10 +103,6 @@ bool Parser::isCommand()
         
         //Set the relationName for the container
         contain.relationName = "CREATE";
-        
-        
-        
-        
 		if (parsedCorrect){ cout << "CREATE - valid command." << endl; } 
 		else{ cout << "CREATE - invalid command." << endl; } 
 	}
@@ -152,13 +148,14 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("CLOSE") == 0)
     {   cout << "Tokens front: " <<  tokens.front() << endl;
-		//contain.functionName = tokens.front(); //so we know it's CLOSE
-        contain.functionName = "CLOSE";
+		contain.functionName = tokens.front(); //so we know it's CLOSE
 		tokens.pop();
 		parsedCorrect = parse_CLOSE();
-         //cout << "contain.functionName: " << tokens.front() << endl;
+        cout << "contain.functionName: " << contain.functionName << endl;
         
-		if (parsedCorrect){ cout << "CLOSE - valid command." << endl; } 
+		if (parsedCorrect){ 
+			cout << "CLOSE - valid command." << endl; 
+		} 
 		else{ cout << "CLOSE - invalid command." << endl; }
         
         
@@ -734,7 +731,6 @@ bool Parser::parse_CLOSE()
     }
     else {
         contain.relationName = tokens.front();  //Give the container the relation name
-        cout << "Relation Name: " << contain.relationName << endl;
         tokens.pop();
     }
 	if(tokens.front().compare(";") != 0)	 {	return false; 	}

@@ -26,50 +26,49 @@ DBsystem::DBsystem()
 }
 
 
-//lots of switch statements based on functionName in Container. 
+//if statements based on functionName in Container. 
 void DBsystem::execute()
 {
-
-    cout << "Func Name: " << DBParser.getContainer().functionName << endl;
+    cout << "Func Name: " << DBParser.contain.functionName << endl;
     
-    if (getParser().getContainer().functionName.compare("CLOSE") == 0){
+    if (DBParser.contain.functionName.compare("CLOSE") == 0){
         //run CLOSE
-        string nameClose = getParser().getContainer().relationName; //Grab relation name from parser
-        CLOSE(nameClose);
+        string nameClose = DBParser.contain.relationName; //Grab relation name from parser
+       //CLOSE(nameClose);
         
         
     }
-    if (getParser().getContainer().functionName.compare("SAVE") == 0){
+    if (DBParser.contain.functionName.compare("SAVE") == 0){
         //run SAVE
         
         
         
     }
-    if (getParser().getContainer().functionName.compare("SHOW") == 0){
+    if (DBParser.contain.functionName.compare("SHOW") == 0){
         //run SHOW
         
         
         
     }
-    if (getParser().getContainer().functionName.compare("UPDATE") == 0){
+    if (DBParser.contain.functionName.compare("UPDATE") == 0){
         //run UPDATE
         
         
         
     }
-    if (getParser().getContainer().functionName.compare("INSERT") == 0){
+    if (DBParser.contain.functionName.compare("INSERT") == 0){
         //run INSERT
         
         
         
     }
-    if (getParser().getContainer().functionName.compare("DELETE") == 0){
+    if (DBParser.contain.functionName.compare("DELETE") == 0){
         //run DELETE
         
         
         
     }
-    if (getParser().getContainer().functionName.compare("EXIT") == 0){
+    if (DBParser.contain.functionName.compare("EXIT") == 0){
         //run EXIT
         
         EXIT();
@@ -89,7 +88,7 @@ Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file
 		cout<<"String: "<<inputLine<<endl;
 		DBParser.sendNewInput(inputLine); //send it to the parser
 		execute(); //run the stuff. 
-		DBParser.getContainer().clear(); //wipe the vectors clean. 
+		DBParser.contain.clear(); //wipe the vectors clean. 
 	}
 	
 	dbFile.close();

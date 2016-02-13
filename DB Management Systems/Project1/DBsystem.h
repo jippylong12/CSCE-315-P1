@@ -11,7 +11,7 @@
 class DBsystem
 {
 	map<string,Table*> database;
-	Parser DBParser;
+	
     
 
 public:
@@ -20,7 +20,7 @@ public:
 	void execute(); //connect Parser containers to DB functions
 	
 	//Parser
-	Parser getParser() {return DBParser;}
+	Parser DBParser;
 	
 	//-------Database queries--------//
 	Table* OPEN(string); //bring a table into memory from file 
