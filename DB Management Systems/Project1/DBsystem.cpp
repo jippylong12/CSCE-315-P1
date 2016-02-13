@@ -35,78 +35,109 @@ void DBsystem::execute()
 	for(int i = DBParser.contain.functionName.size(); i > 0; --i)
 	{
 		
-		currentFunction = DBParser.contain.functionName.top(); //get current function
-	    cout << "Function name to be run: " << currentFunction << endl;
-	    
-	    //-----------------------COMMANDS----------------------//
-		
-		
-		if(currentFunction.compare("OPEN") == 0){
-			//run OPEN
-			string nameOpen = DBParser.contain.parserTableName;
-		}
-		
-		
-		if (currentFunction.compare("CLOSE") == 0){
-	        //run CLOSE
-	        string nameClose = DBParser.contain.parserTableName; //Grab relation name from parser
-	       //CLOSE(nameClose);
-	        
-	        
-	    }
-	    if (currentFunction.compare("SAVE") == 0){
-	        //run SAVE
-	        
-	        
-	        
-	    }
-	    if (currentFunction.compare("SHOW") == 0){
-	        //run SHOW
-	        
-	        
-	        
-	    }
-	    if (currentFunction.compare("UPDATE") == 0){
-	        //run UPDATE
-	        
-	        
-	        
-	    }
-	    if (currentFunction.compare("INSERT") == 0){
-	        //run INSERT
-	        
-	        
-	        
-	    }
-	    if (currentFunction.compare("DELETE") == 0){
-	        //run DELETE
-	        
-	        
-	        
-	    }
-	    if (currentFunction.compare("EXIT") == 0){
-	        //run EXIT
-	        
-	        EXIT();
-	    }
-
-		
-		//---------------------QUERIES------------------------//
-		//for things like animals <- a;
-		if (currentFunction.compare("QUERY") == 0) 
-		{
-			//should just make a copy of the table with new name or just rename the new table.  
-		}
-		if (DBParser.contain.isSetUnion){
-			//do Union
-		}
-		if (DBParser.contain.isSetDifference){
-			//do Union
-		}
-		if (DBParser.contain.isCrossProduct){
-			//do Union
-		}
-		DBParser.contain.functionName.pop(); //move on to the next function
+	currentFunction = DBParser.contain.functionName.top(); //get current function
+    cout << "Function name to be run: " << DBParser.contain.functionName << endl;
+    
+    //-----------------------COMMANDS----------------------//
+	
+	
+	if(DBParser.contain.functionName.compare("OPEN") == 0){
+		//run OPEN
+		string nameOpen = DBParser.contain.parserTableName;
+	}
+	
+	
+	if (DBParser.contain.functionName.compare("CLOSE") == 0){
+        //run CLOSE
+        string nameClose = DBParser.contain.parserTableName; //Grab relation name from parser
+       //CLOSE(nameClose);
+        
+        
+    }
+    if (DBParser.contain.functionName.compare("SAVE") == 0){
+        //run SAVE
+        string nameSave = DBParser.contain.parserTableName;
+        
+        
+    }
+    if (DBParser.contain.functionName.compare("SHOW") == 0){
+        //run SHOW
+        string nameShow = DBParser.contain.parserTableName;
+        
+        
+    }
+    if (DBParser.contain.functionName.compare("UPDATE") == 0){
+        //run UPDATE
+        string nameUpdate = DBParser.contain.parserTableName;
+        string headerName = DBParser.contain.updateHeaderName;
+        string criteria = DBParser.contain.updateCriteria;
+        string replace = DBParser.contain.updateReplace;
+        
+        
+    }
+    if (DBParser.contain.functionName.compare("INSERT") == 0){
+        //run INSERT
+        string nameInsert = DBParser.contain.parserTableName;
+        vector<string> input = DBParser.contain.insertInput;
+        
+        
+    }
+    if (DBParser.contain.functionName.compare("DELETE") == 0){
+        //run DELETE
+        string nameDelete = DBParser.contain.parserTableName;
+        string compareHeader = DBParser.contain.deleteCompareHeader;
+        string compareTo = DBParser.contain.deleteCompareTo;
+        
+        
+    }
+    if (DBParser.contain.functionName.compare("EXIT") == 0){
+        //run EXIT
+        
+        EXIT();
+    }
+	
+	
+	//---------------------QUERIES------------------------//
+	if (currentFunction.compare("QUERY") == 0) 
+	{
+		//should just make a copy of the table with new name or just rename the new table.  
+	}
+	if (DBParser.contain.functionName.compare("select") == 0){
+		//run select
+		//string newTableName,string nameShow, string header ,string comparator, string condition
+		string newTableName = DBParser.contain.parserTableName;
+		string nameShow = DBParser.contain.secondTableName;
+		string header = DBParser.contain.updateHeaderName;
+		string comparator = DBParser.contain.selectComparator;
+		string condition = DBParser.contain.selectCondition;
+	}
+	if (DBParser.contain.functionName.compare("project") == 0){
+		//run project
+		string t1 = DBParser.contain.parserTableName;
+		vector<string> attributes = DBParser.contain.projectAttributes;
+	}
+	if (DBParser.contain.functionName.compare("rename") == 0){
+		//do rename
+		string tName = DBParser.contain.parserTableName;
+		vector<string> tableAttributes = DBParser.contain.renameTableAttributes;
+		vector<string> renameReplaceAttributes = DBParser.contain.renameReplaceAttributes;
+	}
+	if (DBParser.contain.isSetUnion){
+		//do Union
+		string t1 = DBParser.contain.parserTableName;
+		string t2 = DBParser.contain.secondTableName;
+	}
+	if (DBParser.contain.isSetDifference){
+		//do set difference
+		string tableName1 = DBParser.contain.parserTableName;
+		string tableName2 = DBParser.contain.secondTableName;
+	}
+	if (DBParser.contain.isCrossProduct){
+		//do cross product
+		string t1 = DBParser.contain.parserTableName;
+		string t2 = DBParser.contain.secondTableName;
+	}
+	DBParser.contain.functionName.pop(); //move on to the next function
 	}
     
 }
