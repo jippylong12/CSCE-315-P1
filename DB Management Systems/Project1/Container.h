@@ -20,7 +20,9 @@ struct Container
 	
 	vector<int> parserHeaderSizes; //for VARCHAR INTEGERS are -1  
 
-	void clear() // this well erase all the vectors to empty again. s
+	//I don't know how to declare this outside the struct
+	//it will say its redeclared
+	void clear() // this well erase all the vectors to empty again. 
 	{
 		cout<<"I am working"<<endl;
 	}

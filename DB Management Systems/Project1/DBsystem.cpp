@@ -10,6 +10,7 @@ Ivan Rupert */
 #include <string>
 #include <cstring>
 #include <vector>
+#include <fstream>
 #include <sstream>
 #include <iomanip>
 #include <map>
@@ -34,10 +35,19 @@ void DBsystem::execute()
 Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file 
 {
 	//read in from the comma seperated text file
-	//the numbers of rows and columns should be the first two lines of every file
-	//we create a table with those dimensions
-	//change the values of the newly created table in memory by reading from file.
-	//return 0;  //I just think it's better to return 0 on success rather than 1.
+	string inputLine; //for getline
+	string fileName = nameOpen + ".db"; //generate name
+	ifstream dbFile(fileName); //create stream
+	int testCount = 0;
+	while(!dbFile.eof()) //read until the end
+	{
+		getline (dbFile,inputLine); //grab the line
+		cout<<"String: "<<inputLine<<endl;
+		DBParser.sendNewInput(inputLine); //send it to the parser
+		execute(); //run the stuff. 
+	}
+	
+	dbFile.close();
 }
 
 int DBsystem::CLOSE(string nameClose) //saves and removes table instance from memory

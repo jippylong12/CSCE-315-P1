@@ -15,17 +15,17 @@ int main()
 {	
 	string input0;
 	
-	while(1)
-	{
-		DBsystem db;
+	// while(1)
+	// {
+	// 	DBsystem db;
 		
-		cout<<"What is the command?"<<endl;
-		getline (cin,input0); //take the command
-		db.getParser().sendNewInput(input0);
-		//db.execute(); //not implemented yet but will take the command and use switch statement to know what to run
-		//db.getParser().getContainer().clear(); //Not implementted yet but will reset all things in container to 0
+	// 	cout<<"What is the command?"<<endl;
+	// 	getline (cin,input0); //take the command
+	// 	db.getParser().sendNewInput(input0);
+	// 	//db.execute(); //not implemented yet but will take the command and use switch statement to know what to run
+	// 	//db.getParser().getContainer().clear(); //Not implementted yet but will reset all things in container to 0
 		
-	}
+	// }
 
 	
 	// ifstream in("animals.db");
@@ -33,10 +33,10 @@ int main()
 	// buffer << in.rdbuf();
 	// string fileInput = buffer.str();		//Stores all file input into one string
 
-	// DBsystem db;
-
+	DBsystem db;
+	db.OPEN("animals");
 	
-	// db.getParser().sendNewInput("INSERT INTO species VALUES FROM RELATION project (kind) animals;");
+	//db.getParser().sendNewInput("CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);");
 	// //db.getParser().sendNewInput("INSERT INTO animals VALUES FROM (\"Joe\", \"cat\", 4);");
 	// cout<<endl;
 	//if(db.getParser().parse_CREATE() == true){
