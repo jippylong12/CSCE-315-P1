@@ -49,31 +49,37 @@ void DBsystem::execute()
     }
     if (DBParser.contain.functionName.compare("SAVE") == 0){
         //run SAVE
-        
+        string nameSave = DBParser.contain.parserTableName;
         
         
     }
     if (DBParser.contain.functionName.compare("SHOW") == 0){
         //run SHOW
-        
+        string nameShow = DBParser.contain.parserTableName;
         
         
     }
     if (DBParser.contain.functionName.compare("UPDATE") == 0){
         //run UPDATE
-        
+        string nameUpdate = DBParser.contain.parserTableName;
+        string headerName = DBParser.contain.updateHeaderName;
+        string criteria = DBParser.contain.updateCriteria;
+        string replace = DBParser.contain.updateReplace;
         
         
     }
     if (DBParser.contain.functionName.compare("INSERT") == 0){
         //run INSERT
-        
+        string nameInsert = DBParser.contain.parserTableName;
+        vector<string> input = DBParser.contain.insertInput;
         
         
     }
     if (DBParser.contain.functionName.compare("DELETE") == 0){
         //run DELETE
-        
+        string nameDelete = DBParser.contain.parserTableName;
+        string compareHeader = DBParser.contain.deleteCompareHeader;
+        string compareTo = DBParser.contain.deleteCompareTo;
         
         
     }
@@ -85,15 +91,42 @@ void DBsystem::execute()
 	
 	
 	//---------------------QUERIES------------------------//
+	if (DBParser.contain.isSelect){
+		//run select
+		//string newTableName,string nameShow, string header ,string comparator, string condition
+		string newTableName = DBParser.contain.parserTableName;
+		string nameShow = DBParser.contain.secondTableName;
+		string header = DBParser.contain.updateHeaderName;
+		string comparator = DBParser.contain.selectComparator;
+		string condition = DBParser.contain.selectCondition;
+	}
+	if (DBParser.contain.isProject){
+		//run project
+		string t1 = DBParser.contain.parserTableName;
+		vector<string> attributes = DBParser.contain.projectAttributes;
+	}
+	if (DBParser.contain.isRename){
+		//do rename
+		string tName = DBParser.contain.parserTableName;
+		vector<string> tableAttributes = DBParser.contain.renameTableAttributes;
+		vector<string> renameReplaceAttributes = DBParser.contain.renameReplaceAttributes;
+	}
 	if (DBParser.contain.isSetUnion){
 		//do Union
+		string t1 = DBParser.contain.parserTableName;
+		string t2 = DBParser.contain.secondTableName;
 	}
 	if (DBParser.contain.isSetDifference){
-		//do Union
+		//do set difference
+		string tableName1 = DBParser.contain.parserTableName;
+		string tableName2 = DBParser.contain.secondTableName;
 	}
 	if (DBParser.contain.isCrossProduct){
-		//do Union
+		//do cross product
+		string t1 = DBParser.contain.parserTableName;
+		string t2 = DBParser.contain.secondTableName;
 	}
+
     
 }
 
