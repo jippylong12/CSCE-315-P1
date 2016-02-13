@@ -8,9 +8,6 @@ using namespace std;
 struct Container
 {
 	
-    string relationName;
-    
-    
     
     //items
     string functionName; //what to run
@@ -48,9 +45,15 @@ struct Container
 	vector<string> renameReplaceAttributes;
 	
 	//queries
-	bool isUnion;
-	bool isDifference;
+	bool isSelect;
+	bool isProject;
+	bool isRename;
+	bool isSetUnion;
+	bool isSetDifference;
+	bool isCrossProduct;
+	
 	bool isProduct;
+	
 	
 	
 	

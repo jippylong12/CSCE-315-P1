@@ -22,7 +22,7 @@ public:
 	//Parser
 	Parser DBParser;
 	
-	//-------Database queries--------//
+	//-------Database commands--------//
 	Table* OPEN(string); //bring a table into memory from file 
 	int CLOSE(string);
 	int SAVE(string);
@@ -32,7 +32,7 @@ public:
 	int INSERT(string, vector<string> );	//::= INSERT INTO relation-name VALUES FROM ( literal { , literal } ) | INSERT INTO relation-name VALUES FROM RELATION expr
 	int DELETE(string , string, string );	//::= DELETE FROM relation-name WHERE condition
 	void EXIT();
-	//-------Database commands (need definitions)-------//
+	//-------Database queries (need definitions)-------//
 	Table* SELECT(string,string, string, string, string);    //select table with certain criteria
 	vector<Table*>  PROJECT(string, vector<string>);
 	Table* RENAME(string, vector<string>, vector<string>);			

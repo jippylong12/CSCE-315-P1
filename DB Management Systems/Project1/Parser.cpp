@@ -102,7 +102,7 @@ bool Parser::isCommand()
 		parsedCorrect = parse_CREATE();
         
         //Set the relationName for the container
-        contain.relationName = "CREATE";
+       
 		if (parsedCorrect){ cout << "CREATE - valid command." << endl; } 
 		else{ cout << "CREATE - invalid command." << endl; } 
 	}
@@ -730,7 +730,7 @@ bool Parser::parse_CLOSE()
 		
     }
     else {
-        contain.relationName = tokens.front();  //Give the container the relation name
+        contain.parserTableName = tokens.front();  //Give the container the relation name
         tokens.pop();
     }
 	if(tokens.front().compare(";") != 0)	 {	return false; 	}
