@@ -29,9 +29,18 @@ DBsystem::DBsystem()
 //if statements based on functionName in Container. 
 void DBsystem::execute()
 {
-    cout << "Func Name: " << DBParser.contain.functionName << endl;
+    cout << "Function name to be run: " << DBParser.contain.functionName << endl;
     
-    if (DBParser.contain.functionName.compare("CLOSE") == 0){
+    //-----------------------COMMANDS----------------------//
+	
+	
+	if(DBParser.contain.functionName.compare("OPEN") == 0){
+		//run OPEN
+		string nameOpen = DBParser.contain.parserTableName;
+	}
+	
+	
+	if (DBParser.contain.functionName.compare("CLOSE") == 0){
         //run CLOSE
         string nameClose = DBParser.contain.parserTableName; //Grab relation name from parser
        //CLOSE(nameClose);
@@ -73,6 +82,36 @@ void DBsystem::execute()
         
         EXIT();
     }
+	
+	
+	//---------------------QUERIES------------------------//
+	
+	
+	
+	if (DBParser.contain.isSelect){
+		//run select
+		//string newTableName,string nameShow, string header ,string comparator, string condition
+	}
+	if (DBParser.contain.isProject){
+		//run project
+	}
+	if (DBParser.contain.isRename){
+		//do rename
+	}
+	if (DBParser.contain.isSetUnion){
+		//do Union
+	}
+	if (DBParser.contain.isSetDifference){
+		//do Union
+	}
+	if (DBParser.contain.isCrossProduct){
+		//do Union
+	}
+	
+	
+	if(DBParser.contain.isProduct){
+		
+	}
     
 }
 

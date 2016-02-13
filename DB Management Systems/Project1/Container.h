@@ -44,9 +44,10 @@ struct Container
 	vector<string> renameReplaceAttributes;
 	
 	//queries
-	bool isUnion;
-	bool isDifference;
-	bool isProduct;
+	bool isSetUnion;
+	bool isSetDifference;
+	bool isCrossProduct;
+	
 	
 	
 	
@@ -70,9 +71,9 @@ struct Container
 		functionName = "";
 		
 		//reset bool values just in case. 
-		isUnion = 0;
-		isDifference = 0;
-		isProduct = 0;
+		isSetUnion = 0;
+		isSetDifference = 0;
+		isCrossProduct = 0;
 	}
 
 };

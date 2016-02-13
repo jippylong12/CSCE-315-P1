@@ -100,6 +100,8 @@ bool Parser::isCommand()
 		contain.functionName = tokens.front(); //so we know it's CREATE
 		tokens.pop();
 		parsedCorrect = parse_CREATE();
+        
+        //Set the relationName for the container
 		if (parsedCorrect){ cout << "CREATE - valid command." << endl; } 
 		else{ cout << "CREATE - invalid command." << endl; } 
 	}
