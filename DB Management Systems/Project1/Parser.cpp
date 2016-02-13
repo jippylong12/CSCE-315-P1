@@ -102,7 +102,6 @@ bool Parser::isCommand()
 		parsedCorrect = parse_CREATE();
         
         //Set the relationName for the container
-       
 		if (parsedCorrect){ cout << "CREATE - valid command." << endl; } 
 		else{ cout << "CREATE - invalid command." << endl; } 
 	}
@@ -147,11 +146,10 @@ bool Parser::isCommand()
 		else{ cout << "SAVE - invalid command." << endl; } 
 	}
 	else if(firstToken.compare("CLOSE") == 0)
-    {   cout << "Tokens front: " <<  tokens.front() << endl;
+    {   
 		contain.functionName = tokens.front(); //so we know it's CLOSE
 		tokens.pop();
 		parsedCorrect = parse_CLOSE();
-        cout << "contain.functionName: " << contain.functionName << endl;
         
 		if (parsedCorrect){ 
 			cout << "CLOSE - valid command." << endl; 
@@ -375,22 +373,21 @@ bool Parser::isType(string type) //checks if INTEGER or VARCHAR
 
 bool Parser::isAttributeList()
 {
-	cout << 1 << endl;
-	cout << tokens.front() << endl;
 	while(true)
 	{
-		if(!isIdentifier(tokens.front()))
+		if(!isIdentifier(tokens.front())) //check if valid name
 			return false;
-		tokens.pop();
+		contain.parserKeys.push_back(tokens.front()); //get the key
+		tokens.pop(); //remove that key
 		
+		//check if there is another key
 		if(tokens.front().compare(",") == 0 )
 		{
-			tokens.pop();
-			continue;
+			tokens.pop(); //remove the ,
+			continue; //look for the next key
 		}
-		else
+		else //no more keys
 		{
-			cout << 2 << endl;
 			return true;
 		}
 		
@@ -433,11 +430,14 @@ bool Parser::isTypedAttributeList() //only used by CREATE apparently
 
 bool Parser::isAtomicExpression() 
 {			
-	if(isIdentifier(tokens.front())) { }
+	if(isIdentifier(tokens.front())) //just a table
+	{
+		contain.parserTableName = tokens.front(); //get the name for SHOW
+	}
 	else
 	{
 		if(tokens.front().compare("(") != 0) {return false;}
-		tokens.pop();
+		tokens.pop(); //get rid of (
 		
 		if(!isExpression()) {return false;}
 		
@@ -589,13 +589,13 @@ bool Parser::parse_CREATE()
 	cout << tokens.front() << endl;
 	if(tokens.front().compare(")") != 0)
 		return false;	
-	tokens.pop();
+	tokens.pop(); //get rid of )
 	
 	if(tokens.front().compare(";") != 0)
 		return false;	
-	tokens.pop();
+	tokens.pop(); //get rid of ;
 	
-	return true;
+	return true; //done
 }
 
 bool Parser::parse_UPDATE()
@@ -714,8 +714,9 @@ bool Parser::parse_OPEN() //OPEN relation-name
 
 bool Parser::parse_SAVE() //SAVE relation-name
 {
-if (!isIdentifier(tokens.front()))		 {  return false;	}    //relation name 
-		tokens.pop();
+	if (!isIdentifier(tokens.front()))		 {  return false;	}    //relation name 
+	contain.parserTableName = tokens.front(); //get the table name
+	tokens.pop();
 	if(tokens.front().compare(";") != 0)	 {	return false; 	}
 		tokens.pop();
 				
@@ -725,7 +726,7 @@ if (!isIdentifier(tokens.front()))		 {  return false;	}    //relation name
 bool Parser::parse_CLOSE()
 { 
 	if (!isIdentifier(tokens.front())){
-        tokens.pop();
+        tokens.pop(); // we may not need this. Not a big deal either way 
         return false;                       //relation name
 		
     }

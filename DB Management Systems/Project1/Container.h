@@ -8,7 +8,6 @@ using namespace std;
 struct Container
 {
 	
-    
     //items
     string functionName; //what to run
     string parserTableName; //table Name
@@ -45,9 +44,6 @@ struct Container
 	vector<string> renameReplaceAttributes;
 	
 	//queries
-	bool isSelect;
-	bool isProject;
-	bool isRename;
 	bool isSetUnion;
 	bool isSetDifference;
 	bool isCrossProduct;
@@ -73,6 +69,11 @@ struct Container
 		//I think we need to set the functionName to "" because for a query 
 		//there is no function
 		functionName = "";
+		
+		//reset bool values just in case. 
+		isSetUnion = 0;
+		isSetDifference = 0;
+		isCrossProduct = 0;
 	}
 
 };

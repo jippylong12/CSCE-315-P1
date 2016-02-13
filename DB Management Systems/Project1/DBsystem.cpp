@@ -91,9 +91,6 @@ void DBsystem::execute()
 	
 	
 	//---------------------QUERIES------------------------//
-	
-	
-	
 	if (DBParser.contain.isSelect){
 		//run select
 		//string newTableName,string nameShow, string header ,string comparator, string condition
@@ -129,10 +126,7 @@ void DBsystem::execute()
 		string t1 = DBParser.contain.parserTableName;
 		string t2 = DBParser.contain.secondTableName;
 	}
-	
-	if(DBParser.contain.isProduct){
-		
-	}
+
     
 }
 
