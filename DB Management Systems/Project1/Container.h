@@ -52,8 +52,6 @@ struct Container
 	bool isSetDifference;
 	bool isCrossProduct;
 	
-	bool isProduct;
-	
 	
 	
 	
