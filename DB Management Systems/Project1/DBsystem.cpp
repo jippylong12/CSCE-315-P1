@@ -95,7 +95,7 @@ void DBsystem::execute()
 		//for things like animals <- a;
 		if (currentFunction.compare("QUERY") == 0) 
 		{
-			//should just make a copy of the table with new name. 
+			//should just make a copy of the table with new name or just rename the new table.  
 		}
 		if (DBParser.contain.isSetUnion){
 			//do Union
