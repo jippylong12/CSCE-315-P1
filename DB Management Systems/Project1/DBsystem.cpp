@@ -29,70 +29,84 @@ DBsystem::DBsystem()
 //if statements based on functionName in Container. 
 void DBsystem::execute()
 {
-    cout << "Function name to be run: " << DBParser.contain.functionName << endl;
-    
-    //-----------------------COMMANDS----------------------//
-	
-	
-	if(DBParser.contain.functionName.compare("OPEN") == 0){
-		//run OPEN
-		string nameOpen = DBParser.contain.parserTableName;
-	}
-	
-	
-	if (DBParser.contain.functionName.compare("CLOSE") == 0){
-        //run CLOSE
-        string nameClose = DBParser.contain.parserTableName; //Grab relation name from parser
-       //CLOSE(nameClose);
-        
-        
-    }
-    if (DBParser.contain.functionName.compare("SAVE") == 0){
-        //run SAVE
-        
-        
-        
-    }
-    if (DBParser.contain.functionName.compare("SHOW") == 0){
-        //run SHOW
-        
-        
-        
-    }
-    if (DBParser.contain.functionName.compare("UPDATE") == 0){
-        //run UPDATE
-        
-        
-        
-    }
-    if (DBParser.contain.functionName.compare("INSERT") == 0){
-        //run INSERT
-        
-        
-        
-    }
-    if (DBParser.contain.functionName.compare("DELETE") == 0){
-        //run DELETE
-        
-        
-        
-    }
-    if (DBParser.contain.functionName.compare("EXIT") == 0){
-        //run EXIT
-        
-        EXIT();
-    }
-	
-	
-	//---------------------QUERIES------------------------//
-	if (DBParser.contain.isSetUnion){
-		//do Union
-	}
-	if (DBParser.contain.isSetDifference){
-		//do Union
-	}
-	if (DBParser.contain.isCrossProduct){
-		//do Union
+	string currentFunction;
+	cout<<"Size of stack: "<<DBParser.contain.functionName.size()<<endl;
+	//for the size of the function stack
+	for(int i = DBParser.contain.functionName.size(); i > 0; --i)
+	{
+		
+		currentFunction = DBParser.contain.functionName.top(); //get current function
+	    cout << "Function name to be run: " << currentFunction << endl;
+	    
+	    //-----------------------COMMANDS----------------------//
+		
+		
+		if(currentFunction.compare("OPEN") == 0){
+			//run OPEN
+			string nameOpen = DBParser.contain.parserTableName;
+		}
+		
+		
+		if (currentFunction.compare("CLOSE") == 0){
+	        //run CLOSE
+	        string nameClose = DBParser.contain.parserTableName; //Grab relation name from parser
+	       //CLOSE(nameClose);
+	        
+	        
+	    }
+	    if (currentFunction.compare("SAVE") == 0){
+	        //run SAVE
+	        
+	        
+	        
+	    }
+	    if (currentFunction.compare("SHOW") == 0){
+	        //run SHOW
+	        
+	        
+	        
+	    }
+	    if (currentFunction.compare("UPDATE") == 0){
+	        //run UPDATE
+	        
+	        
+	        
+	    }
+	    if (currentFunction.compare("INSERT") == 0){
+	        //run INSERT
+	        
+	        
+	        
+	    }
+	    if (currentFunction.compare("DELETE") == 0){
+	        //run DELETE
+	        
+	        
+	        
+	    }
+	    if (currentFunction.compare("EXIT") == 0){
+	        //run EXIT
+	        
+	        EXIT();
+	    }
+
+		
+		//---------------------QUERIES------------------------//
+		//for things like animals <- a;
+		if (currentFunction.compare("QUERY") == 0) 
+		{
+			//should just make a copy of the table with new name. 
+		}
+		if (DBParser.contain.isSetUnion){
+			//do Union
+		}
+		if (DBParser.contain.isSetDifference){
+			//do Union
+		}
+		if (DBParser.contain.isCrossProduct){
+			//do Union
+		}
+		DBParser.contain.functionName.pop(); //move on to the next function
 	}
     
 }

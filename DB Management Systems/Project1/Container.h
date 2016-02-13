@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <stack>
 #include <iostream>
 
 using namespace std;
@@ -9,7 +10,7 @@ struct Container
 {
 	
     //items
-    string functionName; //what to run
+    stack<string> functionName; //what to run
     string parserTableName; //table Name
     string secondTableName; //for functions with two tables
     
@@ -65,10 +66,6 @@ struct Container
 		projectAttributes.clear();
 		renameTableAttributes.clear();
 		renameReplaceAttributes.clear();
-		
-		//I think we need to set the functionName to "" because for a query 
-		//there is no function
-		functionName = "";
 		
 		//reset bool values just in case. 
 		isSetUnion = 0;

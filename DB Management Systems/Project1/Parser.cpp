@@ -97,7 +97,7 @@ bool Parser::isCommand()
 	
 	if(firstToken.compare("CREATE") == 0)
 	{
-		contain.functionName = tokens.front(); //so we know it's CREATE
+		contain.functionName.push(tokens.front()); //so we know it's CREATE
 		tokens.pop();
 		parsedCorrect = parse_CREATE();
         
@@ -107,7 +107,7 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("UPDATE") == 0)
 	{
-		contain.functionName = tokens.front(); //so we know it's UPDATE
+		contain.functionName.push(tokens.front()); //so we know it's UPDATE
 		tokens.pop();
 		parsedCorrect = parse_UPDATE();
 		if (parsedCorrect){ cout << "UPDATE - valid command." << endl; } 
@@ -115,7 +115,7 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("INSERT") == 0)
 	{
-		contain.functionName = tokens.front(); //so we know it's INSERT
+		contain.functionName.push(tokens.front()); //so we know it's INSERT
 		tokens.pop();
 		parsedCorrect = parse_INSERT();
 		if (parsedCorrect){ cout << "INSERT - valid command." << endl; } 
@@ -123,7 +123,7 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("SHOW") == 0)
 	{
-		contain.functionName = tokens.front(); //so we know it's SHOW
+		contain.functionName.push(tokens.front()); //so we know it's SHOW
 		tokens.pop();
 		parsedCorrect = parse_SHOW();
 		if (parsedCorrect){ cout << "SHOW - valid command." << endl; } 
@@ -131,7 +131,7 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("OPEN") == 0)
 	{
-		contain.functionName = tokens.front(); //so we know it's OPEN
+		contain.functionName.push(tokens.front()); //so we know it's OPEN
 		tokens.pop();
 		parsedCorrect = parse_OPEN();
 		if (parsedCorrect){ cout << "OPEN - valid command." << endl; } 
@@ -139,7 +139,7 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("SAVE") == 0)
 	{
-		contain.functionName = tokens.front(); //so we know it's SAVE
+		contain.functionName.push(tokens.front()); //so we know it's SAVE
 		tokens.pop();
 		parsedCorrect = parse_SAVE();
 		if (parsedCorrect){ cout << "SAVE - valid command." << endl; } 
@@ -147,7 +147,7 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("CLOSE") == 0)
     {   
-		contain.functionName = tokens.front(); //so we know it's CLOSE
+		contain.functionName.push(tokens.front()); //so we know it's CLOSE
 		tokens.pop();
 		parsedCorrect = parse_CLOSE();
         
@@ -160,14 +160,14 @@ bool Parser::isCommand()
 	}
 	else if(firstToken.compare("DELETE") == 0)
 	{
-		contain.functionName = tokens.front(); //so we know it's DELETE
+		contain.functionName.push(tokens.front()); //so we know it's DELETE
 		tokens.pop();
 		parsedCorrect = parse_DELETE();
 		if (parsedCorrect){ cout << "DELETE - valid command." << endl; } 
 		else{ cout << "DELETE - invalid command." << endl; } 
 		
     }else if(firstToken.compare("EXIT") == 0){   //so we know it's EXIT
-        contain.functionName = tokens.front();
+        contain.functionName.push(tokens.front());
         tokens.pop();
         parsedCorrect = parse_EXIT();
         if(parsedCorrect) { cout << "EXIT - valid command." << endl; }
@@ -187,7 +187,7 @@ bool Parser::isExpression()
 	
 	if(firstToken.compare("select") == 0)
 	{
-		contain.functionName = tokens.front(); //so we know it's select
+		contain.functionName.push(tokens.front()); //so we know it's select
 		tokens.pop();
 		parsedCorrect = parse_SELECT();
 		if (parsedCorrect){ cout << "select - valid command." << endl; } 
@@ -195,7 +195,7 @@ bool Parser::isExpression()
 	}
 	else if(firstToken.compare("project") == 0)
 	{
-		contain.functionName = tokens.front(); //so we know it's project
+		contain.functionName.push(tokens.front()); //so we know it's project
 		tokens.pop();
 		parsedCorrect = parse_PROJECT();
 		if (parsedCorrect){ cout << "projection - valid command." << endl; } 
@@ -204,7 +204,7 @@ bool Parser::isExpression()
 	}
 	else if(firstToken.compare("rename") == 0)
 	{
-		contain.functionName = tokens.front(); //so we know it's rename
+		contain.functionName.push(tokens.front()); //so we know it's rename
 		tokens.pop();
 		parsedCorrect = parse_RENAME();
 		if (parsedCorrect){ cout << "rename - valid command." << endl; } 
@@ -213,7 +213,13 @@ bool Parser::isExpression()
 	}
 	else if(isAtomicExpression())
 	{
-			tokens.pop();
+			tokens.pop(); //get rid of )?
+			//needed when it's like answer <- common_names;
+			if(tokens.front().compare(";") == 0)
+			{
+				cout<<"<- Query Passed\n";
+				return true;
+			}
 			firstToken = tokens.front();
 			
 			if(firstToken.compare("+") == 0)
@@ -226,7 +232,9 @@ bool Parser::isExpression()
 			}
 			else if(firstToken.compare("-") == 0)
 			{
-				tokens.pop();
+				contain.functionName.push("Difference");
+				contain.isSetDifference = 1;
+				tokens.pop(); //remove -
 				parsedCorrect = parse_SET_DIFFERENCE();
 				if (parsedCorrect){ cout << "difference - valid command." << endl; } 
 				else{ cout << "difference - invalid command." << endl; } 
@@ -234,6 +242,8 @@ bool Parser::isExpression()
 			}
 			else if(firstToken.compare("*") == 0)
 			{
+				contain.functionName.push("CROSS PRODUCT");
+				contain.isCrossProduct = 1;
 				tokens.pop();
 				parsedCorrect = parse_CROSS_PRODUCT();
 				if (parsedCorrect){ cout << "cross product - valid command." << endl; } 
@@ -263,12 +273,13 @@ bool Parser::isQuery()
 	string firstToken = tokens.front(); //get the name
 	if(!isIdentifier(firstToken)) //check 
 		return false; //return false if not
+	contain.parserTableName = tokens.front(); //get the table name
 	tokens.pop(); //pop it off the top
 	
 	firstToken = tokens.front(); //check for <-
 	if(firstToken.compare("<-") != 0) //check
 		return false; //return if false
-	tokens.pop(); //remove if passed
+	tokens.pop(); //remove <- if passed
 		
 	//check if expression
 	if(!isExpression())
@@ -278,6 +289,8 @@ bool Parser::isQuery()
 	if(tokens.front().compare(";") != 0)
 		return false;	
 	tokens.pop();
+	
+	contain.functionName.push("QUERY"); //need to do a query last
 	
 	return true; //if everything passes return trues
 }
@@ -432,7 +445,7 @@ bool Parser::isAtomicExpression()
 {			
 	if(isIdentifier(tokens.front())) //just a table
 	{
-		contain.parserTableName = tokens.front(); //get the name for SHOW
+		contain.parserTableName = tokens.front(); //get the name for SHOW, also query
 	}
 	else
 	{
@@ -835,6 +848,7 @@ bool Parser::parse_SET_UNION()
 bool Parser::parse_SET_DIFFERENCE()
 { 
 	if(!isAtomicExpression()) {return false;}
+		contain.secondTableName = tokens.front(); //get second table name
 		tokens.pop();
 	
 	return true; 
@@ -843,6 +857,7 @@ bool Parser::parse_SET_DIFFERENCE()
 bool Parser::parse_CROSS_PRODUCT()
 { 
 	if(!isAtomicExpression()) {return false;}
+	contain.secondTableName = tokens.front(); //get second table name
 	tokens.pop();
 	
 	return true; 

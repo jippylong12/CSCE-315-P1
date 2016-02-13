@@ -2,7 +2,7 @@ X m-Close
 X m-Save 
 X m-Show 
 X m-Create 
-p-Update 
+p-Update //done
 p-Insert 
 p-Delete 
 p-Exit //done
