@@ -85,19 +85,6 @@ void DBsystem::execute()
 	
 	
 	//---------------------QUERIES------------------------//
-	
-	
-	
-	if (DBParser.contain.isSelect){
-		//run select
-		//string newTableName,string nameShow, string header ,string comparator, string condition
-	}
-	if (DBParser.contain.isProject){
-		//run project
-	}
-	if (DBParser.contain.isRename){
-		//do rename
-	}
 	if (DBParser.contain.isSetUnion){
 		//do Union
 	}
@@ -106,11 +93,6 @@ void DBsystem::execute()
 	}
 	if (DBParser.contain.isCrossProduct){
 		//do Union
-	}
-	
-	
-	if(DBParser.contain.isProduct){
-		
 	}
     
 }

@@ -377,7 +377,7 @@ bool Parser::isAttributeList()
 	{
 		if(!isIdentifier(tokens.front())) //check if valid name
 			return false;
-		contain.parserKeys = tokens.front(); //get the key
+		contain.parserKeys.push_back(tokens.front()); //get the key
 		tokens.pop(); //remove that key
 		
 		//check if there is another key
@@ -432,7 +432,7 @@ bool Parser::isAtomicExpression()
 {			
 	if(isIdentifier(tokens.front())) //just a table
 	{
-		container.parserTableName = tokens.front(); //get the name for SHOW
+		contain.parserTableName = tokens.front(); //get the name for SHOW
 	}
 	else
 	{
