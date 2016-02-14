@@ -5,7 +5,7 @@
 #include <vector>
 #include <sstream>
 #include <map>
-#include "Table.h"
+
 #include "Parser.h"
 
 class DBsystem
@@ -23,7 +23,7 @@ public:
 	Parser DBParser;
 	
 	//-------Database commands--------//
-	Table* OPEN(string); //bring a table into memory from file 
+	Table* OPEN(string); //bring a table into memory from file
 	int CLOSE(string);
 	int SAVE(string);
 	int SHOW(string);    	//::== SHOW atomic-expr 

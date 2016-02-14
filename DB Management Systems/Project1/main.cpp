@@ -18,12 +18,43 @@ int main()
 	 while(1)
 	 {
 	 	DBsystem db;
-		
-	 	cout<<"What is the command?"<<endl;
+    
+//    vector<string> header;
+//    header.push_back("name");
+//    header.push_back("kind");
+//    header.push_back("years");
+//    
+//    vector<string> types;
+//    types.push_back("VARCHAR(20)");
+//    types.push_back("VARCHAR(8)");
+//    types.push_back("INTEGER");
+//    
+//    vector<string> keys;
+//    keys.push_back("name");
+//    keys.push_back("kind");
+//  
+//    vector<string> input;
+//    input.push_back("Max");
+//    input.push_back("dog");
+//    input.push_back("10");
+//    
+//    vector<int> sizes;
+//    
+//    //sizes.push_back(3);
+//    //sizes.push_back(3);
+//    //sizes.push_back(3);
+//    
+//    
+//    db.CREATE(header.size(), "animals", header,keys, types, sizes );
+//    db.INSERT("animals", input);
+//    db.SHOW("animals");
+	 
+    
+    	cout<<"What is the command?"<<endl;
 	 	getline (cin,input0); //take the command
 	 	db.DBParser.sendNewInput(input0);
 	 	db.execute(); //not implemented yet but will take the command and use switch statement to know what to run
-	 	//db.DBParser.getContainer().clear(); //Not implementted yet but will reset all things in container to 0
+	 	//db.DBParser.contain.clear(); //Not implementted yet but will reset all things in container to 0
 		
 	 }
 

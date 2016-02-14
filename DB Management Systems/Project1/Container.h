@@ -3,12 +3,15 @@
 #include <stack>
 #include <iostream>
 
+#include "Table.h"
 using namespace std;
 
 
 struct Container
 {
-	
+
+    Table* tableState = new Table();
+    
     //items
     stack<string> functionName; //what to run
     string parserTableName; //table Name
