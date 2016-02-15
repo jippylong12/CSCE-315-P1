@@ -14,11 +14,12 @@ using namespace std;
 int main()
 {	
 	string input0;
+	DBsystem db;
 	
 	 while(1)
 	 {
-	 	DBsystem db;
 		
+		cout<<"Size of Map: "<<db.database.size()<<endl;
 	 	cout<<"What is the command?"<<endl;
 	 	getline (cin,input0); //take the command
 	 	db.DBParser.sendNewInput(input0);
@@ -34,6 +35,7 @@ int main()
 	// string fileInput = buffer.str();		//Stores all file input into one string
 
 	//DBsystem db;
+	//db.DBParser.sendNewInput("CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);");
 	//db.OPEN("animals");
 	
 	//db.DBParser.sendNewInput("CREATE TABLE animals (name VARCHAR(20), kind VARCHAR(8), years INTEGER) PRIMARY KEY (name, kind);");

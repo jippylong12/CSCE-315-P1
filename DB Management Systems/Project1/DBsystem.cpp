@@ -36,53 +36,64 @@ void DBsystem::execute()
 	{
 		
 	currentFunction = DBParser.contain.functionName.top(); //get current function
-    cout << "Function name to be run: " << DBParser.contain.functionName << endl;
+    cout << "Function name to be run: " << currentFunction << endl;
     
     //-----------------------COMMANDS----------------------//
+	if(currentFunction.compare("CREATE") == 0){
+		//run OPEN
+		string nameCreate = DBParser.contain.parserTableName;
+		vector<string> createHeaders = DBParser.contain.parserHeaders;
+		vector<string> createKeys= DBParser.contain.parserKeys;
+		vector<string> createHeaderTypes= DBParser.contain.parserHeaderTypes;
+		vector<int> createHeaderSizes = DBParser.contain.parserHeaderSizes;
+		int columnSize = DBParser.contain.parserHeaders.size();
+		CREATE(columnSize,nameCreate, createHeaders,createKeys,createHeaderTypes,createHeaderSizes);
+	}	
 	
-	
-	if(DBParser.contain.functionName.compare("OPEN") == 0){
+	if(currentFunction.compare("OPEN") == 0){ //broken
 		//run OPEN
 		string nameOpen = DBParser.contain.parserTableName;
+		OPEN(nameOpen);
 	}
 	
 	
-	if (DBParser.contain.functionName.compare("CLOSE") == 0){
+	if (currentFunction.compare("CLOSE") == 0){
         //run CLOSE
         string nameClose = DBParser.contain.parserTableName; //Grab relation name from parser
-       //CLOSE(nameClose);
+        CLOSE(nameClose);
         
         
     }
-    if (DBParser.contain.functionName.compare("SAVE") == 0){
+    if (currentFunction.compare("SAVE") == 0){
         //run SAVE
         string nameSave = DBParser.contain.parserTableName;
-        
+        SAVE(nameSave);
         
     }
-    if (DBParser.contain.functionName.compare("SHOW") == 0){
+    if (currentFunction.compare("SHOW") == 0){
         //run SHOW
         string nameShow = DBParser.contain.parserTableName;
+        SHOW(nameShow);
         
         
     }
-    if (DBParser.contain.functionName.compare("UPDATE") == 0){
+    if (currentFunction.compare("UPDATE") == 0){
         //run UPDATE
         string nameUpdate = DBParser.contain.parserTableName;
-        string headerName = DBParser.contain.updateHeaderName;
+        vector<string> headerName = DBParser.contain.updateHeaderName;
         string criteria = DBParser.contain.updateCriteria;
-        string replace = DBParser.contain.updateReplace;
+        vector<string> replace = DBParser.contain.updateReplace;
         
         
     }
-    if (DBParser.contain.functionName.compare("INSERT") == 0){
+    if (currentFunction.compare("INSERT") == 0){
         //run INSERT
         string nameInsert = DBParser.contain.parserTableName;
         vector<string> input = DBParser.contain.insertInput;
-        
+        INSERT(nameInsert, input);
         
     }
-    if (DBParser.contain.functionName.compare("DELETE") == 0){
+    if (currentFunction.compare("DELETE") == 0){
         //run DELETE
         string nameDelete = DBParser.contain.parserTableName;
         string compareHeader = DBParser.contain.deleteCompareHeader;
@@ -91,7 +102,7 @@ void DBsystem::execute()
 		DELETE(nameDelete,compareHeader,compareTo, deleteOP);
         
     }
-    if (DBParser.contain.functionName.compare("EXIT") == 0){
+    if (currentFunction.compare("EXIT") == 0){
         //run EXIT
         
         EXIT();
@@ -103,21 +114,21 @@ void DBsystem::execute()
 	{
 		//should just make a copy of the table with new name or just rename the new table.  
 	}
-	if (DBParser.contain.functionName.compare("select") == 0){
+	if (currentFunction.compare("select") == 0){
 		//run select
 		//string newTableName,string nameShow, string header ,string comparator, string condition
 		string newTableName = DBParser.contain.parserTableName;
 		string nameShow = DBParser.contain.secondTableName;
-		string header = DBParser.contain.updateHeaderName;
+		string header = DBParser.contain.selectHeader;
 		string comparator = DBParser.contain.selectComparator;
 		string condition = DBParser.contain.selectCondition;
 	}
-	if (DBParser.contain.functionName.compare("project") == 0){
+	if (currentFunction.compare("project") == 0){
 		//run project
 		string t1 = DBParser.contain.parserTableName;
 		vector<string> attributes = DBParser.contain.projectAttributes;
 	}
-	if (DBParser.contain.functionName.compare("rename") == 0){
+	if (currentFunction.compare("rename") == 0){
 		//do rename
 		string tName = DBParser.contain.parserTableName;
 		vector<string> tableAttributes = DBParser.contain.renameTableAttributes;
@@ -275,7 +286,9 @@ Table* DBsystem::CREATE(int columnCreate, string nameCreate,vector<string> creat
 {
 	//intiliaze new Table
 	Table* newTable = new Table(columnCreate,nameCreate,createHeaders, createKeys, createTypes,sizes);
+	cout<<"Map size: "<<database.size()<<endl;
 	database[nameCreate] = newTable; //add the table to the database
+	cout<<"Map size: "<<database.size()<<endl;
 	//return new Table
 	return newTable;
 	

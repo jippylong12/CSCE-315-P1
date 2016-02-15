@@ -10,14 +10,12 @@
 
 class DBsystem
 {
-	map<string,Table*> database;
-	
-    
-
 public:
 	DBsystem();
 	
 	void execute(); //connect Parser containers to DB functions
+	map<string, Table*> getDB() { return database; }
+	map<string, Table*> database;
 	
 	//Parser
 	Parser DBParser;
@@ -39,7 +37,6 @@ public:
 	Table* SET_UNION(string, string);			//Take the union of 2 tables
 	Table* SET_DIFFERENCE(string, string);		//2 table names
 	Table* CROSS_PRODUCT(string, string);		//2 table names used to perform cross product
-	map<string, Table*> getDB() { return database; }
 	void addTable(Table* newTable) { database[newTable->getTableName()] = newTable; }
 	
 	
