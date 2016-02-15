@@ -24,7 +24,7 @@ int main()
 	 	getline (cin,input0); //take the command
 	 	db.DBParser.sendNewInput(input0);
 	 	db.execute(); //not implemented yet but will take the command and use switch statement to know what to run
-	 	//db.DBParser.getContainer().clear(); //Not implementted yet but will reset all things in container to 0
+	 	//db.DBParser.contain.clear(); //Not implementted yet but will reset all things in container to 0
 		
 	 }
 

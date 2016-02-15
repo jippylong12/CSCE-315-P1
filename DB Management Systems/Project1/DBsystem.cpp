@@ -29,7 +29,24 @@ DBsystem::DBsystem()
 //if statements based on functionName in Container. 
 void DBsystem::execute()
 {
-	string currentFunction;
+	
+    /*
+     
+        We have a problem where the table is not being stored properly after a function call.  This may be an easy fix.
+     For example, we can CREATE a table "animals" but then if we call SHOW animals, SHOW won't show anything.
+     
+        I tried to create a tableState in the container to store the table's current state, but it does not work.
+     
+     
+     */
+    
+    
+    
+    string currentFunction;
+    //Table* currentTable = DBParser.contain.tableState;
+    
+    
+    
 	cout<<"Size of stack: "<<DBParser.contain.functionName.size()<<endl;
 	//for the size of the function stack
 	for(int i = DBParser.contain.functionName.size(); i > 0; --i)
@@ -62,6 +79,8 @@ void DBsystem::execute()
         string nameClose = DBParser.contain.parserTableName; //Grab relation name from parser
         CLOSE(nameClose);
         
+        currentFunction = DBParser.contain.functionName.top(); //get current function
+        cout << "Function name to be run: " << currentFunction << endl;
         
     }
     if (currentFunction.compare("SAVE") == 0){
@@ -75,6 +94,16 @@ void DBsystem::execute()
         string nameShow = DBParser.contain.parserTableName;
         SHOW(nameShow);
         
+           DBParser.contain.tableState = CREATE(columnCreate, nameCreate, createHeaders, createKeys, createTypes, sizes);
+            
+            //cout << endl << "Create ran successfully." << endl;
+            cout << DBParser.contain.tableState->getColumnLength() << endl;
+            
+            //SHOW() works in this scope
+            //SHOW(DBParser.contain.tableState->getTableName());
+            
+        }
+            
         
     }
     if (currentFunction.compare("UPDATE") == 0){
@@ -154,7 +183,7 @@ void DBsystem::execute()
     
 }
 
-Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file 
+Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file
 {
 	//read in from the comma seperated text file
 	string inputLine; //for getline
@@ -347,7 +376,7 @@ int DBsystem::INSERT(string nameInsert, vector<string> input)
 
 	int tempRow = database[nameInsert]->getRowLength() + 1;
 	database[nameInsert]->setRowLength(tempRow);
-
+    return 0;
 
 }
 
