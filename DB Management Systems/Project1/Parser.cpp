@@ -507,13 +507,16 @@ bool Parser::isComparison()
 		if(!isIdentifier(tokens.front()))
 			return false;
 		contain.deleteCompareHeader = tokens.front(); //get header
+		contain.updateCompareHeader = tokens.front(); //get header for update
+		contain.updateCriteria = tokens.front();
 		tokens.pop();
 	}
 	
 
 	if(!isOP())
 		return false;
-	contain.deleteOP = tokens.front(); //get operation
+	contain.deleteOP = tokens.front(); //get operation for delete
+	contain.updateOP = tokens.front(); //get operation for update
 	tokens.pop(); //
 	
 	if(tokens.front()[0] == '\"')
@@ -526,7 +529,8 @@ bool Parser::isComparison()
 	{
 		if(!isIdentifier(tokens.front()))
 			return false;
-		contain.deleteCompareTo = tokens.front(); //get the other side
+		contain.deleteCompareTo = tokens.front(); //get the other side for delete
+		contain.updateCompareTo = tokens.front(); //get other side for update
 		tokens.pop();
 	}
 	
@@ -664,7 +668,7 @@ bool Parser::parse_UPDATE()
 	//--------------------------------------------------------------------//
 	
 		if(tokens.front().compare("WHERE") != 0) {	return false;	}    //WHERE
-			contain.updateCriteria = tokens.front();
+			//contain.updateCriteria = tokens.front();
 			tokens.pop();
 	
 		if(!isCondition())
