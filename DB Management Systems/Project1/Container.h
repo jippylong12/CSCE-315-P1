@@ -53,13 +53,13 @@ struct Container
 	vector<string> projectAttributes;
 	
 	//rename
-	vector<string> renameTableAttributes;
+	string renameTableToGet;
 	vector<string> renameReplaceAttributes;
 	
 	//queries
-	bool isSetUnion;
-	bool isSetDifference;
-	bool isCrossProduct;
+	bool isSetUnion =0;
+	bool isSetDifference=0;
+	bool isCrossProduct=0;
 	
 	
 	
@@ -81,7 +81,6 @@ struct Container
 		parserHeaderSizes.clear();
 		insertInput.clear();
 		projectAttributes.clear();
-		renameTableAttributes.clear();
 		renameReplaceAttributes.clear();
 		
 		while(functionName.size() > 0)

@@ -408,6 +408,8 @@ bool Parser::isAttributeList()
 	{
 		if(!isIdentifier(tokens.front())) //check if valid name
 			return false;
+		contain.projectAttributes.push_back(tokens.front()); //for project
+		contain.renameReplaceAttributes.push_back(tokens.front()); // for rename
 		contain.parserKeys.push_back(tokens.front()); //get the key
 		tokens.pop(); //remove that key
 		
@@ -471,6 +473,8 @@ bool Parser::isAtomicExpression()
 		tokens.pop(); //get rid of (
 		
 		if(!isExpression()) {return false;}
+		contain.projectAttributes.push_back(tokens.front());
+
 		
 		if(tokens.front().compare(")") != 0) {return false;}
 		
@@ -841,18 +845,20 @@ bool Parser::parse_SELECT()
 	return true; 
 }
 
+
 bool Parser::parse_PROJECT()
 { 
 	if(tokens.front().compare("(") != 0)	 {	return false; 	}
-		tokens.pop();
+		tokens.pop(); //get rid of (
 	
 	if(!isAttributeList()) { return false; }
 
 	if(tokens.front().compare(")") != 0)	 {	return false; 	}
-		tokens.pop();
+		tokens.pop(); //get rid of )
 	
 	if(!isAtomicExpression()) {	return false; }
 	
+	contain.parserTableName = tokens.front();
 	tokens.pop();
 	
 	return true; 
@@ -861,14 +867,16 @@ bool Parser::parse_PROJECT()
 bool Parser::parse_RENAME()
 { 
 	if(tokens.front().compare("(") != 0)	 {	return false; 	}
-		tokens.pop();
+		tokens.pop(); // remove (
 	
 	if(!isAttributeList()) { return false; }
 	
 	if(tokens.front().compare(")") != 0)	 {	return false; 	}
-		tokens.pop();
+		tokens.pop(); //remove )
 	
-	if(!isAtomicExpression()) {	return false; }
+	//get table name
+	if(!isAtomicExpression()) {	return false; } 
+		contain.renameTableToGet = tokens.front(); //get table name
 		tokens.pop();
 	
 	return true; 
@@ -876,7 +884,8 @@ bool Parser::parse_RENAME()
 
 bool Parser::parse_SET_UNION()
 { 
-	if(!isAtomicExpression()) {return false;}
+	if(!isAtomicExpression()) {return false;} //find the other tableName
+	contain.secondTableName = tokens.front();
 	tokens.pop();
 	
 	return true; 
