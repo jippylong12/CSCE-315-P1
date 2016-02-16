@@ -30,8 +30,10 @@ public:
 	
 	int getRowLength() { return rowLength;} 
 	void setRowLength(int r) { rowLength = r;}
+	
 	int getColumnLength() { return columnLength;}
 	void setColumnLength(int l) { columnLength = l;}
+	
 	void setTable(vector< vector<string> > setTble) { table = setTble;}
 	vector< vector<string> > getTable() {return table;}
     //void setRows(vector<string> rows){ for (int i = 0; i < columnLength; ++i) { this->table[i] = rows;  }
@@ -39,13 +41,12 @@ public:
 	void setPrimaryKeys(vector<string> setKeys) { primaryKeys = setKeys;} //set any of the values of the primary key
 	vector<string> getPrimaryKeys() {return primaryKeys;}
 
-	vector<string> getPrimnaryKey() { return primaryKeys;} //return key vector
-	void setPrimaryKey(vector<string> setKeys) { primaryKeys = setKeys;} //set any of the values of the primary key
-
 	string getTableName() { return tableName;}
 	void setTableName(string tName) { tableName = tName;}
+	
 	vector<string> getHeaders() {return tableHeaders;}
     void setHeader(vector<string> tableHeaders);
+    
     vector<string> getHeaderTypes() {return headerTypes;}
     void setHeaderTypes(vector<string> tempHeaderType) { headerTypes = tempHeaderType;}
     //headerSizes functions

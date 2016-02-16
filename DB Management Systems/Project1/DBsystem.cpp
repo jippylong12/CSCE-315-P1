@@ -721,6 +721,9 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 	newName = newTableName;
 	tempTable->setTableName(newTableName);
 	tempTable->setHeader(database[nameShow]->getHeaders());
+	tempTable->setHeaderTypes(database[nameShow]->getHeaderTypes());
+	tempTable->setHeaderSizes(database[nameShow]->getHeaderSizes());
+	tempTable->setPrimaryKeys(database[nameShow]->getPrimaryKeys());
 	tempTable->setColumnLength(tempTable->getHeaders().size());
 	tempTable->setRowLength(newRow);
 	tempTable->setTable(returnT);
