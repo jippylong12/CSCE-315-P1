@@ -30,23 +30,8 @@ DBsystem::DBsystem()
 void DBsystem::execute()
 {
 	
-    /*
-     
-        We have a problem where the table is not being stored properly after a function call.  This may be an easy fix.
-     For example, we can CREATE a table "animals" but then if we call SHOW animals, SHOW won't show anything.
-     
-        I tried to create a tableState in the container to store the table's current state, but it does not work.
-     
-     
-     */
-    
-    
-    
     string currentFunction;
-    //Table* currentTable = DBParser.contain.tableState;
-    
-    
-    
+    bool open = 0; //for when open is called
 	cout<<"Size of stack: "<<DBParser.contain.functionName.size()<<endl;
 	//for the size of the function stack
 	for(int i = DBParser.contain.functionName.size(); i > 0; --i)
@@ -69,6 +54,9 @@ void DBsystem::execute()
 	
 	if(currentFunction.compare("OPEN") == 0){ //broken
 		//run OPEN
+		
+		DBParser.contain.functionName.pop(); //move on to the next function
+		open = 1;
 		string nameOpen = DBParser.contain.parserTableName;
 		OPEN(nameOpen);
 	}
@@ -173,7 +161,7 @@ void DBsystem::execute()
 		string t1 = DBParser.contain.parserTableName;
 		string t2 = DBParser.contain.secondTableName;
 	}
-	DBParser.contain.functionName.pop(); //move on to the next function
+	if(!open) DBParser.contain.functionName.pop(); //move on to the next function
 	}
     
 }
@@ -262,7 +250,7 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	for (int i = 0; i< database[nameSave]->getPrimaryKeys().size() -1; ++i)
 	{
 		saveFile<<database[nameSave]->getPrimaryKeys()[i]<<", ";
-		temp = i;
+		temp = i + 1;
 	}
 	saveFile<<database[nameSave]->getPrimaryKeys()[temp]<<");";
 	
@@ -280,7 +268,10 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 			saveFile <<"\""<< t.getTable()[i][j]<<"\""<<", ";
 			temp = j;
 		}
-		saveFile<<t.getTable()[i][temp + 1]<<");"<<endl;
+		if(i != t.getRowLength() - 1)
+			saveFile<<t.getTable()[i][temp + 1]<<");"<<endl;
+		else
+			saveFile<<t.getTable()[i][temp + 1]<<");";
 	}
 	
 	saveFile.close();

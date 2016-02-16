@@ -79,8 +79,10 @@ struct Container
 		renameTableAttributes.clear();
 		renameReplaceAttributes.clear();
 		
-		
-		
+		while(functionName.size() > 0)
+		{
+			functionName.pop();
+		}
 		parserTableName = ""; //table Name
     	secondTableName = ""; //for functions with two tables
 		

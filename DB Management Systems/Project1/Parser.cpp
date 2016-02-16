@@ -14,7 +14,6 @@ Parser::Parser(string in)
 void Parser::sendNewInput(string in)
 {
 	input = in;
-	cout << 1.1 << endl;
 	parse();
 }
 void Parser::parse()
@@ -31,7 +30,6 @@ void Parser::parse()
 //	was needed because show wasn't popping off tokens. 	
 	while(tokens.size() > 0)
 	{
-		cout<<"Tokens size: "<<tokens.size()<<endl;
 		tokens.pop();
 	}
 	
@@ -232,12 +230,7 @@ bool Parser::isExpression()
 	}
 	else if(isAtomicExpression())
 	{
-			cout<<tokens.front()<<endl;
-			cout<<"-------------"<<endl;
-			contain.parserTableName = tokens.front();
-			tokens.pop();
-			cout<<tokens.front()<<endl;
-			
+			contain.newQueryName = tokens.front();
 			//needed when it's like answer <- common_names;
 			if(tokens.front().compare(";") == 0)
 			{
@@ -292,7 +285,6 @@ bool Parser::isExpression()
 bool Parser::isQuery()
 {
 
-	cout<<6<<endl;
 	//check for relation name
 	string firstToken = tokens.front(); //get the name
 	if(!isIdentifier(firstToken)) //check 
@@ -300,7 +292,6 @@ bool Parser::isQuery()
 	contain.newQueryName = tokens.front(); //for query
 	tokens.pop(); //pop it off the top
 	
-	cout<<6.1<<endl;
 	
 	firstToken = tokens.front(); //check for <-
 	if(firstToken.compare("<-") != 0) //check
@@ -308,18 +299,13 @@ bool Parser::isQuery()
 		
 	tokens.pop(); //remove <- if passed
 	
-	cout<<6.3<<endl;
 	//check if expression
 	if(!isExpression())
 		return false; //return if not
-	
-	cout<<6.4<<endl;
-	
+
 	if(tokens.front().compare(";") != 0)
 		return false;	
-	tokens.pop();
 	
-	cout<<6.5<<endl;
 	contain.functionName.push("QUERY"); //need to do a query last
 	
 	return true; //if everything passes return trues
