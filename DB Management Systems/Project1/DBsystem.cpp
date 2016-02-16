@@ -73,6 +73,7 @@ void DBsystem::execute()
     if (currentFunction.compare("SAVE") == 0){
         //run SAVE
         string nameSave = DBParser.contain.parserTableName;
+        cout<<"SAve: "<<nameSave<<endl;
         SAVE(nameSave);
         
     }
@@ -144,7 +145,7 @@ void DBsystem::execute()
 	//---------------------QUERIES------------------------//
 	if (currentFunction.compare("QUERY") == 0) 
 	{
-		cout<<"parserTableName: "<<endl;
+		cout<<"parserTableName: "<<DBParser.contain.parserTableName<<endl;
 		Table newTable(*database[DBParser.contain.parserTableName]);
 		//should just make a copy of the table with new name or just rename the new table.
 		newTable.setTableName(DBParser.contain.newQueryName);
@@ -166,7 +167,11 @@ void DBsystem::execute()
 		cout<<comparator<<endl;
 		string condition = DBParser.contain.selectCondition;
 		cout<<condition<<endl;
-		SELECT(newTableName,nameShow,header,comparator,condition);
+		Table *newTable (SELECT(newTableName,nameShow,header,comparator,condition));
+		DBParser.contain.parserTableName = newTable->getTableName();
+		cout<<"Select new Table name: "<<newTable->getTableName()<<endl;
+		
+		
 		
 	}
 	if (currentFunction.compare("project") == 0){
@@ -261,6 +266,7 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	
 	saveFile<<"CREATE TABLE " + nameSave + " (";
 	int temp = 0;
+	
 	
 	//Get headers and header types
 	for (int i = 0; i< database[nameSave]->getHeaders().size(); ++i)
@@ -712,12 +718,14 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 		}
 	}
 
-	newName = "SELECT " + comparator + " FROM " + nameShow;
+	newName = newTableName;
 	tempTable->setTableName(newTableName);
 	tempTable->setHeader(database[nameShow]->getHeaders());
 	tempTable->setColumnLength(tempTable->getHeaders().size());
 	tempTable->setRowLength(newRow);
 	tempTable->setTable(returnT);
+	
+	database[newTableName] = tempTable;
 	return tempTable;
 }
 
