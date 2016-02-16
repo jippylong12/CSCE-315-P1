@@ -360,12 +360,18 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criter
 	//search headervector for headerName to find column
 	//search that column for the criteria
 	//replace the criteria with replace
+	//update-cmd ::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition
+	
+ 	//UPDATE animals SET kind = MOG WHERE years == 3;
 	
 	
-	//update-cmd ::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
 	int minIndex = min(database[nameUpdate]->getHeaders().size(), headerName.size());   //store size mismatch
 	vector<int> colPos;																  //store which column(s) to be updated
-	vector<int> rowPos;																  //store which rows to be updated
+	vector<int> rowPos;				
+	vector<int> colComparePos;
+	vector<int> replacePos;
+	
+	//store which rows to be updated
 	//need to iterate through all columns
 	
 	string updateOP = DBParser.contain.updateOP;
@@ -376,7 +382,9 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criter
 	vector<vector<string>> tempTable = database[nameUpdate]->getTable();
 	
 	cout << 1 << endl;
-	for(int i = 0; i < minIndex; ++i){
+	
+	
+	for(int i = 0; i < minIndex; ++i){			//Go through table headers and headers to be updated
 		for (int j = 0; j < database[nameUpdate]->getHeaders().size(); ++j){
 			if(database[nameUpdate]->getHeaders()[j].compare(headerName[i]) == 0 && updateOP.compare("==")==0){
 				colPos.push_back(j);			//Store the positions where the attribute name match
@@ -384,16 +392,42 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criter
 		}
 	}
 	
+	for(int i = 0; i < minIndex; ++i){			//Go through table headers and headers to be updated
+		for (int j = 0; j < database[nameUpdate]->getHeaders().size(); ++j){
+			if(database[nameUpdate]->getHeaders()[j].compare(criteria) == 0 && updateOP.compare("==")==0){
+				colComparePos.push_back(j);			//Store the positions where the attribute name match
+			}else cout << "not ture" << endl;
+		}
+	}
 	
 	
+	
+	cout << "updateCompareTo: " << DBParser.contain.updateCompareTo << endl;
 	
 	for(int i = 0; i <database[nameUpdate]->getRowLength(); ++i ){
 		for (int j = 0; j < colPos.size(); ++j){
-		if(database[nameUpdate]->getTable()[i][colPos[j]].compare("dog")==0){
-			rowPos.push_back(i);
+			
+			cout << "colPos: " << colPos[j] << endl;
+			cout << "database[nameUpdate]->getTable()[i][colPos[j+1]]: " << database[nameUpdate]->getTable()[i][colPos[j]] << endl;
+			
+			
+			if(database[nameUpdate]->getTable()[i][colComparePos[j]].compare(DBParser.contain.updateCompareTo)==0)
+				rowPos.push_back(i);			//Store the position of the row where criteria is met
+				replacePos.push_back(i);
 		}
-		}
-		cout << "replace[0]: " << replace[0] <<endl;
+	}
+	
+	
+	
+	
+	// for(int i = 0; i <database[nameUpdate]->getRowLength(); ++i ){
+	// 	for (int j = 0; j < colPos.size(); ++j){
+	// 		if(database[nameUpdate]->getTable()[i][colPos[j]].compare("dog")==0){
+				
+	// 		}
+	// 	}
+	
+	cout << "replace[0]: " << replace[0] <<endl;
 	cout << "row pos size: " << rowPos.size() << "col pos size: " << colPos.size() << endl;
 		
 		
@@ -407,9 +441,9 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criter
 					//tempTable[2][2] = replace[0];
 		//	}
 		
+		replace.clear();
 		
-		
-	}
+		//	}
 		cout << 2 << endl;
 	//for (int i = 0; i < database[nameUpdate]->getRowLength(); ++i){
 	//	if(database[nameUpdate]->getTable()[i][colPos[i]].compare(criteria)==0){
@@ -417,7 +451,7 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criter
 	//	}
 	//}
 	
-	//UPDATE animals SET kind = fatcat WHERE years == 4;
+	
 	
 	//Need to add conditional DBParser.contain.updateOP
 		cout << 3 << endl;
