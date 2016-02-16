@@ -77,9 +77,9 @@ void DBsystem::execute()
         
     }
     if (currentFunction.compare("SHOW") == 0){
-    //run SHOW
-    string nameShow = DBParser.contain.parserTableName;
-    SHOW(nameShow);
+	    //run SHOW
+	    string nameShow = DBParser.contain.parserTableName;
+	    SHOW(nameShow);
         
     }
             
@@ -144,7 +144,15 @@ void DBsystem::execute()
 	//---------------------QUERIES------------------------//
 	if (currentFunction.compare("QUERY") == 0) 
 	{
-		//should just make a copy of the table with new name or just rename the new table.  
+		cout << 4 << endl;
+		cout<<"parserTableName: "<<endl;
+		Table newTable(*database[DBParser.contain.parserTableName]);
+		cout << 41 << endl;
+		//should just make a copy of the table with new name or just rename the new table.
+		newTable.setTableName(DBParser.contain.newQueryName);
+		cout << 42 << endl;
+
+		database[DBParser.contain.newQueryName] = new Table(newTable);
 	}
 	if (currentFunction.compare("select") == 0){
 		//run select
@@ -154,17 +162,21 @@ void DBsystem::execute()
 		string header = DBParser.contain.selectHeader;
 		string comparator = DBParser.contain.selectComparator;
 		string condition = DBParser.contain.selectCondition;
+		SELECT(newTableName,nameShow,header,comparator,condition);
+		
 	}
 	if (currentFunction.compare("project") == 0){
 		//run project
 		string t1 = DBParser.contain.parserTableName;
 		vector<string> attributes = DBParser.contain.projectAttributes;
+		PROJECT(t1,attributes);
 	}
 	if (currentFunction.compare("rename") == 0){
 		//do rename
 		string tName = DBParser.contain.parserTableName;
 		vector<string> tableAttributes = DBParser.contain.renameTableAttributes;
 		vector<string> renameReplaceAttributes = DBParser.contain.renameReplaceAttributes;
+		RENAME(tName,tableAttributes,renameReplaceAttributes);
 	}
 	if (DBParser.contain.isSetUnion){
 		//do Union

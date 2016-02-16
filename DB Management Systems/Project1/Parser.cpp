@@ -230,7 +230,8 @@ bool Parser::isExpression()
 	}
 	else if(isAtomicExpression())
 	{
-			contain.newQueryName = tokens.front();
+			contain.parserTableName = tokens.front();
+			tokens.pop();
 			//needed when it's like answer <- common_names;
 			if(tokens.front().compare(";") == 0)
 			{
