@@ -155,10 +155,10 @@ void DBsystem::execute()
 		//run select
 		//string newTableName,string nameShow, string header ,string comparator, string condition
 		cout<<55<<endl;
-		string newTableName = DBParser.contain.parserTableName;
+		string newTableName = DBParser.contain.selectSecondName;
 		cout<<"New tAble Name: "<<newTableName<<endl;;
 		cout<<55<<endl;
-		string nameShow = DBParser.contain.selectSecondName;
+		string nameShow = DBParser.contain.parserTableName;
 		cout<<nameShow<<endl;
 		string header = DBParser.contain.selectHeader;
 		cout<<header<<endl;
@@ -643,7 +643,7 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 		}
 	}
 	
-	if (comparator.compare("=") == 0)
+	if (comparator.compare("==") == 0)
 	{
 		cout<<12<<endl;
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i)
