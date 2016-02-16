@@ -30,8 +30,23 @@ DBsystem::DBsystem()
 void DBsystem::execute()
 {
 	
+    /*
+     
+        We have a problem where the table is not being stored properly after a function call.  This may be an easy fix.
+     For example, we can CREATE a table "animals" but then if we call SHOW animals, SHOW won't show anything.
+     
+        I tried to create a tableState in the container to store the table's current state, but it does not work.
+     
+     
+     */
+    
+    
+    
     string currentFunction;
-    bool open = 0; //for when open is called
+    //Table* currentTable = DBParser.contain.tableState;
+    
+    
+    
 	cout<<"Size of stack: "<<DBParser.contain.functionName.size()<<endl;
 	//for the size of the function stack
 	for(int i = DBParser.contain.functionName.size(); i > 0; --i)
@@ -54,9 +69,6 @@ void DBsystem::execute()
 	
 	if(currentFunction.compare("OPEN") == 0){ //broken
 		//run OPEN
-		
-		DBParser.contain.functionName.pop(); //move on to the next function
-		open = 1;
 		string nameOpen = DBParser.contain.parserTableName;
 		OPEN(nameOpen);
 	}
@@ -93,6 +105,28 @@ void DBsystem::execute()
         vector<string> replace = DBParser.contain.updateReplace;
         
         
+        cout << "nameUpdate: " << nameUpdate << endl;
+        
+        cout << "headerName vector: " << endl;
+        for (int i = 0; i < headerName.size(); ++i){
+        	cout << headerName[i] << endl;
+        }
+        
+        cout << "criteria: " << criteria << endl;
+        
+        cout << "replace Vector: " << endl;
+        for (int i = 0; i < replace.size(); ++i){
+        	cout << replace[i] << endl;
+        }
+        
+        
+        
+        
+        
+        
+       // UPDATE (nameUpdate, headerName, criteria, replace);
+        
+        
     }
     if (currentFunction.compare("INSERT") == 0){
         //run INSERT
@@ -120,11 +154,7 @@ void DBsystem::execute()
 	//---------------------QUERIES------------------------//
 	if (currentFunction.compare("QUERY") == 0) 
 	{
-		Table newTable(*database[DBParser.contain.parserTableName]);
-		//should just make a copy of the table with new name or just rename the new table.
-		newTable.setTableName(DBParser.contain.newQueryName);
-
-		database[DBParser.contain.newQueryName] = new Table(newTable);
+		//should just make a copy of the table with new name or just rename the new table.  
 	}
 	if (currentFunction.compare("select") == 0){
 		//run select
@@ -161,7 +191,7 @@ void DBsystem::execute()
 		string t1 = DBParser.contain.parserTableName;
 		string t2 = DBParser.contain.secondTableName;
 	}
-	if(!open) DBParser.contain.functionName.pop(); //move on to the next function
+	DBParser.contain.functionName.pop(); //move on to the next function
 	}
     
 }
@@ -250,7 +280,7 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	for (int i = 0; i< database[nameSave]->getPrimaryKeys().size() -1; ++i)
 	{
 		saveFile<<database[nameSave]->getPrimaryKeys()[i]<<", ";
-		temp = i + 1;
+		temp = i;
 	}
 	saveFile<<database[nameSave]->getPrimaryKeys()[temp]<<");";
 	
@@ -268,10 +298,7 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 			saveFile <<"\""<< t.getTable()[i][j]<<"\""<<", ";
 			temp = j;
 		}
-		if(i != t.getRowLength() - 1)
-			saveFile<<t.getTable()[i][temp + 1]<<");"<<endl;
-		else
-			saveFile<<t.getTable()[i][temp + 1]<<");";
+		saveFile<<t.getTable()[i][temp + 1]<<");"<<endl;
 	}
 	
 	saveFile.close();
@@ -321,7 +348,7 @@ Table* DBsystem::CREATE(int columnCreate, string nameCreate,vector<string> creat
 }
 
 //updates a record in the database given certain criteria
-int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, string replace)
+int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, string updateOP )
 {
 	//go to table nameUpdate
 	//search headervector for headerName to find column
@@ -334,20 +361,20 @@ int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, stri
 
 	for (int i = 0; i < database[nameUpdate]->getColumnLength(); ++i)
 	{
-		if (database[nameUpdate]->getHeaders()[i] == headerName)
-		{
-			col = i;
-		}
+		// if (database[nameUpdate]->getHeaders()[i].compare(headerName[i])==0)
+		// {
+		// 	col = i;
+		// }
 	}
 	for (int i = 0; i < database[nameUpdate]->getRowLength(); ++i)
 	{
-		if (database[nameUpdate]->getTable()[i][col] == criteria)
+		if (database[nameUpdate]->getTable()[i][col].compare(criteria)==0)
 		{
 			row = i;
 		}
 	}
 	
-	tempTable[row][col] = replace;
+	//tempTable[row][col] = replace[0];
 	database[nameUpdate]->setTable(tempTable);
 
 	
@@ -387,6 +414,7 @@ int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo, 
 	int rowToDelete;
 	int columnToCheck;
 	bool foundInHeader = 0;
+	bool isString = 0;
 	
 	for(int i = 0; i<database[nameDelete]->getColumnLength();++i)
 	{
@@ -404,22 +432,101 @@ int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo, 
 	}
 	cout<<"Column To check: "<<columnToCheck<<endl;
 	cout<<"rowLength before loop: "<<database[nameDelete]->getRowLength()<<endl;
+	cout << "deleteOP: " << deleteOP;
+	
+	
 	for(int i = 0; i<database[nameDelete]->getRowLength(); ++i)
 	{
 		tableComparer = tempTable[i][columnToCheck];
 		cout<<"Comparer: "<<tableComparer<<endl;
-		if(tableComparer.compare(compareTo) == 0)
-		{
+		//Checks for equality of strings
+		
+	
+	
+	
+	//Check if what we want to compare is a string...
+		
+		
+	if(!isdigit(DBParser.contain.deleteCompareTo[0])){
+		if(deleteOP.compare("==") == 0 && tableComparer.compare(DBParser.contain.deleteCompareTo)==0){
+			tempTable.erase(tempTable.begin() + i); //delete the row
+			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+			--i;
+			continue;
+		}
+		 //Inequality of strings
+		if(deleteOP.compare("!=") == 0 && tableComparer.compare(DBParser.contain.deleteCompareTo)!=0){
+			tempTable.erase(tempTable.begin() + i); //delete the row
+			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+			--i;
+			continue;
+		}
+	}else{
+	
+		
+		if(deleteOP.compare("==") == 0 && stoi(tableComparer) == stoi(DBParser.contain.deleteCompareTo)){ //DELETE WHERE EQUALS for INTS
 			tempTable.erase(tempTable.begin() + i); //delete the row
 			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
 			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
 			--i;
 		}
+		
+		
+		
+		
+		if(deleteOP.compare(">=") == 0 && stoi(tableComparer) >= stoi(DBParser.contain.deleteCompareTo)){
+		 	tempTable.erase(tempTable.begin() + i); //delete the row
+			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+			--i;
+		 }
+	    if(deleteOP.compare(">") == 0 && stoi(tableComparer) > stoi(DBParser.contain.deleteCompareTo)){
+			tempTable.erase(tempTable.begin() + i); //delete the row
+			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+			--i;
+		}
+	    if(deleteOP.compare("<=") == 0 && stoi(tableComparer) <= stoi(DBParser.contain.deleteCompareTo)){
+		 	tempTable.erase(tempTable.begin() + i); //delete the ro
+			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+			--i;
+		 	
+		 }
+		 if(deleteOP.compare("<") == 0 && stoi(tableComparer) < stoi(DBParser.contain.deleteCompareTo)){
+		 	tempTable.erase(tempTable.begin() + i); //delete the row
+			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+			--i;
+		 	
+		 }
+		 //Inequality of ints
+		 if(deleteOP.compare("!=") == 0 && stoi(tableComparer) != stoi(DBParser.contain.deleteCompareTo)){ //DELETE WHERE NOT EQUALS	
+		 	tempTable.erase(tempTable.begin() + i); //delete the row
+			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+			--i;
+		 }
+	}
+	
+		
+		
+		
+		// if(tableComparer.compare(compareTo) == 0)
+		// {
+		// 	tempTable.erase(tempTable.begin() + i); //delete the row
+		// 	database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+		// 	cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+		// 	--i;
+		// }
+	
 	}
 	
 	cout<<"rowLength after loop: "<<database[nameDelete]->getRowLength()<<endl;
     database[nameDelete]->setTable(tempTable);
-    return 0;
+    //return 0;
 
 }
 
