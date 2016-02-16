@@ -299,6 +299,8 @@ bool Parser::isQuery()
 		
 	tokens.pop(); //remove <- if passed
 	
+	contain.functionName.push("QUERY"); //need to do a query last
+	
 	//check if expression
 	if(!isExpression())
 		return false; //return if not
@@ -306,7 +308,7 @@ bool Parser::isQuery()
 	if(tokens.front().compare(";") != 0)
 		return false;	
 	
-	contain.functionName.push("QUERY"); //need to do a query last
+	
 	
 	return true; //if everything passes return trues
 }
