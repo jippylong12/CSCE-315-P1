@@ -90,22 +90,13 @@ void DBsystem::execute()
         
     }
     if (currentFunction.compare("SHOW") == 0){
-        //run SHOW
-        string nameShow = DBParser.contain.parserTableName;
-        SHOW(nameShow);
-        
-           DBParser.contain.tableState = CREATE(columnCreate, nameCreate, createHeaders, createKeys, createTypes, sizes);
-            
-            //cout << endl << "Create ran successfully." << endl;
-            cout << DBParser.contain.tableState->getColumnLength() << endl;
-            
-            //SHOW() works in this scope
-            //SHOW(DBParser.contain.tableState->getTableName());
-            
-        }
-            
+    //run SHOW
+    string nameShow = DBParser.contain.parserTableName;
+    SHOW(nameShow);
         
     }
+            
+        
     if (currentFunction.compare("UPDATE") == 0){
         //run UPDATE
         string nameUpdate = DBParser.contain.parserTableName;

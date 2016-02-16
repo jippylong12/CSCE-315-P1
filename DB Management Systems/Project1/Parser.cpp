@@ -27,6 +27,14 @@ void Parser::parse()
 	char * cstring = new char [input.length()+1];
 	strcpy(cstring, input.c_str());
 	
+	//was needed because show wasn't popping off tokens. 	
+	// while(tokens.size() > 0)
+	// {
+	// 	cout<<"Tokens size: "<<tokens.size()<<endl;
+	// 	tokens.pop();
+	// }
+	
+	
 	istringstream iss(cstring);
 	while(iss.get() != -1)
 	{
@@ -446,6 +454,7 @@ bool Parser::isAtomicExpression()
 	if(isIdentifier(tokens.front())) //just a table
 	{
 		contain.parserTableName = tokens.front(); //get the name for SHOW, also query
+		tokens.pop(); // pop off table name
 	}
 	else
 	{
@@ -722,6 +731,8 @@ bool Parser::parse_INSERT()
 bool Parser::parse_SHOW() //SHOW atomic-expr
 {
 	if((!isAtomicExpression())) { return false; }
+	
+	tokens.pop(); //remove ;
 	
 	return true;
 }
