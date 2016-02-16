@@ -290,6 +290,7 @@ bool Parser::isQuery()
 	string firstToken = tokens.front(); //get the name
 	if(!isIdentifier(firstToken)) //check 
 		return false; //return false if not
+	contain.selectSecondName = tokens.front(); //for seelct
 	contain.newQueryName = tokens.front(); //for query
 	tokens.pop(); //pop it off the top
 	
@@ -500,15 +501,15 @@ bool Parser::isComparison()
 {
 	if(tokens.front()[0] == '\"')
 	{
-		if(!isLiteral(tokens.front()))
+		if(!isLiteral(tokens.front())) //after ==
 			return false;
-		
 		tokens.pop();
 	}
 	else
 	{
 		if(!isIdentifier(tokens.front()))
 			return false;
+		contain.selectHeader = tokens.front(); //get header for SELECT
 		contain.deleteCompareHeader = tokens.front(); //get header
 		contain.updateCompareHeader = tokens.front(); //get header for update
 		contain.updateCriteria = tokens.front();
@@ -518,9 +519,10 @@ bool Parser::isComparison()
 
 	if(!isOP())
 		return false;
+	contain.selectComparator = tokens.front(); //get op ==  for select
 	contain.deleteOP = tokens.front(); //get operation for delete
 	contain.updateOP = tokens.front(); //get operation for update
-	tokens.pop(); //
+	tokens.pop(); //get rid of op
 	
 	if(tokens.front()[0] == '\"')
 	{
@@ -532,6 +534,7 @@ bool Parser::isComparison()
 	{
 		if(!isIdentifier(tokens.front()))
 			return false;
+		contain.selectCondition = tokens.front();
 		contain.deleteCompareTo = tokens.front(); //get the other side for delete
 		contain.updateCompareTo = tokens.front(); //get other side for update
 		tokens.pop();
@@ -823,15 +826,17 @@ bool Parser::parse_SELECT()
 { 
 
 	if(tokens.front().compare("(") != 0)	 {	return false; 	}
-		tokens.pop();
+		tokens.pop(); //get rid of (
 		
 	if(!isCondition()) { return false; }
 	
 	if(tokens.front().compare(")") != 0)	 {	return false; 	}
-		tokens.pop();
+		tokens.pop(); //get rid of )
 	
+	//get table name
 	if(!isAtomicExpression()) {	return false; }
-		tokens.pop();
+	contain.parserTableName = tokens.front(); //get table name
+	tokens.pop();
 		
 	return true; 
 }
@@ -847,7 +852,8 @@ bool Parser::parse_PROJECT()
 		tokens.pop();
 	
 	if(!isAtomicExpression()) {	return false; }
-		tokens.pop();
+	
+	tokens.pop();
 	
 	return true; 
 }

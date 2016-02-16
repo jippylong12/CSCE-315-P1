@@ -73,6 +73,7 @@ void DBsystem::execute()
     if (currentFunction.compare("SAVE") == 0){
         //run SAVE
         string nameSave = DBParser.contain.parserTableName;
+        cout<<"SAve: "<<nameSave<<endl;
         SAVE(nameSave);
         
     }
@@ -144,25 +145,33 @@ void DBsystem::execute()
 	//---------------------QUERIES------------------------//
 	if (currentFunction.compare("QUERY") == 0) 
 	{
-		cout << 4 << endl;
-		cout<<"parserTableName: "<<endl;
+		cout<<"parserTableName: "<<DBParser.contain.parserTableName<<endl;
 		Table newTable(*database[DBParser.contain.parserTableName]);
-		cout << 41 << endl;
 		//should just make a copy of the table with new name or just rename the new table.
 		newTable.setTableName(DBParser.contain.newQueryName);
-		cout << 42 << endl;
 
 		database[DBParser.contain.newQueryName] = new Table(newTable);
 	}
 	if (currentFunction.compare("select") == 0){
 		//run select
 		//string newTableName,string nameShow, string header ,string comparator, string condition
-		string newTableName = DBParser.contain.parserTableName;
-		string nameShow = DBParser.contain.secondTableName;
+		cout<<55<<endl;
+		string newTableName = DBParser.contain.selectSecondName;
+		cout<<"New tAble Name: "<<newTableName<<endl;;
+		cout<<55<<endl;
+		string nameShow = DBParser.contain.parserTableName;
+		cout<<nameShow<<endl;
 		string header = DBParser.contain.selectHeader;
+		cout<<header<<endl;
 		string comparator = DBParser.contain.selectComparator;
+		cout<<comparator<<endl;
 		string condition = DBParser.contain.selectCondition;
-		SELECT(newTableName,nameShow,header,comparator,condition);
+		cout<<condition<<endl;
+		Table *newTable (SELECT(newTableName,nameShow,header,comparator,condition));
+		DBParser.contain.parserTableName = newTable->getTableName();
+		cout<<"Select new Table name: "<<newTable->getTableName()<<endl;
+		
+		
 		
 	}
 	if (currentFunction.compare("project") == 0){
@@ -257,6 +266,7 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	
 	saveFile<<"CREATE TABLE " + nameSave + " (";
 	int temp = 0;
+	
 	
 	//Get headers and header types
 	for (int i = 0; i< database[nameSave]->getHeaders().size(); ++i)
@@ -653,6 +663,7 @@ void DBsystem::EXIT()
 Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,string comparator, string condition) 
 {
 	//Select multiple columns and join them together by a certain condition
+	cout<<1<<endl;
 	string newName;
 	Table* tempTable = new Table();
 	vector< vector<string> > origT = database[nameShow]->getTable();
@@ -664,14 +675,17 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 	
 	for (int i = 0; i<tempHeaders.size(); ++i)
 	{
+		cout<<11<<endl;
 		if (header.compare(tempHeaders[i]) == 0)
 		{
 			col = i;
 			break;
 		}
 	}
-	if (comparator.compare("=") == 0)
+	
+	if (comparator.compare("==") == 0)
 	{
+		cout<<12<<endl;
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i)
 		{
 			if (origT[i][col].compare(condition) == 0)
@@ -681,8 +695,10 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 			}
 		}
 	}
+	
 	else if (comparator.compare(">") == 0)
 	{
+		cout<<13<<endl;
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
 			if (origT[i][col].compare(condition) > 0)
 			{
@@ -691,8 +707,10 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 			}
 		}
 	}
+	
 	else if (comparator.compare("<") == 0)
 	{
+		cout<<14<<endl;
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
 			if (origT[i][col].compare(condition) < 0)
 			{
@@ -702,8 +720,10 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 		}
 		
 	}
+	
 	else if (comparator.compare("<=") == 0)
 	{
+		cout<<15<<endl;
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){	
 			if (origT[i][col].compare(condition) < 0 || origT[i][col].compare(condition) == 0)
 			{
@@ -732,12 +752,17 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 		}
 	}
 
-	newName = "SELECT " + comparator + " FROM " + nameShow;
+	newName = newTableName;
 	tempTable->setTableName(newTableName);
 	tempTable->setHeader(database[nameShow]->getHeaders());
+	tempTable->setHeaderTypes(database[nameShow]->getHeaderTypes());
+	tempTable->setHeaderSizes(database[nameShow]->getHeaderSizes());
+	tempTable->setPrimaryKeys(database[nameShow]->getPrimaryKeys());
 	tempTable->setColumnLength(tempTable->getHeaders().size());
 	tempTable->setRowLength(newRow);
 	tempTable->setTable(returnT);
+	
+	database[newTableName] = tempTable;
 	return tempTable;
 }
 
