@@ -47,6 +47,7 @@ struct Container
 	string selectHeader;
 	string selectComparator;
 	string selectCondition;
+	string selectSecondName;
 	
 	//project
 	vector<string> projectAttributes;
