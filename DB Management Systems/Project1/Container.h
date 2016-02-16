@@ -30,6 +30,10 @@ struct Container
     string updateCriteria;			 //WHERE condition
     vector<string> updateReplace;	 //replace with
     
+    string updateCompareHeader;
+    string updateOP;        //Operator for update
+    string updateCompareTo; //get other side
+    
     //insert
 	vector<string> insertInput;	//vector of inputs
 	string insertExpr;			//expr for relation

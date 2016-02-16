@@ -90,7 +90,7 @@ void DBsystem::execute()
         vector<string> headerName = DBParser.contain.updateHeaderName;
         string criteria = DBParser.contain.updateCriteria;
         vector<string> replace = DBParser.contain.updateReplace;
-        
+        //string compareTo = DBParser.contain.updateCompareTo;
         
         cout << "nameUpdate: " << nameUpdate << endl;
         
@@ -106,12 +106,15 @@ void DBsystem::execute()
         	cout << replace[i] << endl;
         }
         
+        cout << "replace OP: " << DBParser.contain.updateOP <<  endl;
+       
         
         
         
         
         
-       // UPDATE (nameUpdate, headerName, criteria, replace);
+        
+        UPDATE (nameUpdate, headerName, criteria, replace);
         
         
     }
@@ -339,34 +342,101 @@ Table* DBsystem::CREATE(int columnCreate, string nameCreate,vector<string> creat
 }
 
 //updates a record in the database given certain criteria
-int DBsystem::UPDATE(string nameUpdate, string headerName, string criteria, string updateOP )
+int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criteria, vector<string> replace)
 {
 	//go to table nameUpdate
 	//search headervector for headerName to find column
 	//search that column for the criteria
 	//replace the criteria with replace
 	
+	
+	//update-cmd ::= UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
+	int minIndex = min(database[nameUpdate]->getHeaders().size(), headerName.size());   //store size mismatch
+	vector<int> colPos;																  //store which column(s) to be updated
+	vector<int> rowPos;																  //store which rows to be updated
 	//need to iterate through all columns
+	
+	string updateOP = DBParser.contain.updateOP;
+
+	
+	
 	int row, col;
 	vector<vector<string>> tempTable = database[nameUpdate]->getTable();
-
-	for (int i = 0; i < database[nameUpdate]->getColumnLength(); ++i)
-	{
-		// if (database[nameUpdate]->getHeaders()[i].compare(headerName[i])==0)
-		// {
-		// 	col = i;
-		// }
-	}
-	for (int i = 0; i < database[nameUpdate]->getRowLength(); ++i)
-	{
-		if (database[nameUpdate]->getTable()[i][col].compare(criteria)==0)
-		{
-			row = i;
+	
+	cout << 1 << endl;
+	for(int i = 0; i < minIndex; ++i){
+		for (int j = 0; j < database[nameUpdate]->getHeaders().size(); ++j){
+			if(database[nameUpdate]->getHeaders()[j].compare(headerName[i]) == 0 && updateOP.compare("==")==0){
+				colPos.push_back(j);			//Store the positions where the attribute name match
+			}else cout << "not ture" << endl;
 		}
 	}
 	
-	//tempTable[row][col] = replace[0];
+	
+	
+	
+	for(int i = 0; i <database[nameUpdate]->getRowLength(); ++i ){
+		for (int j = 0; j < colPos.size(); ++j){
+		if(database[nameUpdate]->getTable()[i][colPos[j]].compare("dog")==0){
+			rowPos.push_back(i);
+		}
+		}
+		cout << "replace[0]: " << replace[0] <<endl;
+	cout << "row pos size: " << rowPos.size() << "col pos size: " << colPos.size() << endl;
+		
+		
+		
+		//	if (updateOP.compare("==") == 0){
+					for (int i = 0; i < colPos.size(); ++i){
+						for (int j = 0; j < rowPos.size(); ++j){
+							tempTable[rowPos[j]][colPos[i]] = replace[0];			//updates to default values
+						}
+					}
+					//tempTable[2][2] = replace[0];
+		//	}
+		
+		
+		
+	}
+		cout << 2 << endl;
+	//for (int i = 0; i < database[nameUpdate]->getRowLength(); ++i){
+	//	if(database[nameUpdate]->getTable()[i][colPos[i]].compare(criteria)==0){
+	//		rowPos.push_back(i);				//Store the rows which meet the criteria
+	//	}
+	//}
+	
+	//UPDATE animals SET kind = fatcat WHERE years == 4;
+	
+	//Need to add conditional DBParser.contain.updateOP
+		cout << 3 << endl;
+	// for (int i = 0; i < colPos.size(); ++i){
+	// 	for (int j = 0; j < rowPos.size(); ++j){
+	// 		tempTable[rowPos[j]][colPos[i]] = replace[0];			//updates to default values
+	// 	}
+	// }
+	
 	database[nameUpdate]->setTable(tempTable);
+	
+	
+	
+
+	// for (int i = 0; i < database[nameUpdate]->getColumnLength(); ++i)
+	// {
+	// 	if (database[nameUpdate]->getHeaders()[i].compare(headerName)==0)
+	// 	{
+	// 		col = i;
+	// 	}
+	// }
+	// for (int i = 0; i < database[nameUpdate]->getRowLength(); ++i)
+	// {
+	// 	if (database[nameUpdate]->getTable()[i][col].compare(criteria)==0)
+	// 	{
+	// 		row = i;
+	// 	}
+	// }
+	
+	// tempTable[row][col] = replace;
+	// database[nameUpdate]->setTable(tempTable);
 
 	
     
