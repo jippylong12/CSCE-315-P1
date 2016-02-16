@@ -235,13 +235,24 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	int temp = 0;
 	
 	//Get headers and header types
-	
-	for (int i = 0; i< database[nameSave]->getHeaders().size() - 1; ++i)
+	for (int i = 0; i< database[nameSave]->getHeaders().size(); ++i)
 	{
-		saveFile<<database[nameSave]->getHeaders()[i]<<" "<<database[nameSave]->getHeaderTypes()[i]<<", ";
+		if(database[nameSave]->getHeaderTypes()[i].compare("INTEGER") ==0)
+		{
+			saveFile<<database[nameSave]->getHeaders()[i]<<" "<<database[nameSave]->getHeaderTypes()[i];
+		}
+		else
+		{
+			saveFile<<database[nameSave]->getHeaders()[i]<<" "<<database[nameSave]->getHeaderTypes()[i]
+					<<"("<<database[nameSave]->getHeaderSizes()[i]<<")";
+		}
+		if(i != database[nameSave]->getHeaders().size()-1)
+		{
+			saveFile<<", ";
+		}
 		temp = i;
 	}
-	saveFile<<database[nameSave]->getHeaders()[temp + 1]<<") "<<"PRIMARY KEY(";
+	saveFile<<") "<<"PRIMARY KEY (";
 	//Primary Key
 	temp = 0;
 	for (int i = 0; i< database[nameSave]->getPrimaryKeys().size() -1; ++i)
@@ -249,7 +260,7 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 		saveFile<<database[nameSave]->getPrimaryKeys()[i]<<", ";
 		temp = i;
 	}
-	saveFile<<database[nameSave]->getPrimaryKeys()[temp + 1]<<");";
+	saveFile<<database[nameSave]->getPrimaryKeys()[temp]<<");";
 	
 	saveFile<<endl;
 	

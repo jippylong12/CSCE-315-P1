@@ -17,6 +17,8 @@ struct Container
     string parserTableName; //table Name
     string secondTableName; //for functions with two tables
     
+    //query
+    string newQueryName; 
     //create	
 	vector<string> parserKeys; //keys
 	vector<string> parserHeaders;

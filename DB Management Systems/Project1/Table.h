@@ -49,7 +49,7 @@ public:
     vector<string> getHeaderTypes() {return headerTypes;}
     void setHeaderTypes(vector<string> tempHeaderType) { headerTypes = tempHeaderType;}
     //headerSizes functions
-    vector<int> getHeaderSizes() {return headerSizes;}
+    vector<int> getHeaderSizes() {return headerSizes;} //-1 if INTEGER
     void setHeaderSizes(vector<int> sizes) {headerSizes = sizes;}
     
     bool EQUALS(string,string);

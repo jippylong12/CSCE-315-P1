@@ -69,6 +69,12 @@ void Parser::parse()
 	int tokenSize = tokens.size();
 	for(int i = 0; i<tokenSize; ++i)
 	{
+		if(tokens.front()[0] == '"') //remove quotations
+		{
+			cout<<"here"<<endl;
+			tokens.front().erase(tokens.front().begin()); //remove first quotation
+			tokens.front().pop_back(); //gets rid of last quotation
+		}
 		if(tokens.front() == ", ")
 		{
 			temp.push(",");
@@ -221,6 +227,7 @@ bool Parser::isExpression()
 	}
 	else if(isAtomicExpression())
 	{
+			contain.newQueryName = tokens.front();
 			tokens.pop(); //get rid of )?
 			//needed when it's like answer <- common_names;
 			if(tokens.front().compare(";") == 0)
@@ -305,24 +312,22 @@ bool Parser::isQuery()
 
 bool Parser::isLiteral(string name) //literals
 {
-	if(name[0] == '\"' ) 
+	if(isdigit(name[0])) //check if 
 	{
-		for(int i = 1; i < name.length()-1; i++)
+		for(int i = 0; i < name.length()-1; i++)
+		{
+			if('0' <= name[i] && name[i] <= '9'){}
+			else {return false;}
+		}
+	}
+	else
+	{
+			for(int i = 1; i < name.length()-1; i++)
 		{
 			if('A' <= name[i] && name[i] <= 'Z'){}
 			else if('a' <= name[i] && name[i] <= 'z'){}
 			else if('0' <= name[i] && name[i] <= '9'){}
 			else{return false;}
-		}
-		if(name[name.length()-1] != '\"' ){return false;}
-	}
-	else
-	{
-
-		for(int i = 0; i < name.length()-1; i++)
-		{
-			if('0' <= name[i] && name[i] <= '9'){}
-			else {return false;}
 		}
 	}
 	
