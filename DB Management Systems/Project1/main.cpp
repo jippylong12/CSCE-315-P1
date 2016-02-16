@@ -21,6 +21,7 @@ int main()
 		cout<<"Size of Map: "<<db.database.size()<<endl;
 	 	cout<<"What is the command?"<<endl;
 	 	getline (cin,input0); //take the command
+	 	if(input0.compare("") == 0) continue;
 	 	db.DBParser.sendNewInput(input0);
 	 	db.execute(); //not implemented yet but will take the command and use switch statement to know what to run
 	 	db.DBParser.contain.clear(); //Not implementted yet but will reset all things in container to 0
@@ -64,7 +65,7 @@ int main()
 	// cout << endl;
 	// Parser ef("CLOSE animals;");	
 	// cout << endl;
-	// Parser f("DELETE FROM animals WHERE age > 0;");
+	// Parser f("DELETE FROM animals WHERE years > 0;");
 	// cout << endl;
 	// Parser g("DELETE fram animalz WHERE age > 0;");	//Should fail
 	// cout << endl;

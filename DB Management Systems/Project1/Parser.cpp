@@ -71,7 +71,6 @@ void Parser::parse()
 	{
 		if(tokens.front()[0] == '"') //remove quotations
 		{
-			cout<<"here"<<endl;
 			tokens.front().erase(tokens.front().begin()); //remove first quotation
 			tokens.front().pop_back(); //gets rid of last quotation
 		}

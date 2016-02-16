@@ -391,24 +391,28 @@ int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo, 
 	string tableComparer;
 	int rowToDelete;
 	int columnToCheck;
+	bool foundInHeader = 0;
 	
 	for(int i = 0; i<database[nameDelete]->getColumnLength();++i)
 	{
 		if(database[nameDelete]->getHeaders()[i].compare(compareHeader) == 0 ) // if we find the matching header
 		{
 			columnToCheck = i; //keep track of column
+			foundInHeader = 1;
 			break; // end for loop
 		}
-	    else
-	    {
-	    	cout<<"Not Found in Header.\n";
-	        return 1;
-	    }
 	}
+	if(!foundInHeader)
+	{
+    	cout<<"Not Found in Header.\n";
+		return 0;
+	}
+	cout<<"Column To check: "<<columnToCheck<<endl;
 	cout<<"rowLength before loop: "<<database[nameDelete]->getRowLength()<<endl;
 	for(int i = 0; i<database[nameDelete]->getRowLength(); ++i)
 	{
 		tableComparer = tempTable[i][columnToCheck];
+		cout<<"Comparer: "<<tableComparer<<endl;
 		if(tableComparer.compare(compareTo) == 0)
 		{
 			tempTable.erase(tempTable.begin() + i); //delete the row
