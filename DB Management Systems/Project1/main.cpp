@@ -14,7 +14,8 @@ using namespace std;
 int main()
 {	
 	DBsystem db;
-	
+	try{
+		
 	 while(1)
 	 {
 		string input0;
@@ -22,11 +23,19 @@ int main()
 	 	cout<<"What is the command?"<<endl;
 	 	getline (cin,input0); //take the command
 	 	if(input0.compare("") == 0) continue;
+	 	cout << 1 << endl;
 	 	db.DBParser.sendNewInput(input0);
+	 	cout << 2 << endl;
 	 	db.execute(); //not implemented yet but will take the command and use switch statement to know what to run
+	 	cout << 3 << endl;
 	 	db.DBParser.contain.clear(); //Not implementted yet but will reset all things in container to 0
 	 }
-
+	
+	}
+	catch(...)
+	{
+		cout << "Please try again: " << endl;
+	}
 	
 	// ifstream in("animals.db");
 	// stringstream buffer;

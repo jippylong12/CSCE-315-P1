@@ -1,12 +1,14 @@
 #include "Table.h"
 #include <vector>
 #include <string>
+#include <iostream>
 
 using namespace std;
 
 
 Table::Table(const Table &Source)
 {
+	
 	table = Source.table;
 	tableName = Source.tableName;
 	rowLength = Source.rowLength;
@@ -19,6 +21,7 @@ Table::Table(const Table &Source)
 
 Table& Table::operator= (const Table &Source)
 {
+	cout<<"Is copying \n";
 	table = Source.table;
 	tableName = Source.tableName;
 	rowLength = Source.rowLength;

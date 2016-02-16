@@ -14,6 +14,7 @@ Parser::Parser(string in)
 void Parser::sendNewInput(string in)
 {
 	input = in;
+	cout << 1.1 << endl;
 	parse();
 }
 void Parser::parse()
@@ -27,12 +28,12 @@ void Parser::parse()
 	char * cstring = new char [input.length()+1];
 	strcpy(cstring, input.c_str());
 	
-	//was needed because show wasn't popping off tokens. 	
-	// while(tokens.size() > 0)
-	// {
-	// 	cout<<"Tokens size: "<<tokens.size()<<endl;
-	// 	tokens.pop();
-	// }
+//	was needed because show wasn't popping off tokens. 	
+	while(tokens.size() > 0)
+	{
+		cout<<"Tokens size: "<<tokens.size()<<endl;
+		tokens.pop();
+	}
 	
 	
 	istringstream iss(cstring);
@@ -95,9 +96,15 @@ void Parser::parse()
 	
 	tokens = temp;
 	
+	if(tokens.size() == 0 )
+	{
+		cout << "Error: Command or Query not found!" << endl;
+		return;
+	}
+	
 	//begin parsing
-	if(isCommand()){}
-	else if(isQuery()){}
+	if(isCommand()){cout << 1.2 << endl;}
+	else if(isQuery()){cout << 1.3 << endl;}
 	else
 	{
 		cout << "Error: Command or Query not found!" << endl;
@@ -106,8 +113,9 @@ void Parser::parse()
 
 bool Parser::isCommand()
 {
+	cout << 1.4 << endl;
 	string firstToken = tokens.front();
-	
+	cout << 1.5 << endl;
 	if(firstToken.compare("CREATE") == 0)
 	{
 		contain.functionName.push(tokens.front()); //so we know it's CREATE
@@ -226,8 +234,10 @@ bool Parser::isExpression()
 	}
 	else if(isAtomicExpression())
 	{
+			cout<<tokens.front()<<endl;
 			contain.newQueryName = tokens.front();
-			tokens.pop(); //get rid of )?
+			cout<<"-------------"<<endl;
+			cout<<tokens.front()<<endl;
 			//needed when it's like answer <- common_names;
 			if(tokens.front().compare(";") == 0)
 			{
@@ -282,7 +292,7 @@ bool Parser::isExpression()
 bool Parser::isQuery()
 {
 
-	
+	cout<<6<<endl;
 	//check for relation name
 	string firstToken = tokens.front(); //get the name
 	if(!isIdentifier(firstToken)) //check 
@@ -290,20 +300,26 @@ bool Parser::isQuery()
 	contain.parserTableName = tokens.front(); //get the table name
 	tokens.pop(); //pop it off the top
 	
+	cout<<6.1<<endl;
+	
 	firstToken = tokens.front(); //check for <-
 	if(firstToken.compare("<-") != 0) //check
 		return false; //return if false
-	tokens.pop(); //remove <- if passed
 		
+	tokens.pop(); //remove <- if passed
+	
+	cout<<6.3<<endl;
 	//check if expression
 	if(!isExpression())
 		return false; //return if not
 	
+	cout<<6.4<<endl;
 	
 	if(tokens.front().compare(";") != 0)
 		return false;	
 	tokens.pop();
 	
+	cout<<6.5<<endl;
 	contain.functionName.push("QUERY"); //need to do a query last
 	
 	return true; //if everything passes return trues
@@ -568,6 +584,8 @@ bool Parser::isCondition()
 			break;
 	}
 	
+	
+	
 	return true;
 }
 
@@ -623,8 +641,7 @@ bool Parser::parse_CREATE()
 	
 	if(tokens.front().compare(";") != 0)
 		return false;	
-	tokens.pop(); //get rid of ;
-	
+
 	return true; //done
 }
 
@@ -670,8 +687,7 @@ bool Parser::parse_UPDATE()
 			
 		if(tokens.front().compare(";") != 0)
 			return false;	
-		tokens.pop();
-		
+
 
 		return true;		
 }
@@ -727,8 +743,7 @@ bool Parser::parse_INSERT()
 		return false;
 		
 	if(tokens.front().compare(";") != 0)	 {	return false; 	}
-			tokens.pop();
-		
+
 	return true;
 }
 
@@ -736,8 +751,7 @@ bool Parser::parse_SHOW() //SHOW atomic-expr
 {
 	if((!isAtomicExpression())) { return false; }
 	
-	tokens.pop(); //remove ;
-	
+
 	return true;
 }
 
@@ -747,8 +761,7 @@ bool Parser::parse_OPEN() //OPEN relation-name
 		contain.parserTableName = tokens.front(); 
 		tokens.pop();
 	if(tokens.front().compare(";") != 0)	 {	return false; 	}
-		tokens.pop();
-				
+
 	return true;
 }
 
@@ -758,8 +771,7 @@ bool Parser::parse_SAVE() //SAVE relation-name
 	contain.parserTableName = tokens.front(); //get the table name
 	tokens.pop();
 	if(tokens.front().compare(";") != 0)	 {	return false; 	}
-		tokens.pop();
-				
+
 	return true;
 }
 
@@ -775,8 +787,7 @@ bool Parser::parse_CLOSE()
         tokens.pop();
     }
 	if(tokens.front().compare(";") != 0)	 {	return false; 	}
-		tokens.pop();
-				
+
 	return true;
 }
 
@@ -797,15 +808,13 @@ bool Parser::parse_DELETE() //DELETE FROM relation-name WHERE condition
 	if(!isCondition()) { return false; }
 
 	if(tokens.front().compare(";") != 0)	 {	return false; 	}
-		tokens.pop();
-	
+
 	return true;
 
 }
 bool Parser::parse_EXIT(){
     
     if(tokens.front().compare(";") != 0) { return false; }
-       tokens.pop();
 
     return true;
 }
