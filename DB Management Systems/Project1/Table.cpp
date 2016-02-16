@@ -21,15 +21,19 @@ Table::Table(const Table &Source)
 
 Table& Table::operator= (const Table &Source)
 {
-	cout<<"Is copying \n";
+	cout << "start" << endl;
+	cout << tableName << endl;
 	table = Source.table;
+	cout << 100 << endl;
 	tableName = Source.tableName;
+	cout << tableName << endl;
 	rowLength = Source.rowLength;
 	columnLength = Source.columnLength;
 	primaryKeys = Source.primaryKeys;
 	tableHeaders = Source.tableHeaders;
 	headerTypes = Source.headerTypes;
 	headerSizes = Source.headerSizes;
+	cout<<"copied \n";
 	return *this;
 }
 

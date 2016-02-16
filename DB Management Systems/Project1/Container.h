@@ -65,6 +65,11 @@ struct Container
 	//it will say its redeclared
 	void clear() // this well erase all the vectors to empty again. 
 	{
+		while(functionName.size() > 0 )
+		{
+			functionName.pop();
+		}
+		
 		parserKeys.clear();
 		parserHeaders.clear();
 		parserHeaderTypes.clear();
@@ -73,6 +78,12 @@ struct Container
 		projectAttributes.clear();
 		renameTableAttributes.clear();
 		renameReplaceAttributes.clear();
+		
+		
+		
+		parserTableName = ""; //table Name
+    	secondTableName = ""; //for functions with two tables
+		
 		
 		//reset bool values just in case. 
 		isSetUnion = 0;

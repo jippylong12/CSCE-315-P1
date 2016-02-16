@@ -20,14 +20,13 @@ int main()
 	 {
 		string input0;
 		cout<<"Size of Map: "<<db.database.size()<<endl;
+		for (map<string,Table*>::iterator it = db.database.begin(); it!=db.database.end(); ++it)
+			cout<<it->first << '\n';
 	 	cout<<"What is the command?"<<endl;
 	 	getline (cin,input0); //take the command
 	 	if(input0.compare("") == 0) continue;
-	 	cout << 1 << endl;
 	 	db.DBParser.sendNewInput(input0);
-	 	cout << 2 << endl;
 	 	db.execute(); //not implemented yet but will take the command and use switch statement to know what to run
-	 	cout << 3 << endl;
 	 	db.DBParser.contain.clear(); //Not implementted yet but will reset all things in container to 0
 	 }
 	

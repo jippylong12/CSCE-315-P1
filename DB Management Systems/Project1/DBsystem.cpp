@@ -132,13 +132,11 @@ void DBsystem::execute()
 	//---------------------QUERIES------------------------//
 	if (currentFunction.compare("QUERY") == 0) 
 	{
-		cout << 4 << endl;
-		
+		Table newTable(*database[DBParser.contain.parserTableName]);
 		//should just make a copy of the table with new name or just rename the new table.
-		Table newTable;
-		newTable = *database[DBParser.contain.parserTableName];
 		newTable.setTableName(DBParser.contain.newQueryName);
-		database[DBParser.contain.newQueryName] = &newTable;
+
+		database[DBParser.contain.newQueryName] = new Table(newTable);
 	}
 	if (currentFunction.compare("select") == 0){
 		//run select

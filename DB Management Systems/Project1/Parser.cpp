@@ -103,8 +103,8 @@ void Parser::parse()
 	}
 	
 	//begin parsing
-	if(isCommand()){cout << 1.2 << endl;}
-	else if(isQuery()){cout << 1.3 << endl;}
+	if(isCommand()){}
+	else if(isQuery()){}
 	else
 	{
 		cout << "Error: Command or Query not found!" << endl;
@@ -113,9 +113,7 @@ void Parser::parse()
 
 bool Parser::isCommand()
 {
-	cout << 1.4 << endl;
 	string firstToken = tokens.front();
-	cout << 1.5 << endl;
 	if(firstToken.compare("CREATE") == 0)
 	{
 		contain.functionName.push(tokens.front()); //so we know it's CREATE
@@ -235,9 +233,11 @@ bool Parser::isExpression()
 	else if(isAtomicExpression())
 	{
 			cout<<tokens.front()<<endl;
-			contain.newQueryName = tokens.front();
 			cout<<"-------------"<<endl;
+			contain.parserTableName = tokens.front();
+			tokens.pop();
 			cout<<tokens.front()<<endl;
+			
 			//needed when it's like answer <- common_names;
 			if(tokens.front().compare(";") == 0)
 			{
@@ -297,7 +297,7 @@ bool Parser::isQuery()
 	string firstToken = tokens.front(); //get the name
 	if(!isIdentifier(firstToken)) //check 
 		return false; //return false if not
-	contain.parserTableName = tokens.front(); //get the table name
+	contain.newQueryName = tokens.front(); //for query
 	tokens.pop(); //pop it off the top
 	
 	cout<<6.1<<endl;
@@ -473,8 +473,7 @@ bool Parser::isAtomicExpression()
 {			
 	if(isIdentifier(tokens.front())) //just a table
 	{
-		contain.parserTableName = tokens.front(); //get the name for SHOW, also query
-		tokens.pop(); // pop off table name
+		return true;
 	}
 	else
 	{
@@ -751,6 +750,8 @@ bool Parser::parse_SHOW() //SHOW atomic-expr
 {
 	if((!isAtomicExpression())) { return false; }
 	
+	contain.parserTableName = tokens.front(); //get the name for SHOW, also query
+	tokens.pop(); // pop off table name
 
 	return true;
 }
