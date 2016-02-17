@@ -196,8 +196,8 @@ void DBsystem::execute()
 	}
 	if (currentFunction.compare("rename") == 0){
 		//do rename
-		string tName = DBParser.contain.parserTableName;
-		vector<string> tableAttributes = DBParser.contain.renameTableAttributes;
+		string tName = DBParser.contain.renameTableToGet;
+		vector<string> tableAttributes = database[DBParser.contain.renameTableToGet]->getHeaders();
 		vector<string> renameReplaceAttributes = DBParser.contain.renameReplaceAttributes;
 		RENAME(tName,tableAttributes,renameReplaceAttributes);
 	}
@@ -205,16 +205,19 @@ void DBsystem::execute()
 		//do Union
 		string t1 = DBParser.contain.parserTableName;
 		string t2 = DBParser.contain.secondTableName;
+		SET_UNION(t1,t2);
 	}
 	if (DBParser.contain.isSetDifference){
 		//do set difference
 		string tableName1 = DBParser.contain.parserTableName;
 		string tableName2 = DBParser.contain.secondTableName;
+		SET_DIFFERENCE(tableName1,tableName2);
 	}
 	if (DBParser.contain.isCrossProduct){
 		//do cross product
 		string t1 = DBParser.contain.parserTableName;
 		string t2 = DBParser.contain.secondTableName;
+		CROSS_PRODUCT(t1,t2);
 	}
 	if(!open) DBParser.contain.functionName.pop(); //move on to the next function
 	}
@@ -740,7 +743,9 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 	{
 		cout<<13<<endl;
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
-			if (origT[i][col].compare(condition) > 0)
+			cout<<"Condition: "<<condition<<endl;
+			cout<<"Value: "<<origT[i][col]<<endl;
+			if (origT[i][col].compare(condition) < 0)
 			{
 				returnT.push_back(origT[i]);
 				newRow++;
@@ -855,7 +860,7 @@ Table* DBsystem::RENAME(string tName, vector<string> tableAttributes, vector<str
             replaceAttributes.push_back(tableAttributes[max(tableAttributes.size()-1, replaceAttributes.size()-1)]);
         }
     }
-    database[tName]->setHeader(replaceAttributes);      //Rename the headers.
+    //database[tName]->setHeader(replaceAttributes);      //Rename the headers.
 
     //database[tName]->setColumnLength();
 
