@@ -242,7 +242,9 @@ bool Parser::isExpression()
 			
 			if(firstToken.compare("+") == 0)
 			{
-				tokens.pop();
+				contain.functionName.push("Union");
+				contain.isSetUnion = 1;
+				tokens.pop(); //remove + 
 				parsedCorrect = parse_SET_UNION();
 				if (parsedCorrect){ cout << "union - valid command." << endl; } 
 				else{ cout << "union - invalid command." << endl; } 
@@ -262,7 +264,7 @@ bool Parser::isExpression()
 			{
 				contain.functionName.push("CROSS PRODUCT");
 				contain.isCrossProduct = 1;
-				tokens.pop();
+				tokens.pop(); //remove *
 				parsedCorrect = parse_CROSS_PRODUCT();
 				if (parsedCorrect){ cout << "cross product - valid command." << endl; } 
 				else{ cout << "cross product - invalid command." << endl; } 

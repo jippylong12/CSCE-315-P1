@@ -34,7 +34,7 @@ public:
 	Table* SELECT(string,string, string, string, string);    //select table with certain criteria
 	vector<Table*>  PROJECT(string, vector<string>);
 	Table* RENAME(string, vector<string>, vector<string>);			
-	Table* SET_UNION(string, string);			//Take the union of 2 tables
+	Table* SET_UNION(string, string, string);			//Take the union of 2 tables
 	Table* SET_DIFFERENCE(string, string);		//2 table names
 	Table* CROSS_PRODUCT(string, string);		//2 table names used to perform cross product
 	void addTable(Table* newTable) { database[newTable->getTableName()] = newTable; }

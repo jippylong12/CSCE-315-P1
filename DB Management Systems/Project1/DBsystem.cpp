@@ -160,10 +160,8 @@ void DBsystem::execute()
 	if (currentFunction.compare("select") == 0){
 		//run select
 		//string newTableName,string nameShow, string header ,string comparator, string condition
-		cout<<55<<endl;
 		string newTableName = DBParser.contain.selectSecondName;
 		cout<<"New tAble Name: "<<newTableName<<endl;;
-		cout<<55<<endl;
 		string nameShow = DBParser.contain.parserTableName;
 		cout<<nameShow<<endl;
 		string header = DBParser.contain.selectHeader;
@@ -205,7 +203,8 @@ void DBsystem::execute()
 		//do Union
 		string t1 = DBParser.contain.parserTableName;
 		string t2 = DBParser.contain.secondTableName;
-		SET_UNION(t1,t2);
+		string newName = DBParser.contain.newQueryName;
+		SET_UNION(t1,t2,newName);
 	}
 	if (DBParser.contain.isSetDifference){
 		//do set difference
@@ -868,7 +867,7 @@ Table* DBsystem::RENAME(string tName, vector<string> tableAttributes, vector<str
     return database[tName];
 }
 
-Table* DBsystem::SET_UNION(string t1, string t2)
+Table* DBsystem::SET_UNION(string t1, string t2, string newName)
 {
 	//check if the headers are the same size and the same values
 	
@@ -879,32 +878,30 @@ Table* DBsystem::SET_UNION(string t1, string t2)
 	if(database[t1]->getHeaders().size() == database[t2]->getHeaders().size())
 	{
 
-	string newName; // for the new Table name
-	newName = "Union " + t1 + ' ' + t2; //concat the name
-	//intiliaze new Table for holding the union
-	//create a  new table
-	Table* unionTable = new Table(database[t1]->getColumnLength(),newName, database[t1]->getHeaders(),
-		database[t1]->getPrimaryKeys(),database[t1]->getHeaderTypes(),database[t1]->getHeaderSizes());
-	database[newName] = unionTable; //add the table to the database
-	
-	unionTable->setTable(database[t1]->getTable());// change the header
-	unionTable->setRowLength(database[t1]->getRowLength());//change the row Length
-	
-	
-	vector< vector <string> > copyTable;
-	copyTable = unionTable->getTable();
-	int count = unionTable->getRowLength();
-	//add all the elements from B 
-	for(int i = 0; i < database[t2]->getRowLength(); ++i)
-	{
-		copyTable.push_back(database[t2]->getTable()[i]);
-		count+=1;
-	}
-	
-	unionTable->setTable(copyTable);
-	unionTable->setRowLength(count);
-	
-	return unionTable;
+		//intiliaze new Table for holding the union
+		//create a  new table
+		Table* unionTable = new Table(database[t1]->getColumnLength(),newName, database[t1]->getHeaders(),
+			database[t1]->getPrimaryKeys(),database[t1]->getHeaderTypes(),database[t1]->getHeaderSizes());
+		database[newName] = unionTable; //add the table to the database
+		
+		unionTable->setTable(database[t1]->getTable());// change the header
+		unionTable->setRowLength(database[t1]->getRowLength());//change the row Length
+		
+		
+		vector< vector <string> > copyTable;
+		copyTable = unionTable->getTable();
+		int count = unionTable->getRowLength();
+		//add all the elements from B 
+		for(int i = 0; i < database[t2]->getRowLength(); ++i)
+		{
+			copyTable.push_back(database[t2]->getTable()[i]);
+			count+=1;
+		}
+		
+		unionTable->setTable(copyTable);
+		unionTable->setRowLength(count);
+		
+		return unionTable;
 	}	
 	else
 	{
