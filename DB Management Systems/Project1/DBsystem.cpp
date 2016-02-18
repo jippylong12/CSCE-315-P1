@@ -78,9 +78,21 @@ void DBsystem::execute()
         
     }
     if (currentFunction.compare("SHOW") == 0){
-	    //run SHOW
+	    //run SHOW, checks if the table exists first.
+	    bool tableFound = 0;
 	    string nameShow = DBParser.contain.parserTableName;
-	    SHOW(nameShow);
+	    
+	    if (database.size() != 0){
+	    	for (map<string,Table*>::iterator it = database.begin(); it!= database.end(); ++it){
+		    	if (nameShow.compare(it->first) == 0){
+		   			SHOW(nameShow);
+		   			tableFound = 1;
+		    		break;
+		    	}else tableFound = 0;
+	    	}
+	    }else cout << "There are no tables in the database!" << endl;
+	    
+	    if(!tableFound) cout << nameShow << " was not found in the database!" << endl;
         
     }
             
@@ -403,7 +415,7 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criter
 	//need to iterate through all columns
 	//int row, col;
 	
-
+//UPDATE animals SET kind = fatANIMAL WHERE age == 1;
 
 	
 	for(int i = 0; i < minIndex; ++i){			//Go through table headers and find header to be updated
@@ -414,14 +426,21 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criter
 		}
 	}
 	
+	bool cmpHeaderFound = 0;
+	
 	for(int i = 0; i < minIndex; ++i){		    	//Go through table headers and headers to be COMPARED
 		for (int j = 0; j < database[nameUpdate]->getHeaders().size(); ++j){
 			if(database[nameUpdate]->getHeaders()[j].compare(criteria) == 0){
 				colComparePos.push_back(j);			//Store the positions where te header matches COMPARED header
-			}
+				cmpHeaderFound = 1;
+			} 
 		}
 	}
 	
+	if (!cmpHeaderFound){ 
+		cout << "Comparison header not found.  Please try again." << endl; 
+		return 0; 
+	}
 	
 	cout << "updateCompareTo: " << DBParser.contain.updateCompareTo << endl;
 	
@@ -483,6 +502,7 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criter
 						tempTable[rowPos[j]][colPos[i]] = replace[replacePos[i]];			//FK my life
 					}
 			}
+			
 		
 		
 		
@@ -499,8 +519,8 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criter
 	 	
 /*
 UPDATE animals SET name = BirdName2 WHERE kind != bird;
-UPDATE animals SET name = NEWJOE, kind = young WHERE years > 1; 
-UPDATE animals SET kind = fatANIMAL WHERE years == 1;
+UPDATE animals SET name = NEWJOE, kind = young WHERE age > 1; 
+UPDATE animals SET kind = fatANIMAL WHERE age == 1;
 		*/
 	
 	
@@ -514,8 +534,15 @@ UPDATE animals SET kind = fatANIMAL WHERE years == 1;
 	
 	database[nameUpdate]->setTable(tempTable);
 	//delete tempTable;
-	
-	
+	tempTable.clear();
+	replace.clear();
+	colPos.clear(); 		  //store which column(s) to be updated
+	rowPos.clear();			  //store the position of row(s) to be updated			
+	colComparePos.clear();	  //store the position of column used to compare
+	replacePos.clear();	
+	//headerName.clear();
+	DBParser.contain.updateHeaderName.clear();
+	DBParser.contain.updateReplace.clear();
 	
 
 	// for (int i = 0; i < database[nameUpdate]->getColumnLength(); ++i)
@@ -732,10 +759,12 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 		{
 			if (origT[i][col].compare(condition) == 0)
 			{
+				cout << 12.5 << endl;
 				returnT.push_back(origT[i]);			
 				newRow++;
 			}
 		}
+		cout << 12.75 << endl;
 	}
 	
 	else if (comparator.compare(">") == 0)
@@ -875,11 +904,13 @@ Table* DBsystem::SET_UNION(string t1, string t2, string newName)
 	//push back the rows of the other table
 	//possibly check each time to see if there are any duplicates. 
 	//return new table
-	if(database[t1]->getHeaders().size() == database[t2]->getHeaders().size())
-	{
+	cout << 99;
+	//if(database[t1]->getHeaders().size() == database[t2]->getHeaders().size())
+	//{
 
 		//intiliaze new Table for holding the union
 		//create a  new table
+		cout << 100;
 		Table* unionTable = new Table(database[t1]->getColumnLength(),newName, database[t1]->getHeaders(),
 			database[t1]->getPrimaryKeys(),database[t1]->getHeaderTypes(),database[t1]->getHeaderSizes());
 		database[newName] = unionTable; //add the table to the database
@@ -892,22 +923,23 @@ Table* DBsystem::SET_UNION(string t1, string t2, string newName)
 		copyTable = unionTable->getTable();
 		int count = unionTable->getRowLength();
 		//add all the elements from B 
+		cout << 101;
 		for(int i = 0; i < database[t2]->getRowLength(); ++i)
 		{
 			copyTable.push_back(database[t2]->getTable()[i]);
 			count+=1;
 		}
-		
+		cout << 102;
 		unionTable->setTable(copyTable);
 		unionTable->setRowLength(count);
 		
 		return unionTable;
-	}	
-	else
-	{
+//	}	
+	//else
+	//{
 		cout<<"The headers aren't the same size.\n";
 		return 0;
-	}
+	//}
     //Returns a Table of the Union
 	//return the union
 	
