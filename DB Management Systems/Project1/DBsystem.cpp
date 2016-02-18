@@ -43,12 +43,12 @@ void DBsystem::execute()
     //-----------------------COMMANDS----------------------//
 	if(currentFunction.compare("CREATE") == 0){
 		//run OPEN
-		string nameCreate = DBParser.contain.parserTableName;
-		vector<string> createHeaders = DBParser.contain.parserHeaders;
-		vector<string> createKeys= DBParser.contain.parserKeys;
-		vector<string> createHeaderTypes= DBParser.contain.parserHeaderTypes;
-		vector<int> createHeaderSizes = DBParser.contain.parserHeaderSizes;
-		int columnSize = DBParser.contain.parserHeaders.size();
+		string nameCreate = DBParser.contain.nameCreate;
+		vector<string> createHeaders = DBParser.contain.createHeaders;
+		vector<string> createKeys= DBParser.contain.createKeys;
+		vector<string> createHeaderTypes= DBParser.contain.createTypes;
+		vector<int> createHeaderSizes = DBParser.contain.sizes;
+		int columnSize = DBParser.contain.createHeaders.size();
 		CREATE(columnSize,nameCreate, createHeaders,createKeys,createHeaderTypes,createHeaderSizes);
 	}	
 	
@@ -56,30 +56,26 @@ void DBsystem::execute()
 		//run OPEN
 		DBParser.contain.functionName.pop(); //move on to the next function
 		open = 1;
-		string nameOpen = DBParser.contain.parserTableName;
+		string nameOpen = DBParser.contain.nameOpen;
 		OPEN(nameOpen);
 	}
 	
 	
 	if (currentFunction.compare("CLOSE") == 0){
         //run CLOSE
-        string nameClose = DBParser.contain.parserTableName; //Grab relation name from parser
+        string nameClose = DBParser.contain.nameClose; //Grab relation name from parser
         CLOSE(nameClose);
-        
-        currentFunction = DBParser.contain.functionName.top(); //get current function
-        cout << "Function name to be run: " << currentFunction << endl;
-        
     }
     if (currentFunction.compare("SAVE") == 0){
         //run SAVE
-        string nameSave = DBParser.contain.parserTableName;
-        cout<<"SAve: "<<nameSave<<endl;
+        string nameSave = DBParser.contain.nameSave;
+        cout<<"Save: "<<nameSave<<endl;
         SAVE(nameSave);
         
     }
     if (currentFunction.compare("SHOW") == 0){
 	    //run SHOW
-	    string nameShow = DBParser.contain.parserTableName;
+	    string nameShow = DBParser.contain.nameShow;
 	    SHOW(nameShow);
         
     }
@@ -87,11 +83,12 @@ void DBsystem::execute()
         
     if (currentFunction.compare("UPDATE") == 0){
         //run UPDATE
-        string nameUpdate = DBParser.contain.parserTableName;
+        string nameUpdate = DBParser.contain.nameUpdate;
         vector<string> headerName = DBParser.contain.updateHeaderName;
-        string criteria = DBParser.contain.updateCriteria;
         vector<string> replace = DBParser.contain.updateReplace;
-        //string compareTo = DBParser.contain.updateCompareTo;
+        vector<string> updateOperand1 = DBParser.contain.updateOperand1;
+        vector<string> updateOperand2 = DBParser.contain.updateOperand2;
+        vector<string> updateOP = DBParser.contain.updateOP;
         
         cout << "nameUpdate: " << nameUpdate << endl;
         
@@ -99,50 +96,29 @@ void DBsystem::execute()
         for (int i = 0; i < headerName.size(); ++i){
         	cout << headerName[i] << endl;
         }
-        
-        cout << "criteria: " << criteria << endl;
-        
-        cout << "replace : " << endl;
-       
+ 
         //	cout << replace << endl;
-        
-        
-        cout << "replace OP: " << DBParser.contain.updateOP <<  endl;
-       
-        
-        
-        
-        
-        
-        
-        UPDATE (nameUpdate, headerName, criteria, replace);
-        // nameUpdate = "";
-        // criteria = "";
-        // replace = "";
-        
-        // headerName.clear();
-        
-        
+      
+        UPDATE(nameUpdate, headerName, replace, updateOperand1,updateOperand2,updateOP);
     }
     if (currentFunction.compare("INSERT") == 0){
         //run INSERT
-        string nameInsert = DBParser.contain.parserTableName;
+        string nameInsert = DBParser.contain.nameInsert;
         vector<string> input = DBParser.contain.insertInput;
         INSERT(nameInsert, input);
         
     }
     if (currentFunction.compare("DELETE") == 0){
         //run DELETE
-        string nameDelete = DBParser.contain.parserTableName;
-        string compareHeader = DBParser.contain.deleteCompareHeader;
-        string compareTo = DBParser.contain.deleteCompareTo;
-		string deleteOP = DBParser.contain.deleteOP;
-		DELETE(nameDelete,compareHeader,compareTo, deleteOP);
+        string nameDelete = DBParser.contain.nameDelete;
+        vector<string> deleteOperand1 = DBParser.contain.deleteOperand1;
+        vector<string> deleteOperand2 = DBParser.contain.deleteOperand2;
+		vector<string> deleteOP = DBParser.contain.deleteOP;
+		DELETE(nameDelete,deleteOperand1,deleteOperand2, deleteOP);
         
     }
     if (currentFunction.compare("EXIT") == 0){
         //run EXIT
-        
         EXIT();
     }
 	
@@ -150,74 +126,66 @@ void DBsystem::execute()
 	//---------------------QUERIES------------------------//
 	if (currentFunction.compare("QUERY") == 0) 
 	{
-		cout<<"parserTableName: "<<DBParser.contain.parserTableName<<endl;
-		Table newTable(*database[DBParser.contain.parserTableName]);
+		cout<<"Query: "<<DBParser.contain.lhsQuery<<endl;
+		Table newTable(*database[DBParser.contain.lhsQuery]);
 		//should just make a copy of the table with new name or just rename the new table.
-		newTable.setTableName(DBParser.contain.newQueryName);
+		newTable.setTableName(DBParser.contain.lhsQuery);
 
-		database[DBParser.contain.newQueryName] = new Table(newTable);
+		database[DBParser.contain.lhsQuery] = new Table(newTable);
 	}
 	if (currentFunction.compare("select") == 0){
 		//run select
-		//string newTableName,string nameShow, string header ,string comparator, string condition
-		string newTableName = DBParser.contain.selectSecondName;
-		cout<<"New tAble Name: "<<newTableName<<endl;;
-		string nameShow = DBParser.contain.parserTableName;
-		cout<<nameShow<<endl;
-		string header = DBParser.contain.selectHeader;
-		cout<<header<<endl;
-		string comparator = DBParser.contain.selectComparator;
-		cout<<comparator<<endl;
-		string condition = DBParser.contain.selectCondition;
-		cout<<condition<<endl;
-		Table *newTable (SELECT(newTableName,nameShow,header,comparator,condition));
-		DBParser.contain.parserTableName = newTable->getTableName();
+		string newTableName = DBParser.contain.lhsQuery;
+		cout<<"New Table Name: "<<newTableName<<endl;;
+		string nameShow = DBParser.contain.nameSelect;
+		cout<<"Select Table Name: "<<nameShow<<endl;
+		vector<string> header = DBParser.contain.selectHeader; //lhs
+		vector<string> selectOP = DBParser.contain.selectOP; 
+		vector<string> condition = DBParser.contain.selectCondition; //rhs
+		Table *newTable (SELECT(newTableName,nameShow,header,selectOP,condition));
 		cout<<"Select new Table name: "<<newTable->getTableName()<<endl;
-		
-		
-		
 	}
 	if (currentFunction.compare("project") == 0){
 		//run project
-		string t1 = DBParser.contain.parserTableName;
+		string t1 = DBParser.contain.nameProject;
 		vector<string> attributes = DBParser.contain.projectAttributes;
-		
-		cout << "table Name: " << t1 << endl;
-		cout << "attrbutes: " << endl;
-		for (int i = 0; i < attributes.size(); ++i){
-			cout << "\t" << attributes[i] << endl;
-		}
-		
-		//PROJECT(t1,attributes);
+		PROJECT(t1,attributes);
 		//b <- project (dogs) name; SEG faults in query...
 		
 	}
 	if (currentFunction.compare("rename") == 0){
 		//do rename
-		string tName = DBParser.contain.renameTableToGet;
-		vector<string> tableAttributes = database[DBParser.contain.renameTableToGet]->getHeaders();
+		string tName = DBParser.contain.nameRename;
+		vector<string> tableAttributes = database[DBParser.contain.nameRename]->getHeaders();
 		vector<string> renameReplaceAttributes = DBParser.contain.renameReplaceAttributes;
 		RENAME(tName,tableAttributes,renameReplaceAttributes);
 	}
-	if (DBParser.contain.isSetUnion){
+	if (currentFunction.compare("UNION") == 0){
 		//do Union
-		string t1 = DBParser.contain.parserTableName;
-		string t2 = DBParser.contain.secondTableName;
-		string newName = DBParser.contain.newQueryName;
+		string t1 = DBParser.contain.nameUnion1;
+		cout<<"T1: "<<t1<<endl;
+		string t2 = DBParser.contain.nameUnion2;
+		cout<<"T2: "<<t2<<endl;
+		string newName = t1 + ' ' + t2;
+		cout<<"newName: "<<newName<<endl;
+		cout<<"About to run Union..\n";
 		SET_UNION(t1,t2,newName);
 	}
-	if (DBParser.contain.isSetDifference){
+	if (currentFunction.compare("DIFFERENCE") == 0){
 		//do set difference
-		string tableName1 = DBParser.contain.parserTableName;
-		string tableName2 = DBParser.contain.secondTableName;
-		SET_DIFFERENCE(tableName1,tableName2);
+		string tableName1 = DBParser.contain.nameDifference1;
+		string tableName2 = DBParser.contain.nameDifference2;
+		string newName = tableName1 + ' ' + tableName2;
+		SET_DIFFERENCE(tableName1,tableName2,newName);
 	}
-	if (DBParser.contain.isCrossProduct){
+	if (currentFunction.compare("CROSS PRODUCT") == 0){
 		//do cross product
-		string t1 = DBParser.contain.parserTableName;
-		string t2 = DBParser.contain.secondTableName;
-		CROSS_PRODUCT(t1,t2);
+		string t1 = DBParser.contain.nameCrossProduct1;
+		string t2 = DBParser.contain.nameCrossProduct2;
+		string newName = t1 + ' ' + t2;
+		CROSS_PRODUCT(t1,t2,newName);
 	}
+	cout<<"Popping off: "<<endl;
 	if(!open) DBParser.contain.functionName.pop(); //move on to the next function
 	}
     
@@ -380,7 +348,7 @@ Table* DBsystem::CREATE(int columnCreate, string nameCreate,vector<string> creat
 }
 
 //updates a record in the database given certain criteria
-int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criteria, vector<string> replace)
+int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string> replace, vector<string> updateOperand1, vector<string> updateOperand2,vector<string> updateOP)
 {
 	//go to table nameUpdate
 	//search headervector for headerName to find column
@@ -391,98 +359,98 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criter
  	//UPDATE animals SET kind = MOG WHERE years == 3;
 	
 	
-	int minIndex = min(database[nameUpdate]->getHeaders().size(), headerName.size());   //store size mismatch
+	// int minIndex = min(database[nameUpdate]->getHeaders().size(), headerName.size());   //store size mismatch
 	
-	vector<int> colPos; 		  //store which column(s) to be updated
-	vector<int> rowPos;			  //store the position of row(s) to be updated			
-	vector<int> colComparePos;	  //store the position of column used to compare
-	vector<int> replacePos;		  //trying to store the position of the replace vector so we know what to replace
-	string updateOP = DBParser.contain.updateOP; //grab OP
-	vector<vector<string>> tempTable = database[nameUpdate]->getTable(); //get table info
-	//store which rows to be updated
-	//need to iterate through all columns
-	//int row, col;
+	// vector<int> colPos; 		  //store which column(s) to be updated
+	// vector<int> rowPos;			  //store the position of row(s) to be updated			
+	// vector<int> colComparePos;	  //store the position of column used to compare
+	// vector<int> replacePos;		  //trying to store the position of the replace vector so we know what to replace
+	// string updateOP = DBParser.contain.updateOP; //grab OP
+	// vector<vector<string>> tempTable = database[nameUpdate]->getTable(); //get table info
+	// //store which rows to be updated
+	// //need to iterate through all columns
+	// //int row, col;
 	
 
 
 	
-	for(int i = 0; i < minIndex; ++i){			//Go through table headers and find header to be updated
-		for (int j = 0; j < database[nameUpdate]->getHeaders().size(); ++j){
-			if(database[nameUpdate]->getHeaders()[j].compare(headerName[i]) == 0){
-				colPos.push_back(j);			//Store the positions where the header names match
-			}
-		}
-	}
+	// for(int i = 0; i < minIndex; ++i){			//Go through table headers and find header to be updated
+	// 	for (int j = 0; j < database[nameUpdate]->getHeaders().size(); ++j){
+	// 		if(database[nameUpdate]->getHeaders()[j].compare(headerName[i]) == 0){
+	// 			colPos.push_back(j);			//Store the positions where the header names match
+	// 		}
+	// 	}
+	// }
 	
-	for(int i = 0; i < minIndex; ++i){		    	//Go through table headers and headers to be COMPARED
-		for (int j = 0; j < database[nameUpdate]->getHeaders().size(); ++j){
-			if(database[nameUpdate]->getHeaders()[j].compare(criteria) == 0){
-				colComparePos.push_back(j);			//Store the positions where te header matches COMPARED header
-			}
-		}
-	}
+	// for(int i = 0; i < minIndex; ++i){		    	//Go through table headers and headers to be COMPARED
+	// 	for (int j = 0; j < database[nameUpdate]->getHeaders().size(); ++j){
+	// 		if(database[nameUpdate]->getHeaders()[j].compare(criteria) == 0){
+	// 			colComparePos.push_back(j);			//Store the positions where te header matches COMPARED header
+	// 		}
+	// 	}
+	// }
 	
 	
-	cout << "updateCompareTo: " << DBParser.contain.updateCompareTo << endl;
+	// cout << "updateCompareTo: " << DBParser.contain.updateCompareTo << endl;
 	
-	//In our table, 
-	//Go through the rows of the COMPARED column and see if its elements match up
-	//Store the respective position of the row
+	// //In our table, 
+	// //Go through the rows of the COMPARED column and see if its elements match up
+	// //Store the respective position of the row
 	
-	for(int i = 0; i <database[nameUpdate]->getRowLength(); ++i ){ 
-		for (int j = 0; j < colPos.size(); ++j){
-			if(!isdigit(DBParser.contain.updateCompareTo[0])){	//see if we are comparing strings
-				if(database[nameUpdate]->getTable()[i][colComparePos[j]].compare(DBParser.contain.updateCompareTo)==0  && updateOP.compare("==")==0){
-					rowPos.push_back(i);			//Store the position of the row where criteria is met
-				    replacePos.push_back(j);
-				}
-				if(database[nameUpdate]->getTable()[i][colComparePos[j]].compare(DBParser.contain.updateCompareTo)!=0  && updateOP.compare("!=")==0){
-					rowPos.push_back(i);			//Store the position of the row where criteria is met
-					replacePos.push_back(j);
-				}
-			}else{												//we're comparing ints
-				int updateCmpTo = stoi(DBParser.contain.updateCompareTo);
-				int updateEntry = stoi(database[nameUpdate]->getTable()[i][colComparePos[j]]);
-				cout << "updateEntry ? cmpTo: " <<updateEntry << updateOP << updateCmpTo << endl;
+	// for(int i = 0; i <database[nameUpdate]->getRowLength(); ++i ){ 
+	// 	for (int j = 0; j < colPos.size(); ++j){
+	// 		if(!isdigit(DBParser.contain.updateCompareTo[0])){	//see if we are comparing strings
+	// 			if(database[nameUpdate]->getTable()[i][colComparePos[j]].compare(DBParser.contain.updateCompareTo)==0  && updateOP.compare("==")==0){
+	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
+	// 			    replacePos.push_back(j);
+	// 			}
+	// 			if(database[nameUpdate]->getTable()[i][colComparePos[j]].compare(DBParser.contain.updateCompareTo)!=0  && updateOP.compare("!=")==0){
+	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
+	// 				replacePos.push_back(j);
+	// 			}
+	// 		}else{												//we're comparing ints
+	// 			int updateCmpTo = stoi(DBParser.contain.updateCompareTo);
+	// 			int updateEntry = stoi(database[nameUpdate]->getTable()[i][colComparePos[j]]);
+	// 			cout << "updateEntry ? cmpTo: " <<updateEntry << updateOP << updateCmpTo << endl;
 			
 			
-				if(updateEntry >= updateCmpTo && updateOP.compare(">=")==0){
-					rowPos.push_back(i);			//Store the position of the row where criteria is met
-			    	replacePos.push_back(j);
-				}
-					if(updateEntry > updateCmpTo && updateOP.compare(">")==0){
-					rowPos.push_back(i);			//Store the position of the row where criteria is met
-			    	replacePos.push_back(j);
-				}
-					if(updateEntry <= updateCmpTo && updateOP.compare("<=")==0){
-					rowPos.push_back(i);			//Store the position of the row where criteria is met
-			    	replacePos.push_back(j);
-				}
-					if(updateEntry < updateCmpTo && updateOP.compare("<")==0){
-					rowPos.push_back(i);			//Store the position of the row where criteria is met
-			    	replacePos.push_back(j);
-				}
-					if(updateEntry == updateCmpTo && updateOP.compare("==")==0){
-					rowPos.push_back(i);			//Store the position of the row where criteria is met
-			    	replacePos.push_back(j);
-				}
-					if(updateEntry != updateCmpTo && updateOP.compare("!=")==0){
-					rowPos.push_back(i);			//Store the position of the row where criteria is met
-			    	replacePos.push_back(j);
-				}
+	// 			if(updateEntry >= updateCmpTo && updateOP.compare(">=")==0){
+	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
+	// 		    	replacePos.push_back(j);
+	// 			}
+	// 				if(updateEntry > updateCmpTo && updateOP.compare(">")==0){
+	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
+	// 		    	replacePos.push_back(j);
+	// 			}
+	// 				if(updateEntry <= updateCmpTo && updateOP.compare("<=")==0){
+	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
+	// 		    	replacePos.push_back(j);
+	// 			}
+	// 				if(updateEntry < updateCmpTo && updateOP.compare("<")==0){
+	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
+	// 		    	replacePos.push_back(j);
+	// 			}
+	// 				if(updateEntry == updateCmpTo && updateOP.compare("==")==0){
+	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
+	// 		    	replacePos.push_back(j);
+	// 			}
+	// 				if(updateEntry != updateCmpTo && updateOP.compare("!=")==0){
+	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
+	// 		    	replacePos.push_back(j);
+	// 			}
 			
-			}
+	// 		}
 
-		}
-	}
+	// 	}
+	// }
 	
 	
 	
-			for (int j = 0; j < rowPos.size(); ++j){		//update the table with new element
-					for (int i = 0; i < colPos.size(); ++i){
-						tempTable[rowPos[j]][colPos[i]] = replace[replacePos[i]];			//FK my life
-					}
-			}
+	// 		for (int j = 0; j < rowPos.size(); ++j){		//update the table with new element
+	// 				for (int i = 0; i < colPos.size(); ++i){
+	// 					tempTable[rowPos[j]][colPos[i]] = replace[replacePos[i]];			//FK my life
+	// 				}
+	// 		}
 		
 		
 		
@@ -512,7 +480,7 @@ UPDATE animals SET kind = fatANIMAL WHERE years == 1;
 	// 	}
 	// }
 	
-	database[nameUpdate]->setTable(tempTable);
+	//database[nameUpdate]->setTable(tempTable);
 	//delete tempTable;
 	
 	
@@ -565,115 +533,115 @@ int DBsystem::INSERT(string nameInsert, vector<string> input)
 
 //nameDelete may not be neede depending on the implementation of the Parser.
 //Parser may end up finding the row and may only need one input here.
-int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo, string deleteOP)
+int DBsystem::DELETE(string nameDelete, vector<string> deleteOperand1, vector<string> deleteOperand2, vector<string> deleteOP)
 {
-	vector<vector <string> > tempTable;
-	tempTable = database[nameDelete]->getTable();
-	string tableComparer;
-	int rowToDelete;
-	int columnToCheck;
-	bool foundInHeader = 0;
-	bool isString = 0;
+	// vector<vector <string> > tempTable;
+	// tempTable = database[nameDelete]->getTable();
+	// string tableComparer;
+	// int rowToDelete;
+	// int columnToCheck;
+	// bool foundInHeader = 0;
+	// bool isString = 0;
 	
-	for(int i = 0; i<database[nameDelete]->getColumnLength();++i)
-	{
-		if(database[nameDelete]->getHeaders()[i].compare(compareHeader) == 0 ) // if we find the matching header
-		{
-			columnToCheck = i; //keep track of column
-			foundInHeader = 1;
-			break; // end for loop
-		}
-	}
-	if(!foundInHeader)
-	{
-    	cout<<"Not Found in Header.\n";
-		return 0;
-	}
-	cout<<"Column To check: "<<columnToCheck<<endl;
-	cout<<"rowLength before loop: "<<database[nameDelete]->getRowLength()<<endl;
-	cout << "deleteOP: " << deleteOP;
-	
-	
-	for(int i = 0; i<database[nameDelete]->getRowLength(); ++i)
-	{
-		tableComparer = tempTable[i][columnToCheck];
-		cout<<"Comparer: "<<tableComparer<<endl;
-		//Checks for equality of strings
-		
+	// for(int i = 0; i<database[nameDelete]->getColumnLength();++i)
+	// {
+	// 	if(database[nameDelete]->getHeaders()[i].compare(deleteOperand1) == 0 ) // if we find the matching header
+	// 	{
+	// 		columnToCheck = i; //keep track of column
+	// 		foundInHeader = 1;
+	// 		break; // end for loop
+	// 	}
+	// }
+	// if(!foundInHeader)
+	// {
+ //   	cout<<"Not Found in Header.\n";
+	// 	return 0;
+	// }
+	// cout<<"Column To check: "<<columnToCheck<<endl;
+	// cout<<"rowLength before loop: "<<database[nameDelete]->getRowLength()<<endl;
+	// cout << "deleteOP: " << deleteOP;
 	
 	
+	// for(int i = 0; i<database[nameDelete]->getRowLength(); ++i)
+	// {
+	// 	tableComparer = tempTable[i][columnToCheck];
+	// 	cout<<"Comparer: "<<tableComparer<<endl;
+	// 	//Checks for equality of strings
+		
 	
-	//Check if what we want to compare is a string...
+	
+	
+	// //Check if what we want to compare is a string...
 		
 		
-	if(!isdigit(DBParser.contain.deleteCompareTo[0])){
-		if(deleteOP.compare("==") == 0 && tableComparer.compare(DBParser.contain.deleteCompareTo)==0){
-			tempTable.erase(tempTable.begin() + i); //delete the row
-			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-			--i;
-			continue;
-		}
-		 //Inequality of strings
-		if(deleteOP.compare("!=") == 0 && tableComparer.compare(DBParser.contain.deleteCompareTo)!=0){
-			tempTable.erase(tempTable.begin() + i); //delete the row
-			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-			--i;
-			continue;
-		}
-	}else{
+	// if(!isdigit(DBParser.contain.deleteCompareTo[0])){
+	// 	if(deleteOP.compare("==") == 0 && tableComparer.compare(DBParser.contain.deleteCompareTo)==0){
+	// 		tempTable.erase(tempTable.begin() + i); //delete the row
+	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+	// 		--i;
+	// 		continue;
+	// 	}
+	// 	 //Inequality of strings
+	// 	if(deleteOP.compare("!=") == 0 && tableComparer.compare(DBParser.contain.deleteCompareTo)!=0){
+	// 		tempTable.erase(tempTable.begin() + i); //delete the row
+	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+	// 		--i;
+	// 		continue;
+	// 	}
+	// }else{
 	
 		
-		if(deleteOP.compare("==") == 0 && stoi(tableComparer) == stoi(DBParser.contain.deleteCompareTo)){ //DELETE WHERE EQUALS for INTS
-			tempTable.erase(tempTable.begin() + i); //delete the row
-			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-			--i;
-		}
+	// 	if(deleteOP.compare("==") == 0 && stoi(tableComparer) == stoi(DBParser.contain.deleteCompareTo)){ //DELETE WHERE EQUALS for INTS
+	// 		tempTable.erase(tempTable.begin() + i); //delete the row
+	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+	// 		--i;
+	// 	}
 		
 		
 		
 		
-		if(deleteOP.compare(">=") == 0 && stoi(tableComparer) >= stoi(DBParser.contain.deleteCompareTo)){
-		 	tempTable.erase(tempTable.begin() + i); //delete the row
-			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-			--i;
-		 }
-	    if(deleteOP.compare(">") == 0 && stoi(tableComparer) > stoi(DBParser.contain.deleteCompareTo)){
-			tempTable.erase(tempTable.begin() + i); //delete the row
-			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-			--i;
-		}
-	    if(deleteOP.compare("<=") == 0 && stoi(tableComparer) <= stoi(DBParser.contain.deleteCompareTo)){
-		 	tempTable.erase(tempTable.begin() + i); //delete the ro
-			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-			--i;
+	// 	if(deleteOP.compare(">=") == 0 && stoi(tableComparer) >= stoi(DBParser.contain.deleteCompareTo)){
+	// 	 	tempTable.erase(tempTable.begin() + i); //delete the row
+	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+	// 		--i;
+	// 	 }
+	//     if(deleteOP.compare(">") == 0 && stoi(tableComparer) > stoi(DBParser.contain.deleteCompareTo)){
+	// 		tempTable.erase(tempTable.begin() + i); //delete the row
+	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+	// 		--i;
+	// 	}
+	//     if(deleteOP.compare("<=") == 0 && stoi(tableComparer) <= stoi(DBParser.contain.deleteCompareTo)){
+	// 	 	tempTable.erase(tempTable.begin() + i); //delete the ro
+	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+	// 		--i;
 		 	
-		 }
-		 if(deleteOP.compare("<") == 0 && stoi(tableComparer) < stoi(DBParser.contain.deleteCompareTo)){
-		 	tempTable.erase(tempTable.begin() + i); //delete the row
-			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-			--i;
+	// 	 }
+	// 	 if(deleteOP.compare("<") == 0 && stoi(tableComparer) < stoi(DBParser.contain.deleteCompareTo)){
+	// 	 	tempTable.erase(tempTable.begin() + i); //delete the row
+	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+	// 		--i;
 		 	
-		 }
-		 //Inequality of ints
-		 if(deleteOP.compare("!=") == 0 && stoi(tableComparer) != stoi(DBParser.contain.deleteCompareTo)){ //DELETE WHERE NOT EQUALS	
-		 	tempTable.erase(tempTable.begin() + i); //delete the row
-			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-			--i;
-		 }
-	}
+	// 	 }
+	// 	 //Inequality of ints
+	// 	 if(deleteOP.compare("!=") == 0 && stoi(tableComparer) != stoi(DBParser.contain.deleteCompareTo)){ //DELETE WHERE NOT EQUALS	
+	// 	 	tempTable.erase(tempTable.begin() + i); //delete the row
+	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
+	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
+	// 		--i;
+	// 	 }
+	// }
 	
 		
 		
 		
-		// if(tableComparer.compare(compareTo) == 0)
+		// if(tableComparer.compare(deleteOperand2) == 0)
 		// {
 		// 	tempTable.erase(tempTable.begin() + i); //delete the row
 		// 	database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
@@ -681,11 +649,11 @@ int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo, 
 		// 	--i;
 		// }
 	
-	}
+	//}
 	
-	cout<<"rowLength after loop: "<<database[nameDelete]->getRowLength()<<endl;
-    database[nameDelete]->setTable(tempTable);
-    //return 0;
+	//cout<<"rowLength after loop: "<<database[nameDelete]->getRowLength()<<endl;
+    //database[nameDelete]->setTable(tempTable);
+    return 0;
 
 }
 
@@ -702,10 +670,9 @@ void DBsystem::EXIT()
 
 //----------------Database queries---------------//
 
-Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,string comparator, string condition) 
+Table* DBsystem::SELECT(string newTableName,string nameShow, vector<string> header ,vector<string> selectOP, vector<string> condition) 
 {
 	//Select multiple columns and join them together by a certain condition
-	cout<<1<<endl;
 	string newName;
 	Table* tempTable = new Table();
 	vector< vector<string> > origT = database[nameShow]->getTable();
@@ -724,12 +691,14 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 			break;
 		}
 	}
-	
-	if (comparator.compare("==") == 0)
+	cout<<"col: "<<col<<endl;
+	if (selectOP.compare("==") == 0)
 	{
 		cout<<12<<endl;
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i)
 		{
+			cout<<"Value: "<<origT[i][col]<<endl;
+			cout<<"condition: "<<condition<<endl;
 			if (origT[i][col].compare(condition) == 0)
 			{
 				returnT.push_back(origT[i]);			
@@ -738,13 +707,11 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 		}
 	}
 	
-	else if (comparator.compare(">") == 0)
+	else if (selectOP.compare(">") == 0)
 	{
 		cout<<13<<endl;
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
-			cout<<"Condition: "<<condition<<endl;
-			cout<<"Value: "<<origT[i][col]<<endl;
-			if (origT[i][col].compare(condition) < 0)
+			if (origT[i][col].compare(condition) < 0) //not sure why but works when backwards
 			{
 				returnT.push_back(origT[i]);
 				newRow++;
@@ -752,11 +719,11 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 		}
 	}
 	
-	else if (comparator.compare("<") == 0)
+	else if (selectOP.compare("<") == 0)
 	{
 		cout<<14<<endl;
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
-			if (origT[i][col].compare(condition) < 0)
+			if (origT[i][col].compare(condition) > 0)//not sure why but works when backwards
 			{
 				returnT.push_back(origT[i]);
 				newRow++;
@@ -765,28 +732,31 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, string header ,stri
 		
 	}
 	
-	else if (comparator.compare("<=") == 0)
+	else if (selectOP.compare("<=") == 0)
 	{
 		cout<<15<<endl;
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){	
-			if (origT[i][col].compare(condition) < 0 || origT[i][col].compare(condition) == 0)
+			//not sure why but works when backwards
+			if (origT[i][col].compare(condition) > 0 || origT[i][col].compare(condition) == 
+			0)
 			{
 				returnT.push_back(origT[i]);
 				newRow++;
 			}
 		}
 	}
-	else if (comparator.compare(">=") == 0)
+	else if (selectOP.compare(">=") == 0)
 	{
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){	
-			if (origT[i][col].compare(condition) == 0 || origT[i][col].compare(condition) > 0)
+			//not sure why but works when backwards
+			if (origT[i][col].compare(condition) == 0 || origT[i][col].compare(condition) < 0)
 			{
 				returnT.push_back(origT[i]);
 				newRow++;
 			}
 		}
 	}
-	else if (comparator.compare("!=") == 0){
+	else if (selectOP.compare("!=") == 0){
 		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
 			if (origT[i][col].compare(condition) != 0)
 			{
@@ -915,7 +885,7 @@ Table* DBsystem::SET_UNION(string t1, string t2, string newName)
 
 
 
-Table* DBsystem::SET_DIFFERENCE(string tableName1, string tableName2)
+Table* DBsystem::SET_DIFFERENCE(string tableName1, string tableName2, string newName)
 {
 	Table* differenceTable = database[tableName1]; //to return
 	
@@ -925,7 +895,6 @@ Table* DBsystem::SET_DIFFERENCE(string tableName1, string tableName2)
 	//make a copy of each table
 	tempT1 = database[tableName1]->getTable(); 
 	tempT2 = database[tableName2]->getTable();
-	string newName = "Difference " + tableName1	 + ' ' + tableName2;
 	int rowCount = 0;
 	//check if the headers are the same size and the same values
 	if(database[tableName1]->getHeaders().size() == database[tableName2]->getHeaders().size())
@@ -972,7 +941,7 @@ Table* DBsystem::SET_DIFFERENCE(string tableName1, string tableName2)
 	return differenceTable;
 }
 
-Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
+Table* DBsystem::CROSS_PRODUCT(string t1, string t2, string newName)
 {
     //The cross product of two tables A x B builds a huge virtual table by pairing every row of A with every row of B.
 
@@ -1003,7 +972,6 @@ Table* DBsystem::CROSS_PRODUCT(string t1, string t2)
     
     //set memeber items for the new table
     
-    string newName = "Cross Product " + t1	 + ' ' + t2;
     returnTable->setTableName(newName); // change name
     returnTable->setColumnLength( t1_columnLength + t2_columnLength);  //columnLength
     returnTable->setHeader(newHeaders);                   //Set the new Table headers
