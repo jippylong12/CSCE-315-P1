@@ -9,7 +9,8 @@
 
 using namespace std;
 
-
+//UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
+//UPDATE animals SET Spot = "Max" WHERE age > 5;
 
 int main()
 {	
