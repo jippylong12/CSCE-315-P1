@@ -32,13 +32,13 @@ void DBsystem::execute()
     string currentFunction;
 
 	bool open = 0; //for when open is called
-	cout<<"Size of stack: "<<DBParser.contain.functionName.size()<<endl;
+	//cout<<"Size of stack: "<<DBParser.contain.functionName.size()<<endl;
 	//for the size of the function stack
 	for(int i = DBParser.contain.functionName.size(); i > 0; --i)
 	{
 		
 	currentFunction = DBParser.contain.functionName.top(); //get current function
-    cout << "Function name to be run: " << currentFunction << endl;
+    //cout << "Function name to be run: " << currentFunction << endl;
     
     //-----------------------COMMANDS----------------------//
 	if(currentFunction.compare("CREATE") == 0){

@@ -68,7 +68,15 @@ void Parser::parse()
 	int tokenSize = tokens.size();
 	for(int i = 0; i<tokenSize; ++i)
 	{
-		if(tokens.front()[0] == '"') //remove quotations
+		if(tokens.front()[0] == '"' && tokens.front()[tokens.front().size()-1] != '"' ) //remove quotations
+		{
+			string literal = tokens.front();
+			tokens.pop();
+			tokens.front() = literal + " " + tokens.front();
+			tokenSize--;
+			
+		}
+		if(tokens.front()[0] == '"' && tokens.front()[tokens.front().size()-1] == '"' )
 		{
 			tokens.front().erase(tokens.front().begin()); //remove first quotation
 			tokens.front().pop_back(); //gets rid of last quotation
@@ -329,11 +337,12 @@ bool Parser::isLiteral(string name) //literals
 	}
 	else
 	{
-			for(int i = 1; i < name.length()-1; i++)
+		for(int i = 1; i < name.length()-1; i++)
 		{
 			if('A' <= name[i] && name[i] <= 'Z'){}
 			else if('a' <= name[i] && name[i] <= 'z'){}
 			else if('0' <= name[i] && name[i] <= '9'){}
+			else if(name[i] == ' '){}
 			else{return false;}
 		}
 	}
@@ -411,7 +420,7 @@ bool Parser::isAttributeList()
 		if(!isIdentifier(tokens.front())) //check if valid name
 			return false;
 		contain.projectAttributes.push_back(tokens.front()); //for project
-		cerr<<endl<<endl<<endl<<"project output: "<<contain.projectAttributes[contain.projectAttributes.size()-1]<<endl<<endl<<endl;
+		//cerr<<endl<<endl<<endl<<"project output: "<<contain.projectAttributes[contain.projectAttributes.size()-1]<<endl<<endl<<endl;
 		contain.renameReplaceAttributes.push_back(tokens.front()); // for rename
 		contain.parserKeys.push_back(tokens.front()); //get the key
 		tokens.pop(); //remove that key

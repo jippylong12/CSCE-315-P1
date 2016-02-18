@@ -12,8 +12,8 @@ using namespace std;
 //UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
 //UPDATE animals SET Spot = "Max" WHERE age > 5;
 
-int int_input;
-
+int int_input = 0;
+string str_input = "";
 
 void mainMenu()
 {
@@ -52,12 +52,15 @@ int main()
 	DBsystem db;
 	try{
 		
-		mainMenu();
+		//mainMenu();
+		db.DBParser.sendNewInput("OPEN CEMS;");
+    	db.execute(); 
+    	//db.DBParser.contain.clear(); 
+		db.DBParser.sendNewInput("SHOW CEMS;");
+    	db.execute();
 		
 		
-		
-		
-    	/* while(1)
+    	/*while(1)
     	 {
     		string input0;
     		cout<<"Size of Map: "<<db.database.size()<<endl;
