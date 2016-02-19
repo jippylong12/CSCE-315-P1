@@ -1,0 +1,1 @@
+CREATE TABLE attendees (name VARCHAR(20), organization VARCHAR(100), address VARCHAR(100), email VARCHAR(100), registration_fee INTEGER, category VARCHAR(100), booth_personnel VARCHAR(100), exhibits_visited VARCHAR(300), badge_status VARCHAR(100)) PRIMARY KEY (name, organization);

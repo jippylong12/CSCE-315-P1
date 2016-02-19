@@ -1,0 +1,3 @@
+CREATE TABLE exhibitors (org_name VARCHAR(20), address VARCHAR(100), contact_person VARCHAR(100), email VARCHAR(100), phone VARCHAR(100), fax VARCHAR(100), category VARCHAR(100), booth_personnel VARCHAR(100), org_description VARCHAR(300), org_site VARCHAR(100)) PRIMARY KEY (org_name, address);
+INSERT INTO exhibitors VALUES FROM ("Fancy Pants", "1234 Corp. Lane", "John Wood", "johncwoody@gmail.com", "281-789-7451", "456-789-1234", "commercial", "John Flores johnaflores@gmail.com", "We make fancy ass pants yo!", www.fancypants.com);
+INSERT INTO exhibitors VALUES FROM ("dfdsfdsafdsaf", "dsaf", "sfasdfasfdsa", "dsafdsafdsa", "dsafdsafdsafds", "dsafdsafdsa", "dsafdsafdsa", "dsafdsafa", "dsafdsafa", dsafdsaf);

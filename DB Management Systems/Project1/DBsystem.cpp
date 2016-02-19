@@ -73,7 +73,7 @@ void DBsystem::execute()
     if (currentFunction.compare("SAVE") == 0){
         //run SAVE
         string nameSave = DBParser.contain.parserTableName;
-        cout<<"SAve: "<<nameSave<<endl;
+        cout<<"Save: "<<nameSave<<endl;
         SAVE(nameSave);
         
     }
@@ -242,14 +242,19 @@ Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file
 	string fileName = nameOpen + ".db"; //generate name
 	ifstream dbFile(fileName); //create stream
 	int testCount = 0;
-	while(!dbFile.eof()) //read until the end
+	if (dbFile.is_open())
 	{
-		getline (dbFile,inputLine); //grab the line
-		cout<<"String: "<<inputLine<<endl;
-		DBParser.sendNewInput(inputLine); //send it to the parser
-		execute(); //run the stuff. 
-		DBParser.contain.clear(); //wipe the vectors clean. 
+		while(!dbFile.eof()) //read until the end
+		{
+			getline (dbFile,inputLine); //grab the line
+			cout<<"String: "<<inputLine<<endl;
+			DBParser.sendNewInput(inputLine); //send it to the parser
+			execute(); //run the stuff. 
+			DBParser.contain.clear(); //wipe the vectors clean. 
+		}
 	}
+	else
+		cout << "File does not exists" << endl;
 	
 	dbFile.close();
 }
