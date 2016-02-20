@@ -30,7 +30,7 @@ DBsystem::DBsystem()
 void DBsystem::execute()
 {
     string currentFunction;
-	Table* temp;
+	Table* temp = 0;
 	bool open = 0; //for when open is called
 	bool setTable = 0;
 	
@@ -108,11 +108,24 @@ void DBsystem::execute()
     }
     if (currentFunction.compare("INSERT") == 0){
         //run INSERT
-        
+		vector<string> input;
+
         string nameInsert = DBParser.contain.nameInsert;
         cout<<"nameInsert: "<<nameInsert<<endl;
-        vector<string> input = DBParser.contain.insertInput;
-        INSERT(nameInsert, input);
+		if (setTable) //when we do insert values from relation
+		{
+			for (int i = 0; i < temp->getRowLength(); ++i)
+			{
+				input = temp->getTable()[i]; //get row
+				INSERT(nameInsert, input); //insert into table
+			}
+		}
+		else
+		{
+			input = DBParser.contain.insertInput;
+			INSERT(nameInsert, input);
+		}
+
         
     }
     if (currentFunction.compare("DELETE") == 0){
@@ -184,21 +197,64 @@ void DBsystem::execute()
 		cout<<"Select new Table name: "<<newTable->getTableName()<<endl;
 	}
 	if (currentFunction.compare("project") == 0){
+		string t1;
+		vector<string> attributes;
 		//run project
-		string t1 = DBParser.contain.nameProject;
+		if (setTable)
+		{
+			t1 = temp->getTableName();
+			attributes = temp->getHeaders();
+
+		}
+		else
+		{
+			t1 = DBParser.contain.nameProject;
+			attributes = DBParser.contain.projectAttributes;
+		}
+
 		cout<<"Name Project: "<<t1<<endl;
-		vector<string> attributes = DBParser.contain.projectAttributes;
-		PROJECT(t1,attributes);
-		cout<<"Made it out\n";
+		
+		Table* projectReturnTable;
+		Table* newTable(PROJECT(t1, attributes));
+		projectReturnTable = newTable;
+
+		if (DBParser.contain.functionName.size() > 1)
+		{
+			temp = projectReturnTable;
+			setTable = 1;
+		}
+
 		//b <- project (dogs) name; SEG faults in query...
 		
 	}
 	if (currentFunction.compare("rename") == 0){
+		string tName;
+		vector <string> tableAttributes;
+		vector<string> renameReplaceAttributes;
+			
 		//do rename
-		string tName = DBParser.contain.nameRename;
-		vector<string> tableAttributes = database[DBParser.contain.nameRename]->getHeaders();
-		vector<string> renameReplaceAttributes = DBParser.contain.renameReplaceAttributes;
-		RENAME(tName,tableAttributes,renameReplaceAttributes);
+		if (setTable) //a function ran before this
+		{
+			tName = temp->getTableName();
+			tableAttributes = temp->getHeaders();
+		}
+		else //just rename
+		{
+			tName = DBParser.contain.nameRename;
+			tableAttributes = database[DBParser.contain.nameRename]->getHeaders();
+		}
+		renameReplaceAttributes = DBParser.contain.renameReplaceAttributes;
+
+		Table* renameReturnTable;
+		Table* newTable(RENAME(tName, tableAttributes, renameReplaceAttributes));
+		renameReturnTable = newTable;
+
+		if (DBParser.contain.functionName.size() > 1)
+		{
+			temp = renameReturnTable;
+			setTable = 1;
+		}
+
 	}
 	if (currentFunction.compare("UNION") == 0){
 		//do Union
@@ -221,7 +277,8 @@ void DBsystem::execute()
 		
 		cout<<"About to run Union..\n";
 		Table * unionReturnTable;
-		unionReturnTable = SET_UNION(t1,t2,newName);
+		Table* newTable(SET_UNION(t1, t2, newName));
+		unionReturnTable = newTable;
 		if(DBParser.contain.functionName.size() > 1) //if there are more functions to run
 		{
 			temp = unionReturnTable; //assign tem table
@@ -242,9 +299,12 @@ void DBsystem::execute()
 			tableName2 = DBParser.contain.nameDifference2;	
 		}
 		
-		Table* differenceReturnTable;
 		string newName = DBParser.contain.lhsQuery;
-		differenceReturnTable = SET_DIFFERENCE(tableName1,tableName2,newName);
+
+		Table* differenceReturnTable;
+		Table* newTable(SET_DIFFERENCE(tableName1, tableName2, newName));
+		
+		differenceReturnTable = newTable;
 		if(DBParser.contain.functionName.size() > 1)
 		{
 			temp = differenceReturnTable;
@@ -266,9 +326,11 @@ void DBsystem::execute()
 			setTable = 1;
 		}
 		
-		Table* crossProductReturnTable;
 		string newName = DBParser.contain.lhsQuery;
-		crossProductReturnTable =CROSS_PRODUCT(t1,t2,newName);
+
+		Table* crossProductReturnTable;
+		Table* newTable(CROSS_PRODUCT(t1, t2, newName));
+		crossProductReturnTable = newTable;
 		if(DBParser.contain.functionName.size() > 1)
 		{
 			temp = crossProductReturnTable;
@@ -299,6 +361,7 @@ Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file
 	}
 	
 	dbFile.close();
+	return 0;
 }
 
 int DBsystem::CLOSE(string nameClose) //saves and removes table instance from memory
@@ -908,14 +971,12 @@ Table* DBsystem::PROJECT(string t1, vector<string> attributes)
 
     //we've found all the header locations
     //now we need to create a table from those columns
-    for (int i = 0; i < pos.size(); ++i)
-    {
-        newHeaders.push_back(attributes[pos[i]]);			        //Store the corresponding attribute
-    }
+	newHeaders = attributes; //set the new headers
     
     //here we will grab the column by going throw all the rows for each column 
     for (int j = 0; j < database[t1]->getRowLength(); ++j) //for each row
     {
+		tempRow.clear(); 
 	    for(int i = 0; i < pos.size(); ++i)  //go to the right columns
 	    {
 			tempRow.push_back(tempT[j][pos[i]]); //add the columns 
