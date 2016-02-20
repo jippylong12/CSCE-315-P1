@@ -24,7 +24,6 @@ void viewExhibits();
 void exhibitMenu();
 void exhibitManagerMenu();
 void exhibitPWScreen();
-void saveExhibit();
 
 void registerNewExhibit()
 {
@@ -35,7 +34,39 @@ void registerNewExhibit()
 	
 		cin.ignore();				//needed this here because input was getting cut off
 
-	saveExhibit();
+	str_input = "INSERT INTO exhibitors VALUES FROM (";
+	for(int i = 0; i < 10; ++i)
+	{
+		string userInput;
+		cout << values[i] + ": ";
+		getline(cin,userInput);
+		str_input += "\"" + userInput + "\"";
+		if(i < 9)
+		{
+			str_input += ", ";
+		}	
+	}
+	str_input += ");";
+	
+	cout<<str_input << endl;
+	
+	
+	db.DBParser.sendNewInput("CLOSE " + tables[0] + ";");
+	db.execute();
+	
+	db.DBParser.sendNewInput("OPEN " + tables[0] + ";");
+	db.execute();
+	
+	db.DBParser.sendNewInput(str_input);
+	db.execute();
+	str_input.clear();
+	
+	
+	//for(int i = 0; i < 1; i++)
+	//{
+		db.DBParser.sendNewInput("SAVE " + tables[0] + ";");
+    	db.execute(); 
+	//}
 	/*cout << endl;
 	system("clear");
 	switch(int_input)
@@ -72,44 +103,6 @@ void registerNewExhibit()
 	return;
 }
 
-void saveExhibit()
-{
-	string values[10] = {"Name","Address","contact_person","email", "phone Number","Fax Number","category","booth_personnel","org_description","org_site"};
-	str_input = "INSERT INTO exhibitors VALUES FROM (";
-	for(int i = 0; i < 10; ++i)
-	{
-		string userInput;
-		cout << values[i] + ": ";
-		getline(cin,userInput);
-		str_input += "\"" + userInput + "\"";
-		if(i < 9)
-		{
-			str_input += ", ";
-		}	
-	}
-	str_input += ");";
-	
-	cout<<str_input << endl;
-	
-	
-	db.DBParser.sendNewInput("CLOSE " + tables[0] + ";");
-	db.execute();
-	
-	db.DBParser.sendNewInput("OPEN " + tables[0] + ";");
-	db.execute();
-	
-	db.DBParser.sendNewInput(str_input);
-	db.execute();
-	str_input.clear();
-	
-	
-	//for(int i = 0; i < 1; i++)
-	//{
-		db.DBParser.sendNewInput("SAVE " + tables[0] + ";");
-    	db.execute(); 
-	//}
-	return;
-}
 
 
 void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
@@ -127,7 +120,7 @@ void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 	system("clear");
 	switch(int_input){
 		case 1:
-			printExitbitName(true);
+			//printExitbitName(true);
 			break;
 		case 2:
 			cout << "Enter the Exhibit name: " << endl;
