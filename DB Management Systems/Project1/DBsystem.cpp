@@ -382,6 +382,7 @@ Table* DBsystem::CREATE(int columnCreate, string nameCreate,vector<string> creat
 //updates a record in the database given certain criteria
 int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criteria, vector<string> replace)
 {
+	
 	//go to table nameUpdate
 	//search headervector for headerName to find column
 	//search that column for the criteria
