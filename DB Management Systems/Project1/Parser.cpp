@@ -672,7 +672,7 @@ bool Parser::parse_UPDATE()
 	
 		while(true)
 		{
-			if(!isIdentifier(tokens.front()))		 {  return false;   }	 //Attribute name 
+			if(!isIdentifier(tokens.front()))		 {  return false;   }	 //Attribute name/header
 				contain.updateHeaderName.push_back(tokens.front());
 				tokens.pop(); //remove it
 			if (tokens.front().compare("=") != 0)	 {  return false;   }	 //"="

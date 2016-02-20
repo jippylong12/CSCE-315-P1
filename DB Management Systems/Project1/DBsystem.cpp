@@ -528,155 +528,148 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
 	
  	//UPDATE animals SET kind = MOG WHERE years == 3;
 	
+	//headerName holds the header to change
+	//replace holds the value we want to replace in that headerName given that where is true
+	// operand1 is the lhs of WHERE arguement
+	//operand2 is the rhs
+	//updateOP is the operand for the WHERE arguement
 	
 	int minIndex = min(database[nameUpdate]->getHeaders().size(), headerName.size());   //store size mismatch
 	
-	// vector<int> colPos; 		  //store which column(s) to be updated
-	// vector<int> rowPos;			  //store the position of row(s) to be updated			
-	// vector<int> colComparePos;	  //store the position of column used to compare
-	// vector<int> replacePos;		  //trying to store the position of the replace vector so we know what to replace
-	// string updateOP = DBParser.contain.updateOP; //grab OP
-	// vector<vector<string>> tempTable = database[nameUpdate]->getTable(); //get table info
-	// //store which rows to be updated
-	// //need to iterate through all columns
-	// //int row, col;
+	vector<int> headerColPos; 		  //store which column to check for header
+	vector<int> whereColPos;			  //store which column to look at for the where fuction			
+	vector<int> colComparePos;	  //store the position of column used to compare
+	vector<int> replacePos;		  //trying to store the position of the replace vector so we know what to replace
+	vector<vector<string>> tempTable = database[nameUpdate]->getTable(); //get table info
+	//store which rows to be updated
+	//need to iterate through all columns
+	//int row, col;
 	
 
 
-	
-	// for(int i = 0; i < minIndex; ++i){			//Go through table headers and find header to be updated
-	// 	for (int j = 0; j < database[nameUpdate]->getHeaders().size(); ++j){
-	// 		if(database[nameUpdate]->getHeaders()[j].compare(headerName[i]) == 0){
-	// 			colPos.push_back(j);			//Store the positions where the header names match
-	// 		}
-	// 	}
-	// }
-	
-	// for(int i = 0; i < minIndex; ++i){		    	//Go through table headers and headers to be COMPARED
-	// 	for (int j = 0; j < database[nameUpdate]->getHeaders().size(); ++j){
-	// 		if(database[nameUpdate]->getHeaders()[j].compare(criteria) == 0){
-	// 			colComparePos.push_back(j);			//Store the positions where te header matches COMPARED header
-	// 		}
-	// 	}
-	// }
-	
-	
-	// cout << "updateCompareTo: " << DBParser.contain.updateCompareTo << endl;
-	
-	// //In our table, 
-	// //Go through the rows of the COMPARED column and see if its elements match up
-	// //Store the respective position of the row
-	
-	// for(int i = 0; i <database[nameUpdate]->getRowLength(); ++i ){ 
-	// 	for (int j = 0; j < colPos.size(); ++j){
-	// 		if(!isdigit(DBParser.contain.updateCompareTo[0])){	//see if we are comparing strings
-	// 			if(database[nameUpdate]->getTable()[i][colComparePos[j]].compare(DBParser.contain.updateCompareTo)==0  && updateOP.compare("==")==0){
-	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
-	// 			    replacePos.push_back(j);
-	// 			}
-	// 			if(database[nameUpdate]->getTable()[i][colComparePos[j]].compare(DBParser.contain.updateCompareTo)!=0  && updateOP.compare("!=")==0){
-	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
-	// 				replacePos.push_back(j);
-	// 			}
-	// 		}else{												//we're comparing ints
-	// 			int updateCmpTo = stoi(DBParser.contain.updateCompareTo);
-	// 			int updateEntry = stoi(database[nameUpdate]->getTable()[i][colComparePos[j]]);
-	// 			cout << "updateEntry ? cmpTo: " <<updateEntry << updateOP << updateCmpTo << endl;
-			
-			
-	// 			if(updateEntry >= updateCmpTo && updateOP.compare(">=")==0){
-	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
-	// 		    	replacePos.push_back(j);
-	// 			}
-	// 				if(updateEntry > updateCmpTo && updateOP.compare(">")==0){
-	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
-	// 		    	replacePos.push_back(j);
-	// 			}
-	// 				if(updateEntry <= updateCmpTo && updateOP.compare("<=")==0){
-	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
-	// 		    	replacePos.push_back(j);
-	// 			}
-	// 				if(updateEntry < updateCmpTo && updateOP.compare("<")==0){
-	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
-	// 		    	replacePos.push_back(j);
-	// 			}
-	// 				if(updateEntry == updateCmpTo && updateOP.compare("==")==0){
-	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
-	// 		    	replacePos.push_back(j);
-	// 			}
-	// 				if(updateEntry != updateCmpTo && updateOP.compare("!=")==0){
-	// 				rowPos.push_back(i);			//Store the position of the row where criteria is met
-	// 		    	replacePos.push_back(j);
-	// 			}
-			
-	// 		}
+	//Go through table headers and find header to be updated
+	for (int i = 0; i < headerName.size(); ++i) //for headers
+	{
+		for (int j = 0; j < database[nameUpdate]->getHeaders().size(); ++j)
+		{
+			if (database[nameUpdate]->getHeaders()[j].compare(headerName[i]) == 0) //if we find a match in the header
+			{
+				headerColPos.push_back(j); //push back it's location in header
+			}
+			if (database[nameUpdate]->getHeaders()[j].compare(updateOperand1[i]) == 0)
+			{
+				whereColPos.push_back(j); //push back the header locations
+			}
+		}
+	}
 
-	// 	}
-	// }
+
+	//go through table with the columns in colPos and use where condidtion to 
+
+
+	for (int i = 0; i < headerName.size(); ++i) //for each column we need to change
+	{
+		//In our table, 
+		//Go through the rows of the COMPARED column and see if its elements match up
+		//Store the respective position of the row
+
+		for (int j = 0; j < database[nameUpdate]->getRowLength(); ++j) //for each row
+		{
+			bool whereTrue = 0; //let the program know that WHERE is true
+			//check the correct column and check if the where(s) function is(are) true
+			for (int k = 0; k < updateOP.size(); ++k)
+			{
+				if (updateOP[k] == "==") //==
+				{
+					if (tempTable[j][whereColPos[i]] == updateOperand2[i]) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break; //we break because we know we don't need to check other arguements
+					}
+				}
+				else if (updateOP[k] == "!=") //!=
+				{
+					if (tempTable[j][whereColPos[i]] == updateOperand2[i]) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break;
+					}
+				}
+				else if (updateOP[k] == "<=") //<=
+				{
+					if (tempTable[j][whereColPos[i]] == updateOperand2[i]) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break;
+					}
+				}
+				else if (updateOP[k] == ">=") //>=
+				{
+					if (tempTable[j][whereColPos[i]] == updateOperand2[i]) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break;
+					}
+				}
+				else if (updateOP[k] == "<") //<
+				{
+					if (tempTable[j][whereColPos[i]] == updateOperand2[i]) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break;
+					}
+				}
+				else if (updateOP[k] == ">") //>
+				{
+					if (tempTable[j][whereColPos[i]] == updateOperand2[i]) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break;
+					}
+				}
+			}
+			if (whereTrue) //if we have passed the tests
+			{
+				tempTable[j][headerColPos[i]] = replace[i]; //change the value in the right column
+			}
+		}
+
+	}
 	
-	
-	
-	// 		for (int j = 0; j < rowPos.size(); ++j){		//update the table with new element
-	// 				for (int i = 0; i < colPos.size(); ++i){
-	// 					tempTable[rowPos[j]][colPos[i]] = replace[replacePos[i]];			//FK my life
-	// 				}
-	// 		}
-		
-		
-		
-		
-		
-		//	}
-	//	cout << 2 << endl;
-	//for (int i = 0; i < database[nameUpdate]->getRowLength(); ++i){
-	//	if(database[nameUpdate]->getTable()[i][colPos[i]].compare(criteria)==0){
-	//		rowPos.push_back(i);				//Store the rows which meet the criteria
-	//	}
-	//} 
-	
-	 	
+ 	
 /*
 UPDATE animals SET name = BirdName2 WHERE kind != bird;
 UPDATE animals SET name = NEWJOE, kind = young WHERE years > 1; 
 UPDATE animals SET kind = fatANIMAL WHERE years == 1;
 		*/
 	
+	database[nameUpdate]->setTable(tempTable); //update table
 	
-	//Need to add conditional DBParser.contain.updateOP
-	//	cout << 3 << endl;
-	// for (int i = 0; i < colPos.size(); ++i){
-	// 	for (int j = 0; j < rowPos.size(); ++j){
-	// 		tempTable[rowPos[j]][colPos[i]] = replace[0];			//updates to default values
-	// 	}
-	// }
-	
-	//database[nameUpdate]->setTable(tempTable);
-	//delete tempTable;
-	
-	
-	
-
-	// for (int i = 0; i < database[nameUpdate]->getColumnLength(); ++i)
-	// {
-	// 	if (database[nameUpdate]->getHeaders()[i].compare(headerName)==0)
-	// 	{
-	// 		col = i;
-	// 	}
-	// }
-	// for (int i = 0; i < database[nameUpdate]->getRowLength(); ++i)
-	// {
-	// 	if (database[nameUpdate]->getTable()[i][col].compare(criteria)==0)
-	// 	{
-	// 		row = i;
-	// 	}
-	// }
-	
-	// tempTable[row][col] = replace;
-	// database[nameUpdate]->setTable(tempTable);
-
-	
-    
-    	return 0;
+	return 0;
 	
 }
 
@@ -706,124 +699,14 @@ int DBsystem::INSERT(string nameInsert, vector<string> input)
 //Parser may end up finding the row and may only need one input here.
 int DBsystem::DELETE(string nameDelete, vector<string> deleteOperand1, vector<string> deleteOperand2, vector<string> deleteOP)
 {
-	// vector<vector <string> > tempTable;
-	// tempTable = database[nameDelete]->getTable();
-	// string tableComparer;
-	// int rowToDelete;
-	// int columnToCheck;
-	// bool foundInHeader = 0;
-	// bool isString = 0;
+	 vector<vector <string> > tempTable;
+	 tempTable = database[nameDelete]->getTable();
+	 string tableComparer;
+	 int rowToDelete;
+	 int columnToCheck;
+	 bool foundInHeader = 0;
+	 bool isString = 0;
 	
-	// for(int i = 0; i<database[nameDelete]->getColumnLength();++i)
-	// {
-	// 	if(database[nameDelete]->getHeaders()[i].compare(deleteOperand1) == 0 ) // if we find the matching header
-	// 	{
-	// 		columnToCheck = i; //keep track of column
-	// 		foundInHeader = 1;
-	// 		break; // end for loop
-	// 	}
-	// }
-	// if(!foundInHeader)
-	// {
- //   	cout<<"Not Found in Header.\n";
-	// 	return 0;
-	// }
-	// cout<<"Column To check: "<<columnToCheck<<endl;
-	// cout<<"rowLength before loop: "<<database[nameDelete]->getRowLength()<<endl;
-	// cout << "deleteOP: " << deleteOP;
-	
-	
-	// for(int i = 0; i<database[nameDelete]->getRowLength(); ++i)
-	// {
-	// 	tableComparer = tempTable[i][columnToCheck];
-	// 	cout<<"Comparer: "<<tableComparer<<endl;
-	// 	//Checks for equality of strings
-		
-	
-	
-	
-	// //Check if what we want to compare is a string...
-		
-		
-	// if(!isdigit(DBParser.contain.deleteCompareTo[0])){
-	// 	if(deleteOP.compare("==") == 0 && tableComparer.compare(DBParser.contain.deleteCompareTo)==0){
-	// 		tempTable.erase(tempTable.begin() + i); //delete the row
-	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-	// 		--i;
-	// 		continue;
-	// 	}
-	// 	 //Inequality of strings
-	// 	if(deleteOP.compare("!=") == 0 && tableComparer.compare(DBParser.contain.deleteCompareTo)!=0){
-	// 		tempTable.erase(tempTable.begin() + i); //delete the row
-	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-	// 		--i;
-	// 		continue;
-	// 	}
-	// }else{
-	
-		
-	// 	if(deleteOP.compare("==") == 0 && stoi(tableComparer) == stoi(DBParser.contain.deleteCompareTo)){ //DELETE WHERE EQUALS for INTS
-	// 		tempTable.erase(tempTable.begin() + i); //delete the row
-	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-	// 		--i;
-	// 	}
-		
-		
-		
-		
-	// 	if(deleteOP.compare(">=") == 0 && stoi(tableComparer) >= stoi(DBParser.contain.deleteCompareTo)){
-	// 	 	tempTable.erase(tempTable.begin() + i); //delete the row
-	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-	// 		--i;
-	// 	 }
-	//     if(deleteOP.compare(">") == 0 && stoi(tableComparer) > stoi(DBParser.contain.deleteCompareTo)){
-	// 		tempTable.erase(tempTable.begin() + i); //delete the row
-	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-	// 		--i;
-	// 	}
-	//     if(deleteOP.compare("<=") == 0 && stoi(tableComparer) <= stoi(DBParser.contain.deleteCompareTo)){
-	// 	 	tempTable.erase(tempTable.begin() + i); //delete the ro
-	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-	// 		--i;
-		 	
-	// 	 }
-	// 	 if(deleteOP.compare("<") == 0 && stoi(tableComparer) < stoi(DBParser.contain.deleteCompareTo)){
-	// 	 	tempTable.erase(tempTable.begin() + i); //delete the row
-	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-	// 		--i;
-		 	
-	// 	 }
-	// 	 //Inequality of ints
-	// 	 if(deleteOP.compare("!=") == 0 && stoi(tableComparer) != stoi(DBParser.contain.deleteCompareTo)){ //DELETE WHERE NOT EQUALS	
-	// 	 	tempTable.erase(tempTable.begin() + i); //delete the row
-	// 		database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-	// 		cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-	// 		--i;
-	// 	 }
-	// }
-	
-		
-		
-		
-		// if(tableComparer.compare(deleteOperand2) == 0)
-		// {
-		// 	tempTable.erase(tempTable.begin() + i); //delete the row
-		// 	database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
-		// 	cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
-		// 	--i;
-		// }
-	
-	//}
-	
-	//cout<<"rowLength after loop: "<<database[nameDelete]->getRowLength()<<endl;
-    //database[nameDelete]->setTable(tempTable);
     return 0;
 
 }
