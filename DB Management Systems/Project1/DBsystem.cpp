@@ -43,7 +43,7 @@ void DBsystem::execute()
 	{
 		
 	currentFunction = DBParser.contain.functionName.top(); //get current function
-    cout << "Function name to be run: " << currentFunction << endl;
+    //cout << "Function name to be run: " << currentFunction << endl;
     
     //-----------------------COMMANDS----------------------//
 	if(currentFunction.compare("CREATE") == 0){
@@ -351,14 +351,19 @@ Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file
 	string fileName = nameOpen + ".db"; //generate name
 	ifstream dbFile(fileName); //create stream
 	int testCount = 0;
-	while(!dbFile.eof()) //read until the end
+	if (dbFile.is_open())
 	{
-		getline (dbFile,inputLine); //grab the line
-		cout<<"String: "<<inputLine<<endl;
-		DBParser.sendNewInput(inputLine); //send it to the parser
-		execute(); //run the stuff. 
-		DBParser.contain.clear(); //wipe the vectors clean. 
+		while(!dbFile.eof()) //read until the end
+		{
+			getline (dbFile,inputLine); //grab the line
+			cout<<"String: "<<inputLine<<endl;
+			DBParser.sendNewInput(inputLine); //send it to the parser
+			execute(); //run the stuff. 
+			DBParser.contain.clear(); //wipe the vectors clean. 
+		}
 	}
+	else
+		cout << "File does not exists" << endl;
 	
 	dbFile.close();
 	return 0;
@@ -481,25 +486,30 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 	//print each cell in the table
 	//return 0;
 	//First, print the name of the table
-    cout << " ---------------------------------------- " <<endl;
-    cout<<' '<<setw(21)<<database[nameShow]->getTableName() <<setw(21)<<' '<<endl;
-    cout << " ---------------------------------------- " <<endl;
+    cout << "\t\t\t ----------------------------------- " <<endl;
+    cout << setw(47)<<database[nameShow]->getTableName() << setw(47) << endl;
+    cout << "\t\t\t ----------------------------------- " <<endl;
 	//print headers.
 	for (int i = 0; i< database[nameShow]->getHeaders().size(); ++i)
 	{
-        cout << setw(5)<<"["<<database[nameShow]->getHeaders()[i]<<"]" << setw(5);
+        cout << setw(25) << '[' + database[nameShow]->getHeaders()[i] + ']';
 	}
-    cout<<endl;
+   
 	//print table
 	for (int i = 0; i<database[nameShow]->getRowLength(); ++i)
 	{
+		cout << endl;
 		for (int j = 0; j<database[nameShow]->getColumnLength(); ++j)
 		{
-			cout << setw(10) << database[nameShow]->getTable()[i][j]<<setw(10) ;
+			cout << setw(25);
+			cout << database[nameShow]->getTable()[i][j] << setw(25);
+			if(j==database[nameShow]->getColumnLength()-1){
+				cout << setw(0);
+			}
 		}
-		cout<<endl;
+
 	}
-	cout << endl;
+	cout << endl << endl;
 	return 0;
 	
 	
@@ -520,6 +530,7 @@ Table* DBsystem::CREATE(int columnCreate, string nameCreate,vector<string> creat
 //updates a record in the database given certain criteria
 int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string> replace, vector<string> updateOperand1, vector<string> updateOperand2,vector<string> updateOP)
 {
+	
 	//go to table nameUpdate
 	//search headervector for headerName to find column
 	//search that column for the criteria
@@ -541,7 +552,7 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
 	//need to iterate through all columns
 	//int row, col;
 	
-
+//UPDATE animals SET kind = fatANIMAL WHERE age == 1;
 
 	//Go through table headers and find header to be updated
 	for (int i = 0; i < headerName.size(); ++i) //for headers
@@ -768,8 +779,9 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
  	
 /*
 UPDATE animals SET name = BirdName2 WHERE kind != bird;
-UPDATE animals SET name = NEWJOE, kind = young WHERE years > 1; 
-UPDATE animals SET kind = fatANIMAL WHERE years == 1;
+UPDATE animals SET name = NEWJOE, kind = young WHERE age > 1; 
+UPDATE exhibitors SET address = 123_College_Dr. WHERE fax > 1;
+UPDATE org_name SET address = 123_College_Dr. WHERE fax > 1;
 		*/
 	
 	database[nameUpdate]->setTable(tempTable); //update table
@@ -1072,6 +1084,7 @@ Table* DBsystem::SELECT(string newTableName,string nameSelect, vector<string> he
 				colPosition.push_back(i); //keep track of the location
 			}
 		}
+		cout << 12.75 << endl;
 	}
 	for (int z = 0; z < colPosition.size(); ++z)
 	{
@@ -1398,11 +1411,13 @@ Table* DBsystem::SET_UNION(string t1, string t2, string newName)
 	//push back the rows of the other table
 	//possibly check each time to see if there are any duplicates. 
 	//return new table
-	if(database[t1]->getHeaders().size() == database[t2]->getHeaders().size())
-	{
+	cout << 99;
+	//if(database[t1]->getHeaders().size() == database[t2]->getHeaders().size())
+	//{
 
 		//intiliaze new Table for holding the union
 		//create a  new table
+		cout << 100;
 		Table* unionTable = new Table(database[t1]->getColumnLength(),newName, database[t1]->getHeaders(),
 			database[t1]->getPrimaryKeys(),database[t1]->getHeaderTypes(),database[t1]->getHeaderSizes());
 		//database[newName] = unionTable; //add the table to the database
@@ -1412,22 +1427,23 @@ Table* DBsystem::SET_UNION(string t1, string t2, string newName)
 		int count = database[t1]->getRowLength();
 		
 		//add all the elements from B 
+		cout << 101;
 		for(int i = 0; i < database[t2]->getRowLength(); ++i)
 		{
 			copyTable.push_back(database[t2]->getTable()[i]); // push back each row
 			count+=1; //increase row count
 		}
-		
+		cout << 102;
 		unionTable->setTable(copyTable);
 		unionTable->setRowLength(count);
 		
 		return unionTable;
-	}	
-	else
-	{
+//	}	
+	//else
+	//{
 		cout<<"The headers aren't the same size.\n";
 		return 0;
-	}
+	//}
     //Returns a Table of the Union
 	//return the union
 	

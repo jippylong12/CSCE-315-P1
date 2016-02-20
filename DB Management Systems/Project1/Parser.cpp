@@ -68,12 +68,23 @@ void Parser::parse()
 	int tokenSize = tokens.size();
 	for(int i = 0; i<tokenSize; ++i)
 	{
-		if(tokens.front()[0] == '"') //remove quotations
+		
+		while(tokens.front()[0] == '"' && tokens.front()[tokens.front().size()-1] != '"' ) //remove quotations
 		{
+			
+			string literal = tokens.front();
+			tokens.pop();
+			tokens.front() = literal + " " + tokens.front();
+			tokenSize--;
+			
+		}
+		if(tokens.front()[0] == '"' && tokens.front()[tokens.front().size()-1] == '"' )
+		{
+			
 			tokens.front().erase(tokens.front().begin()); //remove first quotation
 			tokens.front().pop_back(); //gets rid of last quotation
 		}
-		if(tokens.front() == ", ")
+		if(tokens.front().compare(", ") == 0)
 		{
 			temp.push(",");
 			tokens.pop();
@@ -322,24 +333,17 @@ bool Parser::isQuery()
 
 bool Parser::isLiteral(string name) //literals
 {
-	if(isdigit(name[0])) //check if 
-	{
-		for(int i = 0; i < name.length()-1; i++)
-		{
-			if('0' <= name[i] && name[i] <= '9'){}
-			else {return false;}
-		}
-	}
-	else
-	{
-			for(int i = 1; i < name.length()-1; i++)
+	
+
+		for(int i = 0; i < name.length(); i++)
 		{
 			if('A' <= name[i] && name[i] <= 'Z'){}
 			else if('a' <= name[i] && name[i] <= 'z'){}
 			else if('0' <= name[i] && name[i] <= '9'){}
+			else if(name[i] == ' ' || name[i] == '@'  || name[i] == '.' || name[i] == '_' || name[i] == '!' || name[i] == '-' ){}
 			else{return false;}
 		}
-	}
+	
 	
 	
 	
@@ -719,14 +723,14 @@ bool Parser::parse_INSERT()
 		tokens.pop(); //remove from
 		
 
-	
+	cout << 1 <<endl;
 	if(tokens.front().compare("(") == 0) { //Checking for literals
 		
 	
 		tokens.pop();
 		while(true)		
 		{
-			
+				cout << tokens.front() <<endl;
 			if (!isLiteral(tokens.front()))		 {  return false;	}    //literal 
 				contain.insertInput.push_back(tokens.front()); // push back literal
 				tokens.pop();
