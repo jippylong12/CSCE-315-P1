@@ -666,8 +666,8 @@ int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo, 
 		}
 	}else{
 	
-		
-		if(deleteOP.compare("==") == 0 && stoi(tableComparer) == stoi(DBParser.contain.deleteCompareTo)){ //DELETE WHERE EQUALS for INTS
+		cout << tableComparer << endl;
+		if(deleteOP.compare("==") == 0 && tableComparer.compare(DBParser.contain.deleteCompareTo)==0){ //DELETE WHERE EQUALS for INTS
 			tempTable.erase(tempTable.begin() + i); //delete the row
 			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
 			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
@@ -677,26 +677,26 @@ int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo, 
 		
 		
 		
-		if(deleteOP.compare(">=") == 0 && stoi(tableComparer) >= stoi(DBParser.contain.deleteCompareTo)){
+		if(deleteOP.compare(">=") == 0 && tableComparer.compare(DBParser.contain.deleteCompareTo)>=0){
 		 	tempTable.erase(tempTable.begin() + i); //delete the row
 			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
 			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
 			--i;
 		 }
-	    if(deleteOP.compare(">") == 0 && stoi(tableComparer) > stoi(DBParser.contain.deleteCompareTo)){
+	    if(deleteOP.compare(">") == 0 && tableComparer.compare(DBParser.contain.deleteCompareTo) > 0){
 			tempTable.erase(tempTable.begin() + i); //delete the row
 			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
 			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
 			--i;
 		}
-	    if(deleteOP.compare("<=") == 0 && stoi(tableComparer) <= stoi(DBParser.contain.deleteCompareTo)){
+	    if(deleteOP.compare("<=") == 0 && tableComparer.compare(DBParser.contain.deleteCompareTo)<=0){
 		 	tempTable.erase(tempTable.begin() + i); //delete the ro
 			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
 			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
 			--i;
 		 	
 		 }
-		 if(deleteOP.compare("<") == 0 && stoi(tableComparer) < stoi(DBParser.contain.deleteCompareTo)){
+		 if(deleteOP.compare("<") == 0 && tableComparer.compare(DBParser.contain.deleteCompareTo) < 0){
 		 	tempTable.erase(tempTable.begin() + i); //delete the row
 			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
 			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
@@ -704,7 +704,7 @@ int DBsystem::DELETE(string nameDelete, string compareHeader, string compareTo, 
 		 	
 		 }
 		 //Inequality of ints
-		 if(deleteOP.compare("!=") == 0 && stoi(tableComparer) != stoi(DBParser.contain.deleteCompareTo)){ //DELETE WHERE NOT EQUALS	
+		 if(deleteOP.compare("!=") == 0 && tableComparer.compare(DBParser.contain.deleteCompareTo) != 0){ //DELETE WHERE NOT EQUALS	
 		 	tempTable.erase(tempTable.begin() + i); //delete the row
 			database[nameDelete]->setRowLength(database[nameDelete]->getRowLength()-1); // change row length
 			cout<<"rowLength inside loop: "<<database[nameDelete]->getRowLength()<<endl;
