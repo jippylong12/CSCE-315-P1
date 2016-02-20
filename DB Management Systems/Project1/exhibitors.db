@@ -1,0 +1,10 @@
+CREATE TABLE exhibitors (org_name VARCHAR(20), address VARCHAR(100), contact_person VARCHAR(100), email VARCHAR(100), phone VARCHAR(100), fax VARCHAR(100), category VARCHAR(100), booth_personnel VARCHAR(100), org_description VARCHAR(300), org_site VARCHAR(100)) PRIMARY KEY (org_name, address);
+INSERT INTO exhibitors VALUES FROM ("Fancy Pants", "123_Fake_St", "Dead_Pool", "fake@fmail.com", "281-789-7451", "456-789-1234", "commercial", "John Flores johnaflores@gmail.com", "We make fancy ass pants yo!", www.fancypants.com);
+INSERT INTO exhibitors VALUES FROM ("adaf", "123_College_Dr", "Mike-Hawk", "fake@fmail.com", "432", "23", "3423423", "34324", "3423", 14);
+INSERT INTO exhibitors VALUES FROM ("32", "123_College_Dr", "Mike-Hawk", "fake@fmail.com", "43", "12", "34", "23", "12", 43);
+INSERT INTO exhibitors VALUES FROM ("23", "123_Fake_St", "Dead_Pool", "fake@fmail.com", "1234", "324", "1234", "1234", "2134", 432);
+INSERT INTO exhibitors VALUES FROM ("312", "123_Fake_St", "Dead_Pool", "fake@fmail.com", "DGSDF", "34", "RWE", "FDS", "BVC", DFG);
+INSERT INTO exhibitors VALUES FROM ("WRWE", "123_Fake_St", "Dead_Pool", "fake@fmail.com", "CXB", "4", "DG", "FG", "FG", ET);
+INSERT INTO exhibitors VALUES FROM ("Assholes", "1_CollegeDr", "rian", "mail@yahoo.com", "11", "11", "ater", "air", "eet", en);
+INSERT INTO exhibitors VALUES FROM ("Assholes", "69th St", "Mike", "R2D2", "911", "911-1", "Chips", "Yoda", "Death Star", Sampsons);
+INSERT INTO exhibitors VALUES FROM ("a", "b", "c", "d", "e", "f", "g", "h", "i", j);
