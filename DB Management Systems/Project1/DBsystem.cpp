@@ -1048,9 +1048,7 @@ Table* DBsystem::RENAME(string tName, vector<string> tableAttributes, vector<str
             replaceAttributes.push_back(tableAttributes[max(tableAttributes.size()-1, replaceAttributes.size()-1)]);
         }
     }
-    //database[tName]->setHeader(replaceAttributes);      //Rename the headers.
-
-    //database[tName]->setColumnLength();
+    database[tName]->setHeader(replaceAttributes);      //Rename the headers.
 
     
     return database[tName];
