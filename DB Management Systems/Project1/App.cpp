@@ -17,39 +17,25 @@ string tables[5] = {"exhibitors","booth","services","attendees","inventory"};
 
 int int_input = 0;
 string str_input = "";
-
+string ManagerPW = "asdf";
+void mainMenu();
+void registerNewExhibit();
+void viewExhibits();
+void exhibitMenu();
+void exhibitManagerMenu();
+void exhibitPWScreen();
+void saveExhibit();
 
 void registerNewExhibit()
 {
 	string values[10] = {"Name","Address","contact_person","email", "phone Number","Fax Number","category","booth_personnel","org_description","org_site"};
-
-	str_input = "INSERT INTO exhibitors VALUES FROM (";
 	
 	cout << "[Register New Exhibit]\n" << endl;
 	cout << "-Enter the details of your Organization-" << endl;
 	
 		cin.ignore();				//needed this here because input was getting cut off
-	for(int i = 0; i < 10; ++i)
-	{
-		string userInput;
-		cout << values[i] + ": ";
-		getline(cin,userInput);
-		str_input += "\"" + userInput + "\"";
-		if(i < 9)
-			str_input += ", ";
-	}
-	
-	str_input += ");";
-	
-	cout << str_input << endl;
-	
-	db.DBParser.sendNewInput(str_input);
-    db.execute(); 
-	
-	
 
-}
-
+<<<<<<< HEAD
 void printExitbitNames(bool all)
 {
 	
@@ -58,6 +44,12 @@ void printExitbitNames(bool all)
 	string temp = "";
 	
 	if(all)
+=======
+	saveExhibit();
+	/*cout << endl;
+	system("clear");
+	switch(int_input)
+>>>>>>> ff9012c7d3bd9927e0aa9a1e9d5037dd13da7623
 	{
 		
 		if (file.is_open()) 
@@ -82,6 +74,52 @@ void printExitbitNames(bool all)
  	}
  	
  	file.close();
+			cout << "***Not a valid command, try again***\n" << endl;
+			exhibitMenu();
+			break;
+	}
+	
+	exhibitMenu();*/
+	return;
+}
+
+void saveExhibit()
+{
+	string values[10] = {"Name","Address","contact_person","email", "phone Number","Fax Number","category","booth_personnel","org_description","org_site"};
+	str_input = "INSERT INTO exhibitors VALUES FROM (";
+	for(int i = 0; i < 10; ++i)
+	{
+		string userInput;
+		cout << values[i] + ": ";
+		getline(cin,userInput);
+		str_input += "\"" + userInput + "\"";
+		if(i < 9)
+		{
+			str_input += ", ";
+		}	
+	}
+	str_input += ");";
+	
+	cout<<str_input << endl;
+	
+	
+	db.DBParser.sendNewInput("CLOSE " + tables[0] + ";");
+	db.execute();
+	
+	db.DBParser.sendNewInput("OPEN " + tables[0] + ";");
+	db.execute();
+	
+	db.DBParser.sendNewInput(str_input);
+	db.execute();
+	str_input.clear();
+	
+	
+	//for(int i = 0; i < 1; i++)
+	//{
+		db.DBParser.sendNewInput("SAVE " + tables[0] + ";");
+    	db.execute(); 
+	//}
+	return;
 }
 
 
@@ -167,6 +205,10 @@ void exhibitMenu()
 			cin.ignore(10000, '\n');
 			system("clear");
 			cout << "***Not a valid command, try again***\n" << endl;
+<<<<<<< HEAD
+=======
+			
+>>>>>>> ff9012c7d3bd9927e0aa9a1e9d5037dd13da7623
 			break;
 	}
 	
@@ -218,6 +260,24 @@ void exhibitManagerMenu()
 
 }
 
+void exhibitPWScreen()
+{
+	string pw = "";
+	cout<<"Please input the password: ";
+	cin>>pw;
+	if (pw.compare(ManagerPW) == 0)
+	{
+		exhibitManagerMenu();
+	}
+	else
+	{
+		cin.clear();
+		cin.ignore(10000, '\n');
+		cout << "***Not a Valid Password***" << endl;
+		mainMenu();
+	}
+}
+
 void mainMenu()
 {
 
@@ -236,7 +296,8 @@ void mainMenu()
 	{
 		
 		case 1:
-			exhibitManagerMenu();
+			exhibitPWScreen();
+			//exhibitManagerMenu();
 			break;
 		case 2:
 			break;
@@ -244,7 +305,6 @@ void mainMenu()
 			break;
 		case 4:
 			return;
-			break;
 		default:
 			cin.clear();
 			cin.ignore(10000, '\n');
@@ -254,6 +314,7 @@ void mainMenu()
 	mainMenu();
 
 }
+
 
 int main()
 {	
@@ -304,11 +365,11 @@ int main()
 		
 		
 		
-		for(int i = 0; i < 1; i++)
-		{
-			db.DBParser.sendNewInput("SAVE " + tables[i] + ";");
-    		db.execute(); 
-		}
+		 //for(int i = 0; i < 1; i++)
+		 //{
+		 //	db.DBParser.sendNewInput("SAVE " + tables[i] + ";");
+		 //	db.execute(); 
+		 //}
 		
 		
     	//db.DBParser.contain.clear();
