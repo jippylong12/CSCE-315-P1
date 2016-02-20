@@ -30,10 +30,15 @@ DBsystem::DBsystem()
 void DBsystem::execute()
 {
     string currentFunction;
-
+	Table* temp;
 	bool open = 0; //for when open is called
+	bool setTable = 0;
+	
+	
 	cout<<"Size of stack: "<<DBParser.contain.functionName.size()<<endl;
 	//for the size of the function stack
+	
+	
 	for(int i = DBParser.contain.functionName.size(); i > 0; --i)
 	{
 		
@@ -103,7 +108,9 @@ void DBsystem::execute()
     }
     if (currentFunction.compare("INSERT") == 0){
         //run INSERT
+        
         string nameInsert = DBParser.contain.nameInsert;
+        cout<<"nameInsert: "<<nameInsert<<endl;
         vector<string> input = DBParser.contain.insertInput;
         INSERT(nameInsert, input);
         
@@ -127,29 +134,62 @@ void DBsystem::execute()
 	if (currentFunction.compare("QUERY") == 0) 
 	{
 		cout<<"Query: "<<DBParser.contain.lhsQuery<<endl;
-		Table newTable(*database[DBParser.contain.lhsQuery]);
-		//should just make a copy of the table with new name or just rename the new table.
-		newTable.setTableName(DBParser.contain.lhsQuery);
+		if(setTable)
+		{
+			Table newTable0(*temp);
+			//should just make a copy of the table with new name or just rename the new table.
+			newTable0.setTableName(DBParser.contain.lhsQuery);
+			database[DBParser.contain.lhsQuery] = new Table(newTable0);
 
-		database[DBParser.contain.lhsQuery] = new Table(newTable);
+		}
+		else
+		{
+			Table newTable1(*database[DBParser.contain.lhsQuery]);	
+			//should just make a copy of the table with new name or just rename the new table.
+			newTable1.setTableName(DBParser.contain.lhsQuery);
+			database[DBParser.contain.lhsQuery] = new Table(newTable1);
+		}
+
 	}
 	if (currentFunction.compare("select") == 0){
 		//run select
-		string newTableName = DBParser.contain.lhsQuery;
-		cout<<"New Table Name: "<<newTableName<<endl;;
-		string nameShow = DBParser.contain.nameSelect;
-		cout<<"Select Table Name: "<<nameShow<<endl;
+		string newTableName;
+		
+		string nameSelect = DBParser.contain.nameSelect;
+		cout<<"Select Table Name: "<<nameSelect<<endl;
 		vector<string> header = DBParser.contain.selectHeader; //lhs
 		vector<string> selectOP = DBParser.contain.selectOP; 
 		vector<string> condition = DBParser.contain.selectCondition; //rhs
-		Table *newTable (SELECT(newTableName,nameShow,header,selectOP,condition));
+
+		if(setTable) // if we have set a Table the new name needs ot be the temp name we gave it
+		{
+			newTableName = temp->getTableName(); //get the table name of the temp table
+		}
+		else //esle we are just running once. 
+		{
+			newTableName = "SELECT " + nameSelect;	
+		}
+		cout<<"New Table Name: "<<newTableName<<endl;;
+		
+		Table* selectReturnTable;
+		Table *newTable (SELECT(newTableName,nameSelect,header,selectOP,condition));
+		selectReturnTable = newTable;
+		
+		if(DBParser.contain.functionName.size() > 1) //if we have more than one query to run
+		{
+			temp = selectReturnTable;
+			setTable = 1;
+		}
+		
 		cout<<"Select new Table name: "<<newTable->getTableName()<<endl;
 	}
 	if (currentFunction.compare("project") == 0){
 		//run project
 		string t1 = DBParser.contain.nameProject;
+		cout<<"Name Project: "<<t1<<endl;
 		vector<string> attributes = DBParser.contain.projectAttributes;
 		PROJECT(t1,attributes);
+		cout<<"Made it out\n";
 		//b <- project (dogs) name; SEG faults in query...
 		
 	}
@@ -162,28 +202,79 @@ void DBsystem::execute()
 	}
 	if (currentFunction.compare("UNION") == 0){
 		//do Union
+		string t2;
+		
 		string t1 = DBParser.contain.nameUnion1;
 		cout<<"T1: "<<t1<<endl;
-		string t2 = DBParser.contain.nameUnion2;
+		
+		if(setTable) // if we had a function run before
+		{
+			t2 = temp->getTableName();
+		}
+		else // it's just a union call
+		{
+			t2 = DBParser.contain.nameUnion2;
+		}
 		cout<<"T2: "<<t2<<endl;
-		string newName = t1 + ' ' + t2;
+		string newName = DBParser.contain.lhsQuery;
 		cout<<"newName: "<<newName<<endl;
+		
 		cout<<"About to run Union..\n";
-		SET_UNION(t1,t2,newName);
+		Table * unionReturnTable;
+		unionReturnTable = SET_UNION(t1,t2,newName);
+		if(DBParser.contain.functionName.size() > 1) //if there are more functions to run
+		{
+			temp = unionReturnTable; //assign tem table
+			setTable = 1;
+		}
 	}
 	if (currentFunction.compare("DIFFERENCE") == 0){
+		string tableName2;
+		
 		//do set difference
 		string tableName1 = DBParser.contain.nameDifference1;
-		string tableName2 = DBParser.contain.nameDifference2;
-		string newName = tableName1 + ' ' + tableName2;
-		SET_DIFFERENCE(tableName1,tableName2,newName);
+		if(setTable)
+		{
+			tableName2 = temp->getTableName();
+		}
+		else
+		{
+			tableName2 = DBParser.contain.nameDifference2;	
+		}
+		
+		Table* differenceReturnTable;
+		string newName = DBParser.contain.lhsQuery;
+		differenceReturnTable = SET_DIFFERENCE(tableName1,tableName2,newName);
+		if(DBParser.contain.functionName.size() > 1)
+		{
+			temp = differenceReturnTable;
+			setTable = 1;
+		}
 	}
 	if (currentFunction.compare("CROSS PRODUCT") == 0){
+		string t2;
+		
 		//do cross product
 		string t1 = DBParser.contain.nameCrossProduct1;
-		string t2 = DBParser.contain.nameCrossProduct2;
-		string newName = t1 + ' ' + t2;
-		CROSS_PRODUCT(t1,t2,newName);
+		if(setTable)
+		{
+			t2 = temp->getTableName();
+		}
+		else
+		{
+			t2 = DBParser.contain.nameCrossProduct2;
+			setTable = 1;
+		}
+		
+		Table* crossProductReturnTable;
+		string newName = DBParser.contain.lhsQuery;
+		crossProductReturnTable =CROSS_PRODUCT(t1,t2,newName);
+		if(DBParser.contain.functionName.size() > 1)
+		{
+			temp = crossProductReturnTable;
+			setTable = 1;
+			
+		}
 	}
 	cout<<"Popping off: "<<endl;
 	if(!open) DBParser.contain.functionName.pop(); //move on to the next function
@@ -673,100 +764,102 @@ void DBsystem::EXIT()
 Table* DBsystem::SELECT(string newTableName,string nameShow, vector<string> header ,vector<string> selectOP, vector<string> condition) 
 {
 	//Select multiple columns and join them together by a certain condition
-	string newName;
-	Table* tempTable = new Table();
-	vector< vector<string> > origT = database[nameShow]->getTable();
+	
+	Table* tempTable = new Table(); //table to return
+	vector< vector<string> > origT = database[nameShow]->getTable(); //make a copy 
 	vector< vector<string> > returnT;
 	int newRow = 0;
 	int col = 0;
-	vector<string> tempHeaders = database[nameShow]->getHeaders();
+	vector<string> tempHeaders = database[nameShow]->getHeaders(); 
 	
 	
-	for (int i = 0; i<tempHeaders.size(); ++i)
+	for(int a = 0; a<header.size(); a++)
 	{
-		cout<<11<<endl;
-		if (header.compare(tempHeaders[i]) == 0)
+		for (int i = 0; i<tempHeaders.size(); ++i)
 		{
-			col = i;
-			break;
-		}
-	}
-	cout<<"col: "<<col<<endl;
-	if (selectOP.compare("==") == 0)
-	{
-		cout<<12<<endl;
-		for (int i = 0; i < database[nameShow]->getRowLength(); ++i)
-		{
-			cout<<"Value: "<<origT[i][col]<<endl;
-			cout<<"condition: "<<condition<<endl;
-			if (origT[i][col].compare(condition) == 0)
+			cout<<11<<endl;
+			if (header[a].compare(tempHeaders[i]) == 0)
 			{
-				returnT.push_back(origT[i]);			
-				newRow++;
+				col = i;
+				break;
 			}
 		}
-	}
-	
-	else if (selectOP.compare(">") == 0)
-	{
-		cout<<13<<endl;
-		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
-			if (origT[i][col].compare(condition) < 0) //not sure why but works when backwards
+		cout<<"col: "<<col<<endl;
+		if (selectOP[a].compare("==") == 0)
+		{
+			cout<<12<<endl;
+			for (int i = 0; i < database[nameShow]->getRowLength(); ++i)
 			{
-				returnT.push_back(origT[i]);
-				newRow++;
-			}
-		}
-	}
-	
-	else if (selectOP.compare("<") == 0)
-	{
-		cout<<14<<endl;
-		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
-			if (origT[i][col].compare(condition) > 0)//not sure why but works when backwards
-			{
-				returnT.push_back(origT[i]);
-				newRow++;
+				cout<<"Value: "<<origT[i][col]<<endl;
+				cout<<"condition: "<<condition[a]<<endl;
+				if (origT[i][col].compare(condition[a]) == 0)
+				{
+					returnT.push_back(origT[i]);			
+					newRow++;
+				}
 			}
 		}
 		
+		else if (selectOP[a].compare(">") == 0)
+		{
+			cout<<13<<endl;
+			for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
+				if (origT[i][col].compare(condition[a]) < 0) //not sure why but works when backwards
+				{
+					returnT.push_back(origT[i]);
+					newRow++;
+				}
+			}
+		}
+		
+		else if (selectOP[a].compare("<") == 0)
+		{
+			cout<<14<<endl;
+			for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
+				if (origT[i][col].compare(condition[a]) > 0)//not sure why but works when backwards
+				{
+					returnT.push_back(origT[i]);
+					newRow++;
+				}
+			}
+			
+		}
+		
+		else if (selectOP[a].compare("<=") == 0)
+		{
+			cout<<15<<endl;
+			for (int i = 0; i < database[nameShow]->getRowLength(); ++i){	
+				//not sure why but works when backwards
+				if (origT[i][col].compare(condition[a]) > 0 || origT[i][col].compare(condition[a]) == 
+				0)
+				{
+					returnT.push_back(origT[i]);
+					newRow++;
+				}
+			}
+		}
+		else if (selectOP[a].compare(">=") == 0)
+		{
+			for (int i = 0; i < database[nameShow]->getRowLength(); ++i){	
+				//not sure why but works when backwards
+				if (origT[i][col].compare(condition[a]) == 0 || origT[i][col].compare(condition[a]) < 0)
+				{
+					returnT.push_back(origT[i]);
+					newRow++;
+				}
+			}
+		}
+		else if (selectOP[a].compare("!=") == 0){
+			for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
+				if (origT[i][col].compare(condition[a]) != 0)
+				{
+					returnT.push_back(origT[i]);
+					newRow++;
+				}
+			}
+		}
 	}
 	
-	else if (selectOP.compare("<=") == 0)
-	{
-		cout<<15<<endl;
-		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){	
-			//not sure why but works when backwards
-			if (origT[i][col].compare(condition) > 0 || origT[i][col].compare(condition) == 
-			0)
-			{
-				returnT.push_back(origT[i]);
-				newRow++;
-			}
-		}
-	}
-	else if (selectOP.compare(">=") == 0)
-	{
-		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){	
-			//not sure why but works when backwards
-			if (origT[i][col].compare(condition) == 0 || origT[i][col].compare(condition) < 0)
-			{
-				returnT.push_back(origT[i]);
-				newRow++;
-			}
-		}
-	}
-	else if (selectOP.compare("!=") == 0){
-		for (int i = 0; i < database[nameShow]->getRowLength(); ++i){
-			if (origT[i][col].compare(condition) != 0)
-			{
-				returnT.push_back(origT[i]);
-				newRow++;
-			}
-		}
-	}
-
-	newName = newTableName;
 	tempTable->setTableName(newTableName);
 	tempTable->setHeader(database[nameShow]->getHeaders());
 	tempTable->setHeaderTypes(database[nameShow]->getHeaderTypes());
@@ -780,37 +873,64 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, vector<string> head
 	return tempTable;
 }
 
-vector<Table*> DBsystem::PROJECT(string t1, vector<string> attributes)
+Table* DBsystem::PROJECT(string t1, vector<string> attributes)
 {
-    vector<Table*> t;
     Table* tempTable = database[t1];
-    vector<string> attr;
-    vector<int> pos;
-    vector< vector <string> > tempT = database[t1]->getTable();
-    vector< vector <string> > retT(30, vector<string>(30, "")); //Had to initialize this
+    vector<int> pos; //for keeping track of the columns we need to grab
+    vector<string> newHeaders; //for return header
+    vector<string> tempRow; //holds the row for the projected table
+    vector< vector <string> > returnTable; //this what we will pass to our return Table
+    
+    //get table
+    vector< vector <string> > tempT = database[t1]->getTable(); //makes code nicers
 	cout<<"Table col Length: "<<tempTable->getColumnLength();
-	cout<<"Table row Length: "<<tempTable->getRowLength();
+	cout<<" Table row Length: "<<tempTable->getRowLength();
     
-    cout << t1 << " PROJECTION OF: "  << endl;
-    for (int i = 0; i < database[t1]->getColumnLength(); ++i){          //Go through DB
-        if (database[t1]->getHeaders()[i].compare(attributes[i])==0){   //See if and DB header fits attribute
-            pos.push_back(i);           				//Store corresponding position in vector
-            cout << database[t1]->getHeaders()[i] << " " << endl;
-        }else { cout << "Column " << i+1 << " not projected."<< endl; }
+    cout <<" "<< t1 << " PROJECTION OF: "  << endl;
+    cout<<"Size of Headers: "<<database[t1]->getHeaders().size()<<endl;
+   
+   	//we need to check the headers for each attribute
+	for(int i = 0; i<attributes.size(); ++i) //for each attribute
+	{
+		for (int j = 0; j < database[t1]->getHeaders().size(); ++j) //look at each header
+	    {   //Go through headers and find matching attribute
+	        if (database[t1]->getHeaders()[j].compare(attributes[i])==0) //if it matches
+	        {   //See if and DB header fits attribute
+	            cout << "Found: " << database[t1]->getHeaders()[j] << endl;
+	            pos.push_back(j);           				//Store corresponding position in vector
+	        }
+	        else //did not find it
+	        { 
+	        	cout << "Column " << j+1 << " not projected for attribute "<<attributes[i]<< endl; 
+	        }
+	    }
+	}
+
+    //we've found all the header locations
+    //now we need to create a table from those columns
+    for (int i = 0; i < pos.size(); ++i)
+    {
+        newHeaders.push_back(attributes[pos[i]]);			        //Store the corresponding attribute
     }
-    for (int i = 0; i < pos.size(); ++i){
-        attr.push_back(attributes[pos[i]]);			        //Store the corresponding attribute
-    }
-    for (int i = 0; i < pos.size(); ++i){
-        for (int j = 0; j < database[t1]->getColumnLength(); ++j){
-            retT[j][i] = tempT[j][pos[i]];			        //Construct a new table with the proper selected column
-        }
-    }
-    tempTable->setHeader(attr);
-    tempTable->setTable(retT);
-	tempTable->setColumnLength(database[t1]->getHeaders().size());
     
-    return t;
+    //here we will grab the column by going throw all the rows for each column 
+    for (int j = 0; j < database[t1]->getRowLength(); ++j) //for each row
+    {
+	    for(int i = 0; i < pos.size(); ++i)  //go to the right columns
+	    {
+			tempRow.push_back(tempT[j][pos[i]]); //add the columns 
+	    }	    	
+	    returnTable.push_back(tempRow); //add the row to the new table.
+    }
+
+    tempTable->setHeader(newHeaders);
+    cout<<"Old Table col Length: "<<tempTable->getColumnLength()<<endl;
+	cout<<"Old Table row Length: "<<tempTable->getRowLength()<<endl;
+    tempTable->setTable(returnTable);
+	tempTable->setColumnLength(pos.size());
+	cout<<"New Table col Length: "<<tempTable->getColumnLength()<<endl;
+    
+    return tempTable;
 	
 }
 
@@ -852,20 +972,17 @@ Table* DBsystem::SET_UNION(string t1, string t2, string newName)
 		//create a  new table
 		Table* unionTable = new Table(database[t1]->getColumnLength(),newName, database[t1]->getHeaders(),
 			database[t1]->getPrimaryKeys(),database[t1]->getHeaderTypes(),database[t1]->getHeaderSizes());
-		database[newName] = unionTable; //add the table to the database
-		
-		unionTable->setTable(database[t1]->getTable());// change the header
-		unionTable->setRowLength(database[t1]->getRowLength());//change the row Length
-		
+		//database[newName] = unionTable; //add the table to the database
 		
 		vector< vector <string> > copyTable;
-		copyTable = unionTable->getTable();
-		int count = unionTable->getRowLength();
+		copyTable = database[t1]->getTable();
+		int count = database[t1]->getRowLength();
+		
 		//add all the elements from B 
 		for(int i = 0; i < database[t2]->getRowLength(); ++i)
 		{
-			copyTable.push_back(database[t2]->getTable()[i]);
-			count+=1;
+			copyTable.push_back(database[t2]->getTable()[i]); // push back each row
+			count+=1; //increase row count
 		}
 		
 		unionTable->setTable(copyTable);

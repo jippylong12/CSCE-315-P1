@@ -94,7 +94,7 @@ void Parser::parse()
 	
 	tokens = temp;
 	
-	if(tokens.size() == 0 )
+	if(tokens.size() < 3 )
 	{
 		cout << "Error: Command or Query not found!" << endl;
 		return;
@@ -736,6 +736,7 @@ bool Parser::parse_INSERT()
 		tokens.pop(); //remove Relationf
 		
 		if(!isExpression()) return false;
+		return true;
 	}
 	else
 		return false;
@@ -761,7 +762,6 @@ bool Parser::parse_OPEN() //OPEN relation-name
 		contain.nameOpen = tokens.front(); //set the name
 		tokens.pop(); //remove it
 	if(tokens.front().compare(";") != 0)	 {	return false; 	} 
-
 	return true;
 }
 
@@ -882,10 +882,17 @@ bool Parser::parse_RENAME()
 
 bool Parser::parse_SET_UNION()
 { 
-	if(!isAtomicExpression()) {return false;} //check if 2nd table name is valid
-	contain.nameUnion2 = tokens.front();//get 2nd table
-	tokens.pop(); //remove 2nd table
-	
+	if(tokens.front().compare("(") == 0) //if we are about to start a list
+	{
+		if(!isAtomicExpression()) {return false;} //check if 2nd table name is valid
+		tokens.pop(); //gets rid of )
+		contain.nameUnion2 = contain.lhsQuery;
+	}
+	else //we are jsut doing a union of two tables
+	{
+		contain.nameUnion2 = tokens.front();//get 2nd table
+		tokens.pop(); //remove 2nd table
+	}	
 	//still leaves; 
 	
 	return true; 

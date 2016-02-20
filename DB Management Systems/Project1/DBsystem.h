@@ -16,8 +16,6 @@ public:
 	void execute(); //connect Parser containers to DB functions
 	map<string, Table*> getDB() { return database; }
 	map<string, Table*> database;
-	Table* temp;
-	bool tempDeclared =0;
 	//Parser
 	Parser DBParser;
 	
@@ -33,7 +31,7 @@ public:
 	void EXIT();
 	//-------Database queries (need definitions)-------//
 	Table* SELECT(string,string, vector<string>, vector<string>, vector<string>);    //select table with certain criteria
-	vector<Table*>  PROJECT(string, vector<string>);
+	Table*  PROJECT(string, vector<string>);
 	Table* RENAME(string, vector<string>, vector<string>);			
 	Table* SET_UNION(string, string, string);			//Take the union of 2 tables
 	Table* SET_DIFFERENCE(string, string,string);		//2 table names
