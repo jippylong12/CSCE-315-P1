@@ -115,6 +115,7 @@ bool Parser::isCommand()
 	if(firstToken.compare("CREATE") == 0)
 	{
 		contain.functionName.push(tokens.front()); //so we know it's CREATE
+		contain.currentParserFunction = tokens.front(); //for attribute list
 		tokens.pop(); //pop off CREATE
 		parsedCorrect = parse_CREATE();
         
@@ -213,6 +214,7 @@ bool Parser::isExpression()
 	else if(firstToken.compare("project") == 0)
 	{
 		contain.functionName.push(tokens.front()); //so we know it's project
+		contain.currentParserFunction = tokens.front(); //for attribute list
 		tokens.pop(); //get rid of project
 		parsedCorrect = parse_PROJECT();
 		if (parsedCorrect){ cout << "projection - valid command." << endl; } 
@@ -222,6 +224,7 @@ bool Parser::isExpression()
 	else if(firstToken.compare("rename") == 0)
 	{
 		contain.functionName.push(tokens.front()); //so we know it's rename
+		contain.currentParserFunction = tokens.front(); //for attribute list
 		tokens.pop(); //get rid of rename
 		parsedCorrect = parse_RENAME();
 		if (parsedCorrect){ cout << "rename - valid command." << endl; } 
@@ -410,9 +413,20 @@ bool Parser::isAttributeList()
 	{
 		if(!isIdentifier(tokens.front())) //check if valid name
 			return false;
-		contain.projectAttributes.push_back(tokens.front()); //for project
-		contain.renameReplaceAttributes.push_back(tokens.front()); // for rename
-		contain.createKeys.push_back(tokens.front()); //get the key
+
+		if (contain.currentParserFunction.compare("project") == 0)
+		{
+			contain.projectAttributes.push_back(tokens.front()); //for project
+		}
+		else if (contain.currentParserFunction.compare("rename") == 0)
+		{
+			contain.renameReplaceAttributes.push_back(tokens.front()); // for rename
+		}
+		else if (contain.currentParserFunction.compare("CREATE") == 0)
+		{
+			contain.createKeys.push_back(tokens.front()); //get the key
+		}
+		else {}
 		tokens.pop(); //remove that key
 		
 		//check if there is another key

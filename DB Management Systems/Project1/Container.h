@@ -12,7 +12,8 @@ struct Container
 
     Table* tableState = new Table();
     stack<string> functionName;
-    
+	//attributes lists
+	string currentParserFunction; //needed for rename, project, and create keys;
     
     //OPEN
     string nameOpen;

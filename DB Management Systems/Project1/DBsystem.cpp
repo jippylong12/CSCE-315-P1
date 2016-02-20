@@ -184,9 +184,9 @@ void DBsystem::execute()
 		}
 		cout<<"New Table Name: "<<newTableName<<endl;;
 		
-		Table* selectReturnTable;
+		
 		Table *newTable (SELECT(newTableName,nameSelect,header,selectOP,condition));
-		selectReturnTable = newTable;
+		Table* selectReturnTable = newTable;
 		
 		if(DBParser.contain.functionName.size() > 1) //if we have more than one query to run
 		{
@@ -214,9 +214,9 @@ void DBsystem::execute()
 
 		cout<<"Name Project: "<<t1<<endl;
 		
-		Table* projectReturnTable;
+		
 		Table* newTable(PROJECT(t1, attributes));
-		projectReturnTable = newTable;
+		Table* projectReturnTable = newTable;
 
 		if (DBParser.contain.functionName.size() > 1)
 		{
@@ -245,9 +245,9 @@ void DBsystem::execute()
 		}
 		renameReplaceAttributes = DBParser.contain.renameReplaceAttributes;
 
-		Table* renameReturnTable;
+		
 		Table* newTable(RENAME(tName, tableAttributes, renameReplaceAttributes));
-		renameReturnTable = newTable;
+		Table* renameReturnTable = newTable;
 
 		if (DBParser.contain.functionName.size() > 1)
 		{
@@ -276,9 +276,9 @@ void DBsystem::execute()
 		cout<<"newName: "<<newName<<endl;
 		
 		cout<<"About to run Union..\n";
-		Table * unionReturnTable;
+		
 		Table* newTable(SET_UNION(t1, t2, newName));
-		unionReturnTable = newTable;
+		Table * unionReturnTable = newTable;
 		if(DBParser.contain.functionName.size() > 1) //if there are more functions to run
 		{
 			temp = unionReturnTable; //assign tem table
@@ -301,10 +301,10 @@ void DBsystem::execute()
 		
 		string newName = DBParser.contain.lhsQuery;
 
-		Table* differenceReturnTable;
+		
 		Table* newTable(SET_DIFFERENCE(tableName1, tableName2, newName));
 		
-		differenceReturnTable = newTable;
+		Table* differenceReturnTable = newTable;
 		if(DBParser.contain.functionName.size() > 1)
 		{
 			temp = differenceReturnTable;
@@ -328,9 +328,9 @@ void DBsystem::execute()
 		
 		string newName = DBParser.contain.lhsQuery;
 
-		Table* crossProductReturnTable;
+		
 		Table* newTable(CROSS_PRODUCT(t1, t2, newName));
-		crossProductReturnTable = newTable;
+		Table* crossProductReturnTable = newTable;
 		if(DBParser.contain.functionName.size() > 1)
 		{
 			temp = crossProductReturnTable;
@@ -437,21 +437,37 @@ int DBsystem::SAVE(string nameSave) //save the table to file keep in memory
 	saveFile<<endl;
 	
 	
-	
+	//INSERTS
 	
 	temp = 0;
 	for (int i = 0; i<t.getRowLength(); ++i)
 	{
 		saveFile<<"INSERT INTO " + nameSave + " VALUES FROM (";
-		for (int j = 0; j<t.getColumnLength() - 1; ++j)
+		if (t.getColumnLength() == 1) // for when there is only one column
 		{
-			saveFile <<"\""<< t.getTable()[i][j]<<"\""<<", ";
-			temp = j;
+			if (i != t.getRowLength() - 1)
+			{
+				saveFile << "\"" << t.getTable()[i][0] << "\"" << ");" << endl;
+				continue;
+			}
+			else
+			{
+				saveFile << "\"" << t.getTable()[i][0] << "\"" << ");";
+			}			
 		}
-		if(i != t.getRowLength() - 1)
-			saveFile<<t.getTable()[i][temp + 1]<<");"<<endl;
-		else
-			saveFile<<t.getTable()[i][temp + 1]<<");";
+		else //when column length is greater than 1
+		{
+			for (int j = 0; j<t.getColumnLength() - 1; ++j)
+			{
+				saveFile << "\"" << t.getTable()[i][j] << "\"" << ", ";
+				temp = j;
+			}
+			if (i != t.getRowLength() - 1)
+				saveFile << t.getTable()[i][temp + 1] << ");" << endl;
+			else
+				saveFile << t.getTable()[i][temp + 1] << ");";
+		}
+
 	}
 	
 	
@@ -667,6 +683,7 @@ UPDATE animals SET kind = fatANIMAL WHERE years == 1;
 //Takes in the input of nameInsert and returns an int for error checking.
 int DBsystem::INSERT(string nameInsert, vector<string> input)
 {
+
 	if (input.size() != database[nameInsert]->getHeaders().size())
 	{
 		cout << "Did not insert the correct amount of information." << endl;
@@ -938,7 +955,8 @@ Table* DBsystem::SELECT(string newTableName,string nameShow, vector<string> head
 
 Table* DBsystem::PROJECT(string t1, vector<string> attributes)
 {
-    Table* tempTable = database[t1];
+	Table tempTable0(*database[t1]);
+	Table* tempTable = new Table(tempTable0);
     vector<int> pos; //for keeping track of the columns we need to grab
     vector<string> newHeaders; //for return header
     vector<string> tempRow; //holds the row for the projected table
@@ -984,13 +1002,33 @@ Table* DBsystem::PROJECT(string t1, vector<string> attributes)
 	    returnTable.push_back(tempRow); //add the row to the new table.
     }
 
-    tempTable->setHeader(newHeaders);
-    cout<<"Old Table col Length: "<<tempTable->getColumnLength()<<endl;
+	//these are just to fix the new table
+	vector<string> tempHeaderTypes;
+	vector<string> tempPrimaryKeys;
+	vector<int> tempHeaderSizes;
+
+	//we have to fill the tables with adjusted values
+	for (int i = 0; i < pos.size(); ++i)
+	{
+		tempHeaderSizes.push_back(database[t1]->getHeaderSizes()[pos[i]]); 
+		tempHeaderTypes.push_back(database[t1]->getHeaderTypes()[pos[i]]);
+	}
+	tempPrimaryKeys.push_back(attributes[0]); //set the primary key to the first attribute
+	
+	string tempTableName = "Project" + t1;
+	tempTable->setTableName(tempTableName);
+	tempTable->setHeader(newHeaders);
+	tempTable->setHeaderTypes(tempHeaderTypes);
+	tempTable->setHeaderSizes(tempHeaderSizes);
+	tempTable->setPrimaryKeys(tempPrimaryKeys);
+	cout<<"Old Table col Length: "<<tempTable->getColumnLength()<<endl;
 	cout<<"Old Table row Length: "<<tempTable->getRowLength()<<endl;
     tempTable->setTable(returnTable);
 	tempTable->setColumnLength(pos.size());
 	cout<<"New Table col Length: "<<tempTable->getColumnLength()<<endl;
     
+	database[tempTableName] = tempTable;
+
     return tempTable;
 	
 }
