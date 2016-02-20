@@ -157,7 +157,7 @@ void DBsystem::execute()
 		}
 		else
 		{
-			Table newTable1(*database[DBParser.contain.lhsQuery]);	
+			Table newTable1(*database[DBParser.contain.rhsQuery]);	
 			//should just make a copy of the table with new name or just rename the new table.
 			newTable1.setTableName(DBParser.contain.lhsQuery);
 			database[DBParser.contain.lhsQuery] = new Table(newTable1);
