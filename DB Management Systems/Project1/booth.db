@@ -1,1 +1,0 @@
-CREATE TABLE booth (row_start INTEGER, row_end INTEGER, column INTEGER, type VARCHAR(100)) PRIMARY KEY (row_start, row_end, column);
