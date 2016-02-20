@@ -148,11 +148,13 @@ void deleteExhibit()
 	system("clear");
 	cout << "[Delete Exhibit]\n" << endl;
 	
-	cout << "* Enter name of Exhibit: "; 
+	cout << "* Enter name of Exhibit: ";
+	
 	cin >> str_input;
+	str_input = "DELETE FROM exhibitors WHERE org_name == \"" + str_input + "\";";
 	cout << endl;
 	
-	db.DBParser.sendNewInput("DELETE FROM exhibitors WHERE org_name == 23;");
+	db.DBParser.sendNewInput(str_input);
     db.execute(); 
     
     db.DBParser.sendNewInput("SAVE exhibitors;");
