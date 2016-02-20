@@ -360,25 +360,30 @@ int DBsystem::SHOW(string nameShow) //print out the table currently in memory
 	//print each cell in the table
 	//return 0;
 	//First, print the name of the table
-    cout << " ---------------------------------------- " <<endl;
-    cout<<' '<<setw(21)<<database[nameShow]->getTableName() <<setw(21)<<' '<<endl;
-    cout << " ---------------------------------------- " <<endl;
+    cout << "\t\t\t ----------------------------------- " <<endl;
+    cout << setw(47)<<database[nameShow]->getTableName() << setw(47) << endl;
+    cout << "\t\t\t ----------------------------------- " <<endl;
 	//print headers.
 	for (int i = 0; i< database[nameShow]->getHeaders().size(); ++i)
 	{
-        cout << setw(5)<<"["<<database[nameShow]->getHeaders()[i]<<"]" << setw(5);
+        cout << setw(25) << '[' + database[nameShow]->getHeaders()[i] + ']';
 	}
-    cout<<endl;
+   
 	//print table
 	for (int i = 0; i<database[nameShow]->getRowLength(); ++i)
 	{
+		cout << endl;
 		for (int j = 0; j<database[nameShow]->getColumnLength(); ++j)
 		{
-			cout << setw(10) << database[nameShow]->getTable()[i][j]<<setw(10) ;
+			cout << setw(25);
+			cout << database[nameShow]->getTable()[i][j] << setw(25);
+			if(j==database[nameShow]->getColumnLength()-1){
+				cout << setw(0);
+			}
 		}
-		cout<<endl;
+
 	}
-	cout << endl;
+	cout << endl << endl;
 	return 0;
 	
 	
@@ -432,22 +437,25 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criter
 	}
 	
 	bool cmpHeaderFound = 0;
+	cout << "DBHeaders: " << database[nameUpdate]->getHeaders().size() << endl;
 	
 	for(int i = 0; i < minIndex; ++i){		    	//Go through table headers and headers to be COMPARED
 		for (int j = 0; j < database[nameUpdate]->getHeaders().size(); ++j){
+			
 			if(database[nameUpdate]->getHeaders()[j].compare(criteria) == 0){
 				colComparePos.push_back(j);			//Store the positions where te header matches COMPARED header
+				
 				cmpHeaderFound = 1;
 			} 
 		}
 	}
-	
+	cout << "updateCompareTo: " << DBParser.contain.updateCompareTo << endl;
 	if (!cmpHeaderFound){ 
 		cout << "Comparison header not found.  Please try again." << endl; 
 		return 0; 
 	}
 	
-	cout << "updateCompareTo: " << DBParser.contain.updateCompareTo << endl;
+	
 	
 	//In our table, 
 	//Go through the rows of the COMPARED column and see if its elements match up
@@ -525,7 +533,8 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, string criter
 /*
 UPDATE animals SET name = BirdName2 WHERE kind != bird;
 UPDATE animals SET name = NEWJOE, kind = young WHERE age > 1; 
-UPDATE animals SET kind = fatANIMAL WHERE age == 1;
+UPDATE exhibitors SET address = 123_College_Dr. WHERE fax > 1;
+UPDATE org_name SET address = 123_College_Dr. WHERE fax > 1;
 		*/
 	
 	
@@ -545,7 +554,7 @@ UPDATE animals SET kind = fatANIMAL WHERE age == 1;
 	rowPos.clear();			  //store the position of row(s) to be updated			
 	colComparePos.clear();	  //store the position of column used to compare
 	replacePos.clear();	
-	//headerName.clear();
+	headerName.clear();
 	DBParser.contain.updateHeaderName.clear();
 	DBParser.contain.updateReplace.clear();
 	

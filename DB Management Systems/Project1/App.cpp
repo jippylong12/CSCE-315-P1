@@ -10,7 +10,7 @@
 using namespace std;
 
 //UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
-//UPDATE animals SET Spot = "Max" WHERE age > 5;
+//UPDATE exhibitors SET email = "Max" WHERE age > 5;
 
 DBsystem db;
 string tables[5] = {"exhibitors","booth","services","attendees","inventory"};
@@ -22,20 +22,19 @@ string str_input = "";
 void registerNewExhibit()
 {
 	string values[10] = {"Name","Address","contact_person","email", "phone Number","Fax Number","category","booth_personnel","org_description","org_site"};
-	
+
 	str_input = "INSERT INTO exhibitors VALUES FROM (";
 	
 	cout << "[Register New Exhibit]\n" << endl;
 	cout << "-Enter the details of your Organization-" << endl;
 	
-	for(int i = 0; i < 10; i++)
+		cin.ignore();				//needed this here because input was getting cut off
+	for(int i = 0; i < 10; ++i)
 	{
-		string s = "";
+		string userInput;
 		cout << values[i] + ": ";
-		cin.ignore();
-		getline(cin,s);
-		
-		str_input += "\"" + s + "\"";
+		getline(cin,userInput);
+		str_input += "\"" + userInput + "\"";
 		if(i < 9)
 			str_input += ", ";
 	}
@@ -71,13 +70,48 @@ void registerNewExhibit()
 
 }
 
+void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
+	int noTables = 0;		//counts how many exhibits are there
+	int selection;
+	string showTable;
+	
+
+	cout << "[View/Search for an Exhibit(s)]\n" << endl;
+	cout << "   1. View all exhibits" << endl;
+	cout << "   2. Search for an Exhibit(s)" << endl;
+	cout << "   3. <- Go Back\n" << endl;
+	cin >> selection;
+	switch(selection){
+		case 1:
+			for (map<string,Table*>::iterator it = db.database.begin(); it!=db.database.end(); ++it){
+				db.SHOW(it->first);
+			}
+			break;
+		case 2:
+			cout << "Enter the Exhibit name: " << endl;
+			cin >> showTable;
+			db.SHOW(showTable);
+			break;
+		case 3:
+			return;
+		default:
+			cin.clear();
+			cin.ignore(10000, '\n');
+			system("clear");
+			cout << "***Not a valid command, try again***\n" << endl;
+			break;
+	}
+	
+}
+
 void exhibitMenu()
 {
 	
 	cout << "[Exhibit Manager Menu]\n" << endl;
 	cout << "   1. Register New Exhibit" << endl;
 	cout << "   2. View/Search for an Exhibit(s)" << endl;
-	cout << "   3. Remove an Exhibit\n" << endl;
+	cout << "   3. Remove an Exhibit" << endl;
+	cout << "   4. <- Go Back\n" << endl;
 	cout << "* Enter command number: ";
 	
 	cin >> int_input;
@@ -89,10 +123,13 @@ void exhibitMenu()
 			registerNewExhibit();
 			break;
 		case 2:
+			viewExhibits();
 			break;
 		case 3:
-			return;
+			cout << "Remove..." << endl;
 			break;
+		case 4:
+			return;
 		default:
 			cin.clear();
 			cin.ignore(10000, '\n');
@@ -158,7 +195,7 @@ void mainMenu()
 	cout << "   1. Exhibit Manager" << endl;
 	cout << "   2. Exhibitor" << endl;
 	cout << "   3. Attendees" << endl;
-	cout << "   4. Exit\n" << endl;
+	cout << "   4. Exit and Save\n" << endl;
 	cout << "* Enter command number: ";
 	
 	cin >> int_input;
@@ -208,7 +245,33 @@ int main()
 		
 		
 		system("clear");
-		mainMenu();
+	    mainMenu();
+		
+		
+		
+		//Testing things here
+		//Update works if the whole column is of ONE type!
+		
+		
+		/*
+		db.DBParser.sendNewInput("OPEN exhibitors;");
+		db.execute();
+		db.DBParser.sendNewInput("SHOW exhibitors;");
+		db.execute();
+		
+		db.DBParser.sendNewInput("UPDATE exhibitors SET address = 123_Fake_St, contact_person = Dead_Pool, email = fake@fmail.com WHERE fax >= 34;");
+		db.execute();
+		db.DBParser.sendNewInput("SHOW exhibitors;");
+		db.execute();
+		*/
+		//db.DBParser.sendNewInput("OPEN animals;");
+		//db.execute();
+		//db.DBParser.sendNewInput("SHOW animals;");
+		//db.execute();
+		
+		
+		
+		
 		
 		for(int i = 0; i < 1; i++)
 		{

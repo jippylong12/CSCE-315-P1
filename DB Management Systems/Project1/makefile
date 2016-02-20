@@ -1,6 +1,6 @@
 # makefile
 
-all: app
+all: app database
 
 app: Table.o Parser.o DBsystem.o App.o
 	g++ -std=c++11  -o app Table.o Parser.o DBsystem.o App.o
