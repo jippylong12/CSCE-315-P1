@@ -40,17 +40,29 @@ void registerNewExhibit()
 	system("clear");
 	switch(int_input)
 	{
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			return;
-			break;
-		default:
+		
+		if (file.is_open()) 
+		{
+			cout << "[All Exhibits]\n" << endl;
+			getline(file, temp); // skips CREATE line
+			int count = 1;
+			while (getline(file, temp)) 
+			{
+				int s = temp.find("\"") + 1;
+				int e = temp.find("\"",s);
+				cout << count << ". " << temp.substr(s,e-s) << endl;
+				count++;
+			}
+			cout << "\n* Press ENTER to continue...";
+			cin >> int_input;
 			cin.clear();
 			cin.ignore(10000, '\n');
 			system("clear");
+		}
+
+ 	}
+ 	
+ 	file.close();
 			cout << "***Not a valid command, try again***\n" << endl;
 			exhibitMenu();
 			break;
@@ -99,9 +111,9 @@ void saveExhibit()
 	return;
 }
 
+
 void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 	int noTables = 0;		//counts how many exhibits are there
-	int selection;
 	string showTable;
 	
 
@@ -109,12 +121,13 @@ void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 	cout << "   1. View all exhibits" << endl;
 	cout << "   2. Search for an Exhibit(s)" << endl;
 	cout << "   3. <- Go Back\n" << endl;
-	cin >> selection;
-	switch(selection){
+	cout << "* Enter command number: ";
+	
+	cin >> int_input;
+	system("clear");
+	switch(int_input){
 		case 1:
-			for (map<string,Table*>::iterator it = db.database.begin(); it!=db.database.end(); ++it){
-				db.SHOW(it->first);
-			}
+			printExitbitName(true);
 			break;
 		case 2:
 			cout << "Enter the Exhibit name: " << endl;
