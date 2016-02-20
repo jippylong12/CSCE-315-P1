@@ -529,7 +529,7 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
  	//UPDATE animals SET kind = MOG WHERE years == 3;
 	
 	
-	// int minIndex = min(database[nameUpdate]->getHeaders().size(), headerName.size());   //store size mismatch
+	int minIndex = min(database[nameUpdate]->getHeaders().size(), headerName.size());   //store size mismatch
 	
 	// vector<int> colPos; 		  //store which column(s) to be updated
 	// vector<int> rowPos;			  //store the position of row(s) to be updated			
