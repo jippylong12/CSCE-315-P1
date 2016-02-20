@@ -67,6 +67,7 @@ void registerNewExhibit()
 		db.DBParser.sendNewInput("SAVE " + tables[0] + ";");
     	db.execute(); 
 	//}
+}
 void printExitbitNames(bool all)
 {
 	
