@@ -67,19 +67,19 @@ void registerNewExhibit()
 		db.DBParser.sendNewInput("SAVE " + tables[0] + ";");
     	db.execute(); 
 	//}
+	system("clear");
+	
+}
 void printExitbitNames(bool all)
 {
 	
 	ifstream file;
 	file.open("exhibitors.db");
 	string temp = "";
-	
-	if(all)
-	/*cout << endl;
+		cout << endl;
 	system("clear");
-	switch(int_input)
+	if(all)
 	{
-		
 		if (file.is_open()) 
 		{
 			cout << "[All Exhibits]\n" << endl;
@@ -102,13 +102,9 @@ void printExitbitNames(bool all)
  	}
  	
  	file.close();
-			cout << "***Not a valid command, try again***\n" << endl;
-			exhibitMenu();
-			break;
-	}
+			
 	
-	exhibitMenu();*/
-	return;
+
 }
 
 
@@ -315,11 +311,7 @@ int main()
 		}
 		
 		
-		for(int i = 0; i < 1; i++)
-		{
-			db.DBParser.sendNewInput("SHOW " + tables[i] + ";");
-    		db.execute(); 
-		}
+		
 		
 		
 		
@@ -327,59 +319,6 @@ int main()
 	    mainMenu();
 		
 		
-		
-		//Testing things here
-		//Update works if the whole column is of ONE type!
-		
-		
-		/*
-		db.DBParser.sendNewInput("OPEN exhibitors;");
-		db.execute();
-		db.DBParser.sendNewInput("SHOW exhibitors;");
-		db.execute();
-		
-		db.DBParser.sendNewInput("UPDATE exhibitors SET address = 123_Fake_St, contact_person = Dead_Pool, email = fake@fmail.com WHERE fax >= 34;");
-		db.execute();
-		db.DBParser.sendNewInput("SHOW exhibitors;");
-		db.execute();
-		*/
-		//db.DBParser.sendNewInput("OPEN animals;");
-		//db.execute();
-		//db.DBParser.sendNewInput("SHOW animals;");
-		//db.execute();
-		
-		
-		
-		
-		
-		 //for(int i = 0; i < 1; i++)
-		 //{
-		 //	db.DBParser.sendNewInput("SAVE " + tables[i] + ";");
-		 //	db.execute(); 
-		 //}
-		
-		
-    	//db.DBParser.contain.clear();
-		//db.DBParser.sendNewInput("SAVE inventory;");
-    	//db.execute();
-
-		
-		
-    	/*while(1)
-    	 {
-    		string input0;
-    		cout<<"Size of Map: "<<db.database.size()<<endl;
-    		for (map<string,Table*>::iterator it = db.database.begin(); it!=db.database.end(); ++it)
-    			cout<<it->first << '\n';
-    	 	cout<<"What is the command?"<<endl;
-    	 	getline (cin,input0); //take the command
-    	 	if(input0.compare("") == 0) continue;
-    	 	db.DBParser.sendNewInput(input0);
-    	 	db.execute(); //not implemented yet but will take the command and use switch statement to know what to run
-    	 	db.DBParser.contain.clear(); //Not implementted yet but will reset all things in container to 0
-    	 	
-    	 	
-    	 }*/
 	
 	}
 	catch(...)
