@@ -6,6 +6,7 @@
 #include <sstream>
 #include <map>
 #include "DBsystem.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -50,7 +51,7 @@ void registerNewExhibit()
 
 }
 
-void printExitbitName(bool all)
+void printExhibitName(bool all, string searchName = "")
 {
 	
 	ifstream file;
@@ -65,12 +66,64 @@ void printExitbitName(bool all)
 			cout << "[All Exhibits]\n" << endl;
 			getline(file, temp); // skips CREATE line
 			int count = 1;
+			cout << "\t";
+			for (int i = 0; i < 10; ++i){
+					cout << '[' << db.database["exhibitors"]->getHeaders()[i] << ']' << "   ";
+			}
+			cout << endl;
 			while (getline(file, temp)) 
 			{
 				int s = temp.find("\"") + 1;
 				int e = temp.find("\"",s);
-				cout << count << ". " << temp.substr(s,e-s) << endl;
-				count++;
+			
+				char chars[] = "\"),;";										//Grab characters to remove
+				
+				//if(searchName.compare(temp.substr(s,e-s))==0){				//Get all proper headers and print
+					string str = temp.substr(s,temp.length());
+					for (unsigned int i = 0; i < strlen(chars); ++i)		//Do some formatting
+					 {
+						str.erase(std::remove(str.begin(), str.end(), chars[i]), str.end());
+					 }
+					cout << count << ". " << str << endl;
+					count++;
+				//}
+			}
+			cout << "\n* Press ENTER. to continue...";
+			cin >> int_input;
+			
+			cin.clear();
+			cin.ignore(10000, '\n');
+			system("clear");
+		}
+
+ 	}else{		//Searching for a specific exhibitor
+ 	
+ 		if (file.is_open()) 
+		{
+			cout << "[Searching Exhibits...]\n" << endl;
+			getline(file, temp); // skips CREATE line
+			int count = 1;
+			cout << "\t";
+			for (int i = 0; i < 10; ++i){
+					cout << '[' << db.database["exhibitors"]->getHeaders()[i] << ']' << "    " ;
+			}
+			cout << endl;
+			while (getline(file, temp)) 
+			{
+				int s = temp.find("\"") + 1;
+				int e = temp.find("\"",s);
+		
+				char chars[] = "\"),;";										//Grab characters to remove
+				
+				if(searchName.compare(temp.substr(s,e-s))==0){				//Get all proper headers and print
+					string str = temp.substr(s,temp.length());
+					for (unsigned int i = 0; i < strlen(chars); ++i)		//Do some formatting
+					 {
+						str.erase(std::remove(str.begin(), str.end(), chars[i]), str.end());
+					 }
+					cout << count << ". " << str << endl;
+					count++;
+				}
 			}
 			cout << "\n* Press ENTER to continue...";
 			cin >> int_input;
@@ -78,7 +131,7 @@ void printExitbitName(bool all)
 			cin.ignore(10000, '\n');
 			system("clear");
 		}
-
+ 		
  	}
  	
  	file.close();
@@ -87,7 +140,7 @@ void printExitbitName(bool all)
 
 void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 	int noTables = 0;		//counts how many exhibits are there
-	string showTable;
+	string showName;
 	
 
 	cout << "[View/Search for an Exhibit(s)]\n" << endl;
@@ -100,12 +153,14 @@ void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 	system("clear");
 	switch(int_input){
 		case 1:
-			printExitbitName(true);
+			printExhibitName(true, "");
 			break;
 		case 2:
 			cout << "Enter the Exhibit name: " << endl;
-			cin >> showTable;
-			db.SHOW(showTable);
+			cin.ignore();
+			getline(cin, showName);
+			printExhibitName(false, showName);
+			//db.SHOW(showTable);
 			break;
 		case 3:
 			return;
