@@ -50,7 +50,7 @@ void registerNewExhibit()
 
 }
 
-void printExitbitName(bool all)
+void printExitbitNames(bool all)
 {
 	
 	ifstream file;
@@ -91,7 +91,7 @@ void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 	
 
 	cout << "[View/Search for an Exhibit(s)]\n" << endl;
-	cout << "   1. View all exhibits" << endl;
+	cout << "   1. View all Exhibit's Names" << endl;
 	cout << "   2. Search for an Exhibit(s)" << endl;
 	cout << "   3. <- Go Back\n" << endl;
 	cout << "* Enter command number: ";
@@ -100,7 +100,7 @@ void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 	system("clear");
 	switch(int_input){
 		case 1:
-			printExitbitName(true);
+			printExitbitNames(true);
 			break;
 		case 2:
 			cout << "Enter the Exhibit name: " << endl;
@@ -119,13 +119,30 @@ void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 	viewExhibits();
 }
 
+void deleteExhibit()
+{
+	system("clear");
+	cout << "[Delete Exhibit]\n" << endl;
+	
+	cout << "* Enter name of Exhibit: "; 
+	cin >> str_input;
+	cout << endl;
+	
+	db.DBParser.sendNewInput("DELETE FROM exhibitors WHERE org_name == 23;");
+    db.execute(); 
+    
+    db.DBParser.sendNewInput("SAVE exhibitors;");
+    db.execute(); 
+	
+}
+
 void exhibitMenu()
 {
 	
-	cout << "[Exhibit Manager Menu]\n" << endl;
+	cout << "[Exhibit Menu]\n" << endl;
 	cout << "   1. Register New Exhibit" << endl;
 	cout << "   2. View/Search for an Exhibit(s)" << endl;
-	cout << "   3. Remove an Exhibit" << endl;
+	cout << "   3. Delete an Exhibit" << endl;
 	cout << "   4. <- Go Back\n" << endl;
 	cout << "* Enter command number: ";
 	
@@ -141,7 +158,7 @@ void exhibitMenu()
 			viewExhibits();
 			break;
 		case 3:
-			cout << "Remove..." << endl;
+			deleteExhibit();
 			break;
 		case 4:
 			return;
@@ -150,7 +167,6 @@ void exhibitMenu()
 			cin.ignore(10000, '\n');
 			system("clear");
 			cout << "***Not a valid command, try again***\n" << endl;
-			exhibitMenu();
 			break;
 	}
 	
