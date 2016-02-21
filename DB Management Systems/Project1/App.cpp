@@ -10,11 +10,7 @@
 
 using namespace std;
 
-//for exhibitors Find by name
-int findInTable(string tableName)
-{
 
-}
 
 //error checking for menu navigation
 int checkInputSize(string input)
@@ -46,6 +42,29 @@ void viewExhibits();
 void exhibitMenu();
 void exhibitManagerMenu();
 void exhibitPWScreen();
+
+int managerSearchExhibits(string tableName)
+{
+	string newTableName = "SELECT " + tableName;
+	vector<string> headers;
+	headers.push_back("org_name");
+
+	vector<string> OP;
+	OP.push_back("==");
+
+	vector<string> condition;
+	condition.push_back(tableName);
+
+
+	Table* pointer = db.SELECT(newTableName, "exhibitors", headers, OP, condition);
+	
+	db.SHOW(pointer->getTableName());
+
+	delete pointer;
+	
+	return 0;
+}
+
 
 void registerNewExhibit()
 {
@@ -156,14 +175,10 @@ void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 			break;
 		case 2:
 			cout << "Enter the Exhibit name: " << endl;
-			cin >> showTable;
-			if (!findInTable(showTable))
-			{
-				db.SELECT(showTable);
-				break;
-			}
-
-		case 3:
+			cin >> showTable; //get input
+			system("clear");//clear out the screen
+			managerSearchExhibits(showTable); //will call select and then SHOW and then delete the temp table.
+		case 3: // go back
 			return;
 		default:
 			cin.clear();
