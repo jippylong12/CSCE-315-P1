@@ -44,31 +44,22 @@ void exhibitMenu();
 void exhibitManagerMenu();
 void exhibitPWScreen();
 
-int managerSearchExhibits(string tableName)
+int managerSearchExhibits(vector<string> headers, vector<string> OP, vector<string> conditions)
 {
-	string newTableName = "SELECT " + tableName;
-	vector<string> headers;
-	headers.push_back("org_name");
+	string newTableName = "SEARCH QUERY";//create new name
 
-	vector<string> OP;
-	OP.push_back("==");
-
-	vector<string> condition;
-	condition.push_back(tableName);
-
-
-	Table* pointer = db.SELECT(newTableName, "exhibitors", headers, OP, condition);
+	Table* pointer = db.SELECT(newTableName, "exhibitors", headers, OP, conditions); //get select table and assign a pointer to it
 	
-	if (pointer->getRowLength() < 1)
+	if (pointer->getRowLength() < 1) //if there is not anything to show
 	{
-		cout << "There is no table with that name. \n";
+		cout << "There is no table with that name. \n"; //there must be no table
 		return 1;
 	}
-	else
+	else //otherwise we have something to show
 	{
-		db.SHOW(pointer->getTableName());
+		db.SHOW(pointer->getTableName()); //so show it
 
-		delete pointer;
+		delete pointer; //get rid of the table in memory since we don't need it 
 
 		return 0;
 	}
@@ -213,11 +204,71 @@ void printExhibitName(bool all, string searchName = "")
 }
 
 
+void managerSearchExhibitsMenu()
+{
+
+	//for searching for exhibit
+	int case2Option = 0;
+	string viewHeader ="";
+	string viewOP= "";
+	string viewCondition = "";
+
+	vector<string> headers;
+	vector<string> OP;
+	vector<string> conditions;
+
+	//clear out vectors
+	headers.clear();
+	OP.clear();
+	conditions.clear();
+
+	cout << "Search by Criteria? (1 Yes. 0 No.)\n";
+	cin >> case2Option;
+	if (case2Option)
+	{
+		cout << "Enter Criteria. Enter 1 at header stage when done." << endl;
+		while (1) //get header, op, and condition for search
+		{
+			cout << "Header: ";
+			cin >> viewHeader; //get header lhs
+			if (viewHeader == "1") break; //break if we have 1
+			cout << endl;
+			headers.push_back(viewHeader); //push back into vector
+
+			cout << "Operation: ";
+			cin >> viewOP; //get operation
+			cout << endl;
+			OP.push_back(viewOP);
+
+			cout << "Condtion: ";
+			cin >> viewCondition; //get condition rhs
+			cout << endl;
+			conditions.push_back(viewCondition);
+		}
+		system("clear");//clear out the screen
+		managerSearchExhibits(headers, OP, conditions);
+	}
+	else
+	{
+		cout << "Enter the Exhibit name: " << endl;
+		cin >> viewCondition; //get input
+		headers.push_back("org_name");
+		OP.push_back("==");
+		conditions.push_back(viewCondition);
+		system("clear");//clear out the screen
+		managerSearchExhibits(headers, OP, conditions); //will call select and then SHOW and then delete the temp table.
+	}
+
+
+
+}
+
 
 void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 	int noTables = 0;		//counts how many exhibits are there
-	string showName; //for searching for exhibit
 	
+
+
 
 	cout << "[View/Search for an Exhibit(s)]\n" << endl;
 	cout << "   1. View all Exhibit's Names" << endl;
@@ -236,10 +287,8 @@ void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 			printExhibitName(true, "");
 			break;
 		case 2:
-			cout << "Enter the Exhibit name: " << endl;
-			cin >> showName; //get input
-			system("clear");//clear out the screen
-			managerSearchExhibits(showName); //will call select and then SHOW and then delete the temp table.
+			managerSearchExhibitsMenu();
+			break;
 		case 3: // go back
 			return;
 		default:
