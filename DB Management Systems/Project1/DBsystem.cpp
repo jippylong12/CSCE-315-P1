@@ -257,6 +257,7 @@ Table* DBsystem::OPEN(string nameOpen) //bring a table into memory from file
 		cout << "File does not exists" << endl;
 	
 	dbFile.close();
+	return 0;
 }
 
 int DBsystem::CLOSE(string nameClose) //saves and removes table instance from memory
