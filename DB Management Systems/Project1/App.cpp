@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <cstring>
+#include <limits>
 #include <vector>
 #include <sstream>
 #include <map>
@@ -9,13 +10,27 @@
 
 using namespace std;
 
+
+int checkInputSize(string input)
+{
+	if (input.size() > 1)
+		return 1; //false
+	else
+		return 0; //true
+}
+
+int checkIsDigit(string input)
+{
+	return isdigit(input[0]); //returns 0 if true
+}
+
 //UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
 //UPDATE exhibitors SET email = "Max" WHERE age > 5;
 
 DBsystem db;
 string tables[5] = {"exhibitors","booth","services","attendees","inventory"};
 
-int int_input = 0;
+string main_input;
 string str_input = "";
 string ManagerPW = "asdf";
 void mainMenu();
@@ -41,12 +56,12 @@ void registerNewExhibit()
 		cout << values[i] + ": ";
 		getline(cin,userInput);
 		str_input += "\"" + userInput + "\"";
-		if(i < 9)
+		if(i < 9) //for the first nine items
 		{
-			str_input += ", ";
+			str_input += ", "; //put a comma
 		}	
 	}
-	str_input += ");";
+	str_input += ");"; //on the last item we don't need a comma
 	
 	cout<<str_input << endl;
 	
@@ -92,11 +107,13 @@ void printExitbitNames(bool all)
 				cout << count << ". " << temp.substr(s,e-s) << endl;
 				count++;
 			}
-			cout << "\n* Press ENTER to continue...";
-			cin >> int_input;
-			cin.clear();
-			cin.ignore(10000, '\n');
-			system("clear");
+			cout << "\n* Enter 1 to continue..." << endl;;
+
+			//enter wasn't working so I just used 1
+			char temp = 'x';
+			while (temp != '1')
+				cin.get(temp);
+			system("clear"); //make screen pretty
 		}
 
  	}
@@ -120,9 +137,13 @@ void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 	cout << "   3. <- Go Back\n" << endl;
 	cout << "* Enter command number: ";
 	
-	cin >> int_input;
-	system("clear");
-	switch(int_input){
+	cin >> main_input;
+	if (!checkInputSize(main_input) && !checkInputSize(main_input))
+	{
+		int int_input = stoi(main_input);
+		system("clear");
+		switch (int_input)
+		{
 		case 1:
 			printExitbitNames(true);
 			break;
@@ -139,8 +160,18 @@ void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 			system("clear");
 			cout << "***Not a valid command, try again***\n" << endl;
 			break;
+		}
+		viewExhibits();
 	}
-	viewExhibits();
+	else
+	{
+		cin.clear();
+		cin.ignore(10000, '\n');
+		system("clear");
+		cout << "***Not a valid command, try again***\n" << endl;
+		viewExhibits();
+	}
+
 }
 
 void deleteExhibit()
@@ -151,6 +182,7 @@ void deleteExhibit()
 	cout << "* Enter name of Exhibit: ";
 	
 	cin >> str_input;
+	string deleteName = str_input; //grab the tablename for output
 	str_input = "DELETE FROM exhibitors WHERE org_name == \"" + str_input + "\";";
 	cout << endl;
 	
@@ -159,6 +191,10 @@ void deleteExhibit()
     
     db.DBParser.sendNewInput("SAVE exhibitors;");
     db.execute(); 
+
+	system("clear"); //clean terminal
+
+	cout << "Deleted " << deleteName << '.'<< endl;
 	
 }
 
@@ -172,11 +208,14 @@ void exhibitMenu()
 	cout << "   4. <- Go Back\n" << endl;
 	cout << "* Enter command number: ";
 	
-	cin >> int_input;
-	cout << endl;
-	system("clear");
-	switch(int_input)
+	cin >> main_input;
+	if (!checkInputSize(main_input) && !checkInputSize(main_input))
 	{
+		int int_input = stoi(main_input);
+		cout << endl;
+		system("clear");
+		switch (int_input)
+		{
 		case 1:
 			registerNewExhibit();
 			break;
@@ -195,9 +234,18 @@ void exhibitMenu()
 			cout << "***Not a valid command, try again***\n" << endl;
 
 			break;
+		}
+
+		exhibitMenu();
 	}
-	
-	exhibitMenu();
+	else
+	{
+		cin.clear();
+		cin.ignore(10000, '\n');
+		system("clear");
+		cout << "***Not a valid command, try again***\n" << endl;
+		exhibitMenu();
+	}
 
 }
 
@@ -214,11 +262,14 @@ void exhibitManagerMenu()
 	cout << "   6. <- Go Back\n" << endl;
 	cout << "* Enter command number: ";
 	
-	cin >> int_input;
-	cout << endl;
-	system("clear");
-	switch(int_input)
+	cin >> main_input;
+	if (!checkInputSize(main_input) && !checkInputSize(main_input))
 	{
+		int int_input = stoi(main_input);
+		cout << endl;
+		system("clear");
+		switch (int_input)
+		{
 		case 1:
 			exhibitMenu();
 			break;
@@ -239,15 +290,25 @@ void exhibitManagerMenu()
 			system("clear");
 			cout << "***Not a valid command, try again***\n" << endl;
 			break;
+		}
+
+		exhibitManagerMenu();
 	}
-	
-	exhibitManagerMenu();
+	else
+	{
+		cin.clear();
+		cin.ignore(10000, '\n');
+		system("clear");
+		cout << "***Not a valid command, try again***\n" << endl;
+		exhibitManagerMenu();
+	}
 
 }
 
+//high level clearance
 void exhibitPWScreen()
 {
-	string pw = "";
+	string pw = ""; //password
 	cout<<"Please input the password: ";
 	cin>>pw;
 	if (pw.compare(ManagerPW) == 0)
@@ -258,6 +319,7 @@ void exhibitPWScreen()
 	{
 		cin.clear();
 		cin.ignore(10000, '\n');
+		system("clear");
 		cout << "***Not a Valid Password***" << endl;
 		mainMenu();
 	}
@@ -274,15 +336,17 @@ void mainMenu()
 	cout << "   4. Exit and Save\n" << endl;
 	cout << "* Enter command number: ";
 	
-	cin >> int_input;
-	cout << endl;
-	system("clear");
-	switch(int_input)
+	cin >> main_input;
+	if (!checkInputSize(main_input) && !checkInputSize(main_input))
 	{
-		
+		int int_input = stoi(main_input);
+		cout << endl;
+		system("clear");
+		switch (int_input)
+		{
+
 		case 1:
 			exhibitPWScreen();
-			//exhibitManagerMenu();
 			break;
 		case 2:
 			break;
@@ -295,8 +359,17 @@ void mainMenu()
 			cin.ignore(10000, '\n');
 			cout << "***Not a valid command, try again***\n" << endl;
 			break;
+		}
+		mainMenu();
 	}
-	mainMenu();
+	else
+	{
+		cin.clear();
+		cin.ignore(10000, '\n');
+		cout << "***Not a valid command, try again***\n" << endl;
+		mainMenu();
+	}
+
 
 }
 
@@ -306,21 +379,14 @@ int main()
 	
 	try{
 		
-		for(int i = 0; i < 1; i++)
+		for(int i = 0; i < 5; i++)
 		{
 			db.DBParser.sendNewInput("OPEN " + tables[i] + ";");
     		db.execute(); 
 		}
 		
-		
-		
-		
-		
-		
-		system("clear");
+		system("clear"); //gives terminal clean look
 	    mainMenu();
-		
-		
 	
 	}
 	catch(...)
