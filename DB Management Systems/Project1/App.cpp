@@ -10,7 +10,13 @@
 
 using namespace std;
 
+//for exhibitors Find by name
+int findInTable(string tableName)
+{
 
+}
+
+//error checking for menu navigation
 int checkInputSize(string input)
 {
 	if (input.size() > 1)
@@ -19,6 +25,7 @@ int checkInputSize(string input)
 		return 0; //true
 }
 
+//error checking for menu navigation
 int checkIsDigit(string input)
 {
 	return isdigit(input[0]); //returns 0 if true
@@ -150,8 +157,12 @@ void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 		case 2:
 			cout << "Enter the Exhibit name: " << endl;
 			cin >> showTable;
-			db.SHOW(showTable);
-			break;
+			if (!findInTable(showTable))
+			{
+				db.SELECT(showTable);
+				break;
+			}
+
 		case 3:
 			return;
 		default:
@@ -183,7 +194,7 @@ void deleteExhibit()
 	
 	cin >> str_input;
 	string deleteName = str_input; //grab the tablename for output
-	str_input = "DELETE FROM exhibitors WHERE org_name == \"" + str_input + "\";";
+	str_input = "DELETE FROM exhibitors WHERE org_name == " + str_input + ";";
 	cout << endl;
 	
 	db.DBParser.sendNewInput(str_input);
