@@ -588,11 +588,11 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
 			{
 				if (updateOP[k] == "==") //==
 				{
-					if (database[nameUpdate]->getHeaderSizes()[whereColPos[i]] < 0)//if it's an int
+					if (database[nameUpdate]->getHeaderSizes()[whereColPos[k]] < 0)//if it's an int
 					{
 						int lhs, rhs;
-						lhs = stoi(tempTable[j][whereColPos[i]]); //convert to int
-						rhs = stoi(updateOperand2[i]); //convert to int
+						lhs = stoi(tempTable[j][whereColPos[k]]); //convert to int
+						rhs = stoi(updateOperand2[k]); //convert to int
 						if (lhs == rhs) //check the column in the right row
 						{
 							whereTrue = 1;
@@ -605,7 +605,7 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
 					}
 					else
 					{
-						if (tempTable[j][whereColPos[i]] == updateOperand2[i]) //check the column in the right row
+						if (tempTable[j][whereColPos[k]] == updateOperand2[k]) //check the column in the right row
 						{
 							whereTrue = 1;
 						}
@@ -618,11 +618,11 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
 				}
 				else if (updateOP[k] == "!=") //!=
 				{
-					if (database[nameUpdate]->getHeaderSizes()[whereColPos[i]] < 0)//if it's an int
+					if (database[nameUpdate]->getHeaderSizes()[whereColPos[k]] < 0)//if it's an int
 					{
 						int lhs, rhs;
-						lhs = stoi(tempTable[j][whereColPos[i]]); //convert to int
-						rhs = stoi(updateOperand2[i]); //convert to int
+						lhs = stoi(tempTable[j][whereColPos[k]]); //convert to int
+						rhs = stoi(updateOperand2[k]); //convert to int
 						if (lhs != rhs) //check the column in the right row
 						{
 							whereTrue = 1;
@@ -635,7 +635,7 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
 					}
 					else
 					{
-						if (tempTable[j][whereColPos[i]] != updateOperand2[i]) //check the column in the right row
+						if (tempTable[j][whereColPos[k]] != updateOperand2[k]) //check the column in the right row
 						{
 							whereTrue = 1;
 						}
@@ -648,11 +648,11 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
 				}
 				else if (updateOP[k] == "<=") //<=
 				{
-					if (database[nameUpdate]->getHeaderSizes()[whereColPos[i]] < 0)//if it's an int
+					if (database[nameUpdate]->getHeaderSizes()[whereColPos[k]] < 0)//if it's an int
 					{
 						int lhs, rhs;
-						lhs = stoi(tempTable[j][whereColPos[i]]); //convert to int
-						rhs = stoi(updateOperand2[i]); //convert to int
+						lhs = stoi(tempTable[j][whereColPos[k]]); //convert to int
+						rhs = stoi(updateOperand2[k]); //convert to int
 						if (lhs <= rhs) //check the column in the right row
 						{
 							whereTrue = 1;
@@ -665,7 +665,7 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
 					}
 					else
 					{
-						if (tempTable[j][whereColPos[i]] <= updateOperand2[i]) //check the column in the right row
+						if (tempTable[j][whereColPos[k]] <= updateOperand2[k]) //check the column in the right row
 						{
 							whereTrue = 1;
 						}
@@ -678,11 +678,11 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
 				}
 				else if (updateOP[k] == ">=") //>=
 				{
-					if (database[nameUpdate]->getHeaderSizes()[whereColPos[i]] < 0)//if it's an int
+					if (database[nameUpdate]->getHeaderSizes()[whereColPos[k]] < 0)//if it's an int
 					{
 						int lhs, rhs;
-						lhs = stoi(tempTable[j][whereColPos[i]]); //convert to int
-						rhs = stoi(updateOperand2[i]); //convert to int
+						lhs = stoi(tempTable[j][whereColPos[k]]); //convert to int
+						rhs = stoi(updateOperand2[k]); //convert to int
 						if (lhs >= rhs) //check the column in the right row
 						{
 							whereTrue = 1;
@@ -695,7 +695,7 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
 					}
 					else
 					{
-						if (tempTable[j][whereColPos[i]] >= updateOperand2[i]) //check the column in the right row
+						if (tempTable[j][whereColPos[k]] >= updateOperand2[k]) //check the column in the right row
 						{
 							whereTrue = 1;
 						}
@@ -708,11 +708,11 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
 				}
 				else if (updateOP[k] == "<") //<
 				{
-					if (database[nameUpdate]->getHeaderSizes()[whereColPos[i]] < 0)//if it's an int
+					if (database[nameUpdate]->getHeaderSizes()[whereColPos[k]] < 0)//if it's an int
 					{
 						int lhs, rhs;
-						lhs = stoi(tempTable[j][whereColPos[i]]); //convert to int
-						rhs = stoi(updateOperand2[i]); //convert to int
+						lhs = stoi(tempTable[j][whereColPos[k]]); //convert to int
+						rhs = stoi(updateOperand2[k]); //convert to int
 						if (lhs < rhs) //check the column in the right row
 						{
 							whereTrue = 1;
@@ -725,7 +725,7 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
 					}
 					else
 					{
-						if (tempTable[j][whereColPos[i]] < updateOperand2[i]) //check the column in the right row
+						if (tempTable[j][whereColPos[k]] < updateOperand2[k]) //check the column in the right row
 						{
 							whereTrue = 1;
 						}
@@ -739,11 +739,11 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
 				}
 				else if (updateOP[k] == ">") //>
 				{
-					if (database[nameUpdate]->getHeaderSizes()[whereColPos[i]] < 0)//if it's an int
+					if (database[nameUpdate]->getHeaderSizes()[whereColPos[k]] < 0)//if it's an int
 					{
 						int lhs, rhs;
-						lhs = stoi(tempTable[j][whereColPos[i]]); //convert to int
-						rhs = stoi(updateOperand2[i]); //convert to int
+						lhs = stoi(tempTable[j][whereColPos[k]]); //convert to int
+						rhs = stoi(updateOperand2[k]); //convert to int
 						if (lhs > rhs) //check the column in the right row
 						{
 							whereTrue = 1;
@@ -756,7 +756,7 @@ int DBsystem::UPDATE(string nameUpdate, vector<string> headerName, vector<string
 					}
 					else
 					{
-						if (tempTable[j][whereColPos[i]] > updateOperand2[i]) //check the column in the right row
+						if (tempTable[j][whereColPos[k]] > updateOperand2[k]) //check the column in the right row
 						{
 							whereTrue = 1;
 						}
@@ -835,205 +835,201 @@ int DBsystem::DELETE(string nameDelete, vector<string> deleteOperand1, vector<st
 	 //go through table with the columns in colPos and use where condidtion to 
 
 
-	 for (int i = 0; i < whereColPos.size(); ++i) //for each column we need to change
+	 for (int j = 0; j < newRowCount; ++j) //for each row
 	 {
-		 for (int j = 0; j < newRowCount; ++j) //for each row
+		 bool whereTrue = 0; //let the program know that WHERE is true
+							 //check the correct column and check if the where(s) function is(are) true
+		 for (int k = 0; k < deleteOP.size(); ++k)
 		 {
-			 bool whereTrue = 0; //let the program know that WHERE is true
-								 //check the correct column and check if the where(s) function is(are) true
-			 for (int k = 0; k < deleteOP.size(); ++k)
+			 if (deleteOP[k] == "==") //==
 			 {
-				 if (deleteOP[k] == "==") //==
+				 if (database[nameDelete]->getHeaderSizes()[whereColPos[k]] < 0)//if it's an int
 				 {
-					 if (database[nameDelete]->getHeaderSizes()[whereColPos[i]] < 0)//if it's an int
-					 {
-						 int lhs, rhs;
-						 lhs = stoi(tempTable[j][whereColPos[i]]); //convert to int
-						 rhs = stoi(deleteOperand2[i]); //convert to int
-						 if (lhs == rhs) //check the column in the right row
-						 {
-							 whereTrue = 1;
-						 }
-						 else
-						 {
-							 whereTrue = 0;
-							 break;
-						 }
-					 }
-					 else
-					 {
-
-					 }
-					 if (tempTable[j][whereColPos[i]] == deleteOperand2[i]) //check the column in the right row
+					 int lhs, rhs;
+					 lhs = stoi(tempTable[j][whereColPos[k]]); //convert to int
+					 rhs = stoi(deleteOperand2[k]); //convert to int
+					 if (lhs == rhs) //check the column in the right row
 					 {
 						 whereTrue = 1;
 					 }
 					 else
 					 {
 						 whereTrue = 0;
-						 break; //we break because we know we don't need to check other arguements
+						 break;
 					 }
 				 }
-				 else if (deleteOP[k] == "!=") //!=
+				 else
 				 {
-					 if (database[nameDelete]->getHeaderSizes()[whereColPos[i]] < 0)//if it's an int
+
+				 }
+				 if (tempTable[j][whereColPos[k]] == deleteOperand2[k]) //check the column in the right row
+				 {
+					 whereTrue = 1;
+				 }
+				 else
+				 {
+					 whereTrue = 0;
+					 break; //we break because we know we don't need to check other arguements
+				 }
+			 }
+			 else if (deleteOP[k] == "!=") //!=
+			 {
+				 if (database[nameDelete]->getHeaderSizes()[whereColPos[k]] < 0)//if it's an int
+				 {
+					 int lhs, rhs;
+					 lhs = stoi(tempTable[j][whereColPos[k]]); //convert to int
+					 rhs = stoi(deleteOperand2[k]); //convert to int
+					 if (lhs != rhs) //check the column in the right row
 					 {
-						 int lhs, rhs;
-						 lhs = stoi(tempTable[j][whereColPos[i]]); //convert to int
-						 rhs = stoi(deleteOperand2[i]); //convert to int
-						 if (lhs != rhs) //check the column in the right row
-						 {
-							 whereTrue = 1;
-						 }
-						 else
-						 {
-							 whereTrue = 0;
-							 break;
-						 }
+						 whereTrue = 1;
 					 }
 					 else
 					 {
-						 if (tempTable[j][whereColPos[i]] != deleteOperand2[i]) //check the column in the right row
-						 {
-							 whereTrue = 1;
-						 }
-						 else
-						 {
-							 whereTrue = 0;
-							 break;
-						 }
+						 whereTrue = 0;
+						 break;
 					 }
 				 }
-				 else if (deleteOP[k] == "<=") //<=
+				 else
 				 {
-					 if (database[nameDelete]->getHeaderSizes()[whereColPos[i]] < 0)//if it's an int
+					 if (tempTable[j][whereColPos[k]] != deleteOperand2[k]) //check the column in the right row
 					 {
-						 int lhs, rhs;
-						 lhs = stoi(tempTable[j][whereColPos[i]]); //convert to int
-						 rhs = stoi(deleteOperand2[i]); //convert to int
-						 if (lhs <= rhs) //check the column in the right row
-						 {
-							 whereTrue = 1;
-						 }
-						 else
-						 {
-							 whereTrue = 0;
-							 break;
-						 }
+						 whereTrue = 1;
 					 }
 					 else
 					 {
-						 if (tempTable[j][whereColPos[i]] <= deleteOperand2[i]) //check the column in the right row
-						 {
-							 whereTrue = 1;
-						 }
-						 else
-						 {
-							 whereTrue = 0;
-							 break;
-						 }
-					 }
-				 }
-				 else if (deleteOP[k] == ">=") //>=
-				 {
-					 if (database[nameDelete]->getHeaderSizes()[whereColPos[i]] < 0)//if it's an int
-					 {
-						 int lhs, rhs;
-						 lhs = stoi(tempTable[j][whereColPos[i]]); //convert to int
-						 rhs = stoi(deleteOperand2[i]); //convert to int
-						 if (lhs >= rhs) //check the column in the right row
-						 {
-							 whereTrue = 1;
-						 }
-						 else
-						 {
-							 whereTrue = 0;
-							 break;
-						 }
-					 }
-					 else
-					 {
-						 if (tempTable[j][whereColPos[i]] >= deleteOperand2[i]) //check the column in the right row
-						 {
-							 whereTrue = 1;
-						 }
-						 else
-						 {
-							 whereTrue = 0;
-							 break;
-						 }
-					 }
-				 }
-				 else if (deleteOP[k] == "<") //<
-				 {
-					 if (database[nameDelete]->getHeaderSizes()[whereColPos[i]] < 0)//if it's an int
-					 {
-						 int lhs, rhs;
-						 lhs = stoi(tempTable[j][whereColPos[i]]); //convert to int
-						 rhs = stoi(deleteOperand2[i]); //convert to int
-						 if (lhs < rhs) //check the column in the right row
-						 {
-							 whereTrue = 1;
-						 }
-						 else
-						 {
-							 whereTrue = 0;
-							 break;
-						 }
-					 }
-					 else
-					 {
-						 if (tempTable[j][whereColPos[i]] < deleteOperand2[i]) //check the column in the right row
-						 {
-							 whereTrue = 1;
-						 }
-						 else
-						 {
-							 whereTrue = 0;
-							 break;
-						 }
-					 }
-				 }
-				 else if (deleteOP[k] == ">") //>
-				 {
-					 if (database[nameDelete]->getHeaderSizes()[whereColPos[i]] < 0)//if it's an int
-					 {
-						 int lhs, rhs;
-						 lhs = stoi(tempTable[j][whereColPos[i]]); //convert to int
-						 rhs = stoi(deleteOperand2[i]); //convert to int
-						 if (lhs > rhs) //check the column in the right row
-						 {
-							 whereTrue = 1;
-						 }
-						 else
-						 {
-							 whereTrue = 0;
-							 break;
-						 }
-					 }
-					 else
-					 {
-						 if (tempTable[j][whereColPos[i]] > deleteOperand2[i]) //check the column in the right row
-						 {
-							 whereTrue = 1;
-						 }
-						 else
-						 {
-							 whereTrue = 0;
-							 break;
-						 }
+						 whereTrue = 0;
+						 break;
 					 }
 				 }
 			 }
-			 if (whereTrue) //if we have passed the tests
+			 else if (deleteOP[k] == "<=") //<=
 			 {
-				 tempTable.erase(tempTable.begin() + j); //delete the row
-				 --j; //the rows move down in the vector so we have to account for that
-				 newRowCount--; //accont for removing a row
-
+				 if (database[nameDelete]->getHeaderSizes()[whereColPos[k]] < 0)//if it's an int
+				 {
+					 int lhs, rhs;
+					 lhs = stoi(tempTable[j][whereColPos[k]]); //convert to int
+					 rhs = stoi(deleteOperand2[k]); //convert to int
+					 if (lhs <= rhs) //check the column in the right row
+					 {
+						 whereTrue = 1;
+					 }
+					 else
+					 {
+						 whereTrue = 0;
+						 break;
+					 }
+				 }
+				 else
+				 {
+					 if (tempTable[j][whereColPos[k]] <= deleteOperand2[k]) //check the column in the right row
+					 {
+						 whereTrue = 1;
+					 }
+					 else
+					 {
+						 whereTrue = 0;
+						 break;
+					 }
+				 }
+			 }
+			 else if (deleteOP[k] == ">=") //>=
+			 {
+				 if (database[nameDelete]->getHeaderSizes()[whereColPos[k]] < 0)//if it's an int
+				 {
+					 int lhs, rhs;
+					 lhs = stoi(tempTable[j][whereColPos[k]]); //convert to int
+					 rhs = stoi(deleteOperand2[k]); //convert to int
+					 if (lhs >= rhs) //check the column in the right row
+					 {
+						 whereTrue = 1;
+					 }
+					 else
+					 {
+						 whereTrue = 0;
+						 break;
+					 }
+				 }
+				 else
+				 {
+					 if (tempTable[j][whereColPos[k]] >= deleteOperand2[k]) //check the column in the right row
+					 {
+						 whereTrue = 1;
+					 }
+					 else
+					 {
+						 whereTrue = 0;
+						 break;
+					 }
+				 }
+			 }
+			 else if (deleteOP[k] == "<") //<
+			 {
+				 if (database[nameDelete]->getHeaderSizes()[whereColPos[k]] < 0)//if it's an int
+				 {
+					 int lhs, rhs;
+					 lhs = stoi(tempTable[j][whereColPos[k]]); //convert to int
+					 rhs = stoi(deleteOperand2[k]); //convert to int
+					 if (lhs < rhs) //check the column in the right row
+					 {
+						 whereTrue = 1;
+					 }
+					 else
+					 {
+						 whereTrue = 0;
+						 break;
+					 }
+				 }
+				 else
+				 {
+					 if (tempTable[j][whereColPos[k]] < deleteOperand2[k]) //check the column in the right row
+					 {
+						 whereTrue = 1;
+					 }
+					 else
+					 {
+						 whereTrue = 0;
+						 break;
+					 }
+				 }
+			 }
+			 else if (deleteOP[k] == ">") //>
+			 {
+				 if (database[nameDelete]->getHeaderSizes()[whereColPos[k]] < 0)//if it's an int
+				 {
+					 int lhs, rhs;
+					 lhs = stoi(tempTable[j][whereColPos[k]]); //convert to int
+					 rhs = stoi(deleteOperand2[k]); //convert to int
+					 if (lhs > rhs) //check the column in the right row
+					 {
+						 whereTrue = 1;
+					 }
+					 else
+					 {
+						 whereTrue = 0;
+						 break;
+					 }
+				 }
+				 else
+				 {
+					 if (tempTable[j][whereColPos[k]] > deleteOperand2[k]) //check the column in the right row
+					 {
+						 whereTrue = 1;
+					 }
+					 else
+					 {
+						 whereTrue = 0;
+						 break;
+					 }
+				 }
 			 }
 		 }
+		 if (whereTrue) //if we have passed the tests
+		 {
+			 tempTable.erase(tempTable.begin() + j); //delete the row
+			 --j; //the rows move down in the vector so we have to account for that
+			 newRowCount--; //accont for removing a row
 
+		 }
 	 }
 
 
@@ -1085,205 +1081,202 @@ Table* DBsystem::SELECT(string newTableName,string nameSelect, vector<string> he
 			}
 		}
 	}
-	for (int z = 0; z < colPosition.size(); ++z)
+	for (int j = 0; j < database[nameSelect]->getRowLength(); ++j) //for each row
 	{
-		for (int j = 0; j < database[nameSelect]->getRowLength(); ++j) //for each row
+		bool whereTrue = 0; //let the program know that WHERE is true
+							//check the correct column and check if the where(s) function is(are) true
+		for (int k = 0; k < selectOP.size(); ++k)
 		{
-			bool whereTrue = 0; //let the program know that WHERE is true
-								//check the correct column and check if the where(s) function is(are) true
-			for (int k = 0; k < selectOP.size(); ++k)
+			if (selectOP[k] == "==") //==
 			{
-				if (selectOP[k] == "==") //==
+				if (database[nameSelect]->getHeaderSizes()[colPosition[k]] < 0)//if it's an int
 				{
-					if (database[nameSelect]->getHeaderSizes()[colPosition[z]] < 0)//if it's an int
+					int lhs, rhs;
+					lhs = stoi(origT[j][colPosition[k]]); //convert to int
+					rhs = stoi(condition[k]); //convert to int
+					if (lhs == rhs) //check the column in the right row
 					{
-						int lhs, rhs;
-						lhs = stoi(origT[j][colPosition[z]]); //convert to int
-						rhs = stoi(condition[z]); //convert to int
-						if (lhs == rhs) //check the column in the right row
-						{
-							whereTrue = 1;
-						}
-						else
-						{
-							whereTrue = 0;
-							break;
-						}
+						whereTrue = 1;
 					}
 					else
 					{
-						if (origT[j][colPosition[z]] == condition[z]) //check the column in the right row
-						{
-							whereTrue = 1;
-						}
-						else
-						{
-							whereTrue = 0;
-							break; //we break because we know we don't need to check other arguements
-						}
-					}
-
-				}
-				else if (selectOP[k] == "!=") //!=
-				{
-					if (database[nameSelect]->getHeaderSizes()[colPosition[z]] < 0)//if it's an int
-					{
-						int lhs, rhs;
-						lhs = stoi(origT[j][colPosition[z]]); //convert to int
-						rhs = stoi(condition[z]); //convert to int
-						if (lhs != rhs) //check the column in the right row
-						{
-							whereTrue = 1;
-						}
-						else
-						{
-							whereTrue = 0;
-							break;
-						}
-					}
-					else
-					{
-						if (origT[j][colPosition[z]] != condition[z]) //check the column in the right row
-						{
-							whereTrue = 1;
-						}
-						else
-						{
-							whereTrue = 0;
-							break;
-						}
-					}
-
-				}
-				else if (selectOP[k] == "<=") //<=
-				{
-					if (database[nameSelect]->getHeaderSizes()[colPosition[z]] < 0)//if it's an int
-					{
-						int lhs, rhs;
-						lhs = stoi(origT[j][colPosition[z]]); //convert to int
-						rhs = stoi(condition[z]); //convert to int
-						if (lhs <= rhs) //check the column in the right row
-						{
-							whereTrue = 1;
-						}
-						else
-						{
-							whereTrue = 0;
-							break;
-						}
-					}
-					else
-					{
-						if (origT[j][colPosition[z]] <= condition[z]) //check the column in the right row
-						{
-							whereTrue = 1;
-						}
-						else
-						{
-							whereTrue = 0;
-							break;
-						}
-					}
-
-				}
-				else if (selectOP[k] == ">=") //>=
-				{
-					if (database[nameSelect]->getHeaderSizes()[colPosition[z]] < 0)//if it's an int
-					{
-						int lhs, rhs;
-						lhs = stoi(origT[j][colPosition[z]]); //convert to int
-						rhs = stoi(condition[z]); //convert to int
-						if (lhs >= rhs) //check the column in the right row
-						{
-							whereTrue = 1;
-						}
-						else
-						{
-							whereTrue = 0;
-							break;
-						}
-					}
-					else
-					{
-						if (origT[j][colPosition[z]] >= condition[z]) //check the column in the right row
-						{
-							whereTrue = 1;
-						}
-						else
-						{
-							whereTrue = 0;
-							break;
-						}
+						whereTrue = 0;
+						break;
 					}
 				}
-				else if (selectOP[k] == "<") //<
+				else
 				{
-					if (database[nameSelect]->getHeaderSizes()[colPosition[z]] < 0)//if it's an int
+					if (origT[j][colPosition[k]] == condition[k]) //check the column in the right row
 					{
-						int lhs, rhs;
-						lhs = stoi(origT[j][colPosition[z]]); //convert to int
-						rhs = stoi(condition[z]); //convert to int
-						if (lhs < rhs) //check the column in the right row
-						{
-							whereTrue = 1;
-						}
-						else
-						{
-							whereTrue = 0;
-							break;
-						}
+						whereTrue = 1;
 					}
 					else
 					{
-						if (origT[j][colPosition[z]] < condition[z]) //check the column in the right row
-						{
-							whereTrue = 1;
-						}
-						else
-						{
-							whereTrue = 0;
-							break;
-						}
+						whereTrue = 0;
+						break; //we break because we know we don't need to check other arguements
 					}
-
 				}
-				else if (selectOP[k] == ">") //>
+
+			}
+			else if (selectOP[k] == "!=") //!=
+			{
+				if (database[nameSelect]->getHeaderSizes()[colPosition[k]] < 0)//if it's an int
 				{
-					if (database[nameSelect]->getHeaderSizes()[colPosition[z]] < 0)//if it's an int
+					int lhs, rhs;
+					lhs = stoi(origT[j][colPosition[k]]); //convert to int
+					rhs = stoi(condition[k]); //convert to int
+					if (lhs != rhs) //check the column in the right row
 					{
-						int lhs, rhs;
-						lhs = stoi(origT[j][colPosition[z]]); //convert to int
-						rhs = stoi(condition[z]); //convert to int
-						if (lhs > rhs) //check the column in the right row
-						{
-							whereTrue = 1;
-						}
-						else
-						{
-							whereTrue = 0;
-							break;
-						}
+						whereTrue = 1;
 					}
 					else
 					{
-						if (origT[j][colPosition[z]] > condition[z]) //check the column in the right row
-						{
-							whereTrue = 1;
-						}
-						else
-						{
-							whereTrue = 0;
-							break;
-						}
+						whereTrue = 0;
+						break;
 					}
+				}
+				else
+				{
+					if (origT[j][colPosition[k]] != condition[k]) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break;
+					}
+				}
 
+			}
+			else if (selectOP[k] == "<=") //<=
+			{
+				if (database[nameSelect]->getHeaderSizes()[colPosition[k]] < 0)//if it's an int
+				{
+					int lhs, rhs;
+					lhs = stoi(origT[j][colPosition[k]]); //convert to int
+					rhs = stoi(condition[k]); //convert to int
+					if (lhs <= rhs) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break;
+					}
+				}
+				else
+				{
+					if (origT[j][colPosition[k]] <= condition[k]) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break;
+					}
+				}
+
+			}
+			else if (selectOP[k] == ">=") //>=
+			{
+				if (database[nameSelect]->getHeaderSizes()[colPosition[k]] < 0)//if it's an int
+				{
+					int lhs, rhs;
+					lhs = stoi(origT[j][colPosition[k]]); //convert to int
+					rhs = stoi(condition[k]); //convert to int
+					if (lhs >= rhs) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break;
+					}
+				}
+				else
+				{
+					if (origT[j][colPosition[k]] >= condition[k]) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break;
+					}
 				}
 			}
-			if (whereTrue) //if we have passed the tests
+			else if (selectOP[k] == "<") //<
 			{
-				returnT.push_back(origT[j]); //push back that row into the return Table
-				++rowCount;
+				if (database[nameSelect]->getHeaderSizes()[colPosition[k]] < 0)//if it's an int
+				{
+					int lhs, rhs;
+					lhs = stoi(origT[j][colPosition[k]]); //convert to int
+					rhs = stoi(condition[k]); //convert to int
+					if (lhs < rhs) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break;
+					}
+				}
+				else
+				{
+					if (origT[j][colPosition[k]] < condition[k]) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break;
+					}
+				}
+
 			}
+			else if (selectOP[k] == ">") //>
+			{
+				if (database[nameSelect]->getHeaderSizes()[colPosition[k]] < 0)//if it's an int
+				{
+					int lhs, rhs;
+					lhs = stoi(origT[j][colPosition[k]]); //convert to int
+					rhs = stoi(condition[k]); //convert to int
+					if (lhs > rhs) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break;
+					}
+				}
+				else
+				{
+					if (origT[j][colPosition[k]] > condition[k]) //check the column in the right row
+					{
+						whereTrue = 1;
+					}
+					else
+					{
+						whereTrue = 0;
+						break;
+					}
+				}
+
+			}
+		}
+		if (whereTrue) //if we have passed the tests
+		{
+			returnT.push_back(origT[j]); //push back that row into the return Table
+			++rowCount;
 		}
 	}
 	
