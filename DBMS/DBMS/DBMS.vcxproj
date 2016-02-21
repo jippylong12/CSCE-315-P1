@@ -156,8 +156,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\DB Management Systems\Project1\App.cpp" />
     <ClCompile Include="..\..\DB Management Systems\Project1\DBsystem.cpp" />
-    <ClCompile Include="..\..\DB Management Systems\Project1\main.cpp" />
     <ClCompile Include="..\..\DB Management Systems\Project1\Parser.cpp" />
     <ClCompile Include="..\..\DB Management Systems\Project1\Table.cpp" />
   </ItemGroup>

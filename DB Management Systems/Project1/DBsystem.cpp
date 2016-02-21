@@ -1084,7 +1084,6 @@ Table* DBsystem::SELECT(string newTableName,string nameSelect, vector<string> he
 				colPosition.push_back(i); //keep track of the location
 			}
 		}
-		cout << 12.75 << endl;
 	}
 	for (int z = 0; z < colPosition.size(); ++z)
 	{

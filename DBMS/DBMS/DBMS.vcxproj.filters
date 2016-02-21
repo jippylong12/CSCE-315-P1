@@ -38,13 +38,13 @@
     <ClCompile Include="..\..\DB Management Systems\Project1\DBsystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\DB Management Systems\Project1\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\DB Management Systems\Project1\Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\DB Management Systems\Project1\Table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DB Management Systems\Project1\App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
