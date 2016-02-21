@@ -59,11 +59,20 @@ int managerSearchExhibits(string tableName)
 
 	Table* pointer = db.SELECT(newTableName, "exhibitors", headers, OP, condition);
 	
-	db.SHOW(pointer->getTableName());
+	if (pointer->getRowLength() < 1)
+	{
+		cout << "There is no table with that name. \n";
+		return 1;
+	}
+	else
+	{
+		db.SHOW(pointer->getTableName());
 
-	delete pointer;
-	
-	return 0;
+		delete pointer;
+
+		return 0;
+	}
+
 }
 
 
@@ -189,7 +198,7 @@ void printExhibitName(bool all, string searchName = "")
 				}
 			}
 			cout << "\n* Press ENTER to continue...";
-			cin >> int_input;
+			cin >> main_input;
 			cin.clear();
 			cin.ignore(10000, '\n');
 			system("clear");
@@ -207,7 +216,7 @@ void printExhibitName(bool all, string searchName = "")
 
 void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 	int noTables = 0;		//counts how many exhibits are there
-	string showName;
+	string showName; //for searching for exhibit
 	
 
 	cout << "[View/Search for an Exhibit(s)]\n" << endl;
@@ -228,9 +237,9 @@ void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 			break;
 		case 2:
 			cout << "Enter the Exhibit name: " << endl;
-			cin >> showTable; //get input
+			cin >> showName; //get input
 			system("clear");//clear out the screen
-			managerSearchExhibits(showTable); //will call select and then SHOW and then delete the temp table.
+			managerSearchExhibits(showName); //will call select and then SHOW and then delete the temp table.
 		case 3: // go back
 			return;
 		default:
