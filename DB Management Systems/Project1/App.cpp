@@ -405,18 +405,18 @@ void exhibitorExhibitbyName()
     }else{
         DBsystem tempDB;
         
-        vector<string> showHeader;          //Search by org_name
-        showHeader.push_back("org_name");
+        vector<string> orgHeader;          //Search by org_name
+        orgHeader.push_back("org_name");
     
         vector<string> OP;                  //Remove all tables that are not the org name
-        OP.push_back("!=");
+        OP.push_back("==");
     
-        vector<string> conditions;          //Search for the ACUTAL org_name entry
-        conditions.push_back(str_input);
+        vector<string> orgName;          //Search for the ACUTAL org_name entry
+        orgName.push_back(str_input);
     
-    
-        db.DELETE("exhibitors", showHeader, conditions, OP);
-        db.SHOW("exhibitors");
+    	managerSearchExhibits(orgHeader, OP, orgName);
+        //db.SEARCH(orgHeader, OP, orgName);
+        //db.SHOW("exhibitors");
     }
     
     

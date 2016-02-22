@@ -7,7 +7,7 @@ app: Table.o Parser.o DBsystem.o App.o
 	clear
 
 App.o:	App.cpp
-	g++ -c -std=c++11 App.cpp
+	g++ -c -std=c++11 App.cpp App.h
 	
 DBsystem.o: DBsystem.cpp DBsystem.h App.cpp
 	g++ -c -std=c++11 DBsystem.cpp DBsystem.h App.cpp

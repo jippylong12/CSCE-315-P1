@@ -58,6 +58,9 @@
 //-----------Attendee Menu Funcitons--------------------//
 
     void attendeeMenu();
+    void attendeeBoothInfo();
+    void attendeeBooths();
+    void attendeeName();
     //add other attendee stuff
 
 
