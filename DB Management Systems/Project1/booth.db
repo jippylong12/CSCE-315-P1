@@ -1,0 +1,6 @@
+CREATE TABLE exhibitors (org_name VARCHAR(20), row VARCHAR(100), column VARCHAR(100), rowMax VARCHAR(100), columnMax VARCHAR(100), type VARCHAR(100), phone VARCHAR(100)) PRIMARY KEY (org_name, row, column);
+INSERT INTO exhibitors VALUES FROM ("Fancy Pants", "1", "2");
+INSERT INTO exhibitors VALUES FROM ("A", "1", "50", "20", "2");
+INSERT INTO exhibitors VALUES FROM ("B", "1", "50", "20", "3");
+INSERT INTO exhibitors VALUES FROM ("C", "1", "50", "20", "4");
+INSERT INTO exhibitors VALUES FROM ("D", "1", "50", "20", "5");

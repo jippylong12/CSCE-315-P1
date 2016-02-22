@@ -1,1 +1,2 @@
-CREATE TABLE attendees (name VARCHAR(20), organization VARCHAR(100), address VARCHAR(100), email VARCHAR(100), registration_fee INTEGER, category VARCHAR(100), booth_personnel VARCHAR(100), exhibits_visited VARCHAR(300), badge_status VARCHAR(100)) PRIMARY KEY (name, organization);
+CREATE TABLE attendees (name VARCHAR(20), organization VARCHAR(100), address VARCHAR(100), email VARCHAR(100), registration_fee INTEGER, category VARCHAR(100), exhibits_visited VARCHAR(300), badge_status VARCHAR(100)) PRIMARY KEY (name, organization);
+INSERT INTO exhibitors VALUES FROM ("KickAss", "Fort. KickAss", "6969 Kickass Street", "KickAss@FuckYeah.org", "69", "discounted", "", "mailed");

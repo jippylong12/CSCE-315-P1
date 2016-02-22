@@ -43,6 +43,11 @@ void viewExhibits();
 void exhibitMenu();
 void exhibitManagerMenu();
 void exhibitPWScreen();
+void exhibitorMenu();
+void exhibitorExhibitbyName();
+void exhibitorNumAttendees();
+
+
 
 int managerSearchExhibits(vector<string> headers, vector<string> OP, vector<string> conditions)
 {
@@ -358,6 +363,49 @@ void exhibitMenu()
 
 }
 
+void exhibitorMenu()
+{
+	cout << "[Exhibitor Menu]\n"<<endl;
+	cout << "Select option:"<<endl;
+	cout << "  1. View Exhibit by Entering Name"<<endl;
+	cout << "  2. View Attendees by Exhibit"<<endl;
+	cout << "  3. <-- Go Back"<<endl<<endl;
+	
+	cout<< "* Enter command number: ";
+	cin >> int_input;
+	cout<<endl;
+	system ("clear");
+	switch (int_input)
+	{
+		case 1:
+			exhibitorExhibitbyName();
+			break;
+		case 2:
+			exhibitorNumAttendees();
+			break;
+		case 3:
+			return;
+		default:
+			cin.clear();
+			cin.ignore(10000, '\n');
+			system("clear");
+			cout << "***Not a valid command, try again***\n" << endl;
+			break;
+	}
+	exhibitorMenu();
+}
+
+void exhibitorExhibitbyName()
+{
+	cout << "Enter the Name of the Exhibit: ";
+	cin >> str_input;
+}
+
+void exhibitorNumAttendees()
+{
+	
+}
+
 void exhibitManagerMenu()
 {
 	
@@ -447,6 +495,7 @@ void mainMenu()
 		exhibitPWScreen();
 		break;
 	case 2:
+		exhibitorMenu();
 		break;
 	case 3:
 		break;
