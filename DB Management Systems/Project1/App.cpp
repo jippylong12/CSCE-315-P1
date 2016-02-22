@@ -34,7 +34,7 @@ int checkIsDigit(string input)
 DBsystem db;
 string tables[5] = {"exhibitors","booth","services","attendees","inventory"};
 
-string main_input;
+int int_input;
 string str_input = "";
 string ManagerPW = "asdf";
 void mainMenu();
@@ -104,12 +104,14 @@ void registerNewExhibit()
 	str_input.clear();
 	
 	
-	//for(int i = 0; i < 1; i++)
-	//{
-		db.DBParser.sendNewInput("SAVE " + tables[0] + ";");
-    	db.execute(); 
-	//}
+	
+	db.DBParser.sendNewInput("SAVE " + tables[0] + ";");
+	db.execute(); 
+	
 	system("clear");
+	
+	cout << "* New Exhibit has been added *\n" << endl;;
+	
 	
 }
 
@@ -128,38 +130,25 @@ void printExhibitName(bool all, string searchName = "")
 			cout << "[All Exhibits]\n" << endl;
 			getline(file, temp); // skips CREATE line
 			int count = 1;
-			cout << "\t";
-			for (int i = 0; i < 10; ++i){
-					cout << '[' << db.database["exhibitors"]->getHeaders()[i] << ']' << "   ";
-			}
-			cout << endl;
 			while (getline(file, temp)) 
 			{
 				int s = temp.find("\"") + 1;
 				int e = temp.find("\"",s);
-			
-				char chars[] = "\"),;";										//Grab characters to remove
-				
-				//if(searchName.compare(temp.substr(s,e-s))==0){				//Get all proper headers and print
-					string str = temp.substr(s,temp.length());
-					for (unsigned int i = 0; i < strlen(chars); ++i)		//Do some formatting
-					 {
-						str.erase(std::remove(str.begin(), str.end(), chars[i]), str.end());
-					 }
-					cout << count << ". " << str << endl;
-					count++;
-				//}
+				cout << count << ". " << temp.substr(s,e-s) << endl;
+				count++;
 			}
-			cout << "\n* Enter 1 to continue..." << endl;;
-
-			//enter wasn't working so I just used 1
-			char temp = 'x';
-			while (temp != '1')
-				cin.get(temp);
-			system("clear"); //make screen pretty
+			cout << "\n* Press ENTER to continue...";
+			
+			cin.clear();
+			cin.get();
+			cin.clear();
+			cin.ignore(10000, '\n');
+			system("clear");
 		}
+		
 
- 	}else{		//Searching for a specific exhibitor
+ 	}
+ 	else{		//Searching for a specific exhibitor
  	
  		if (file.is_open()) 
 		{
@@ -189,7 +178,7 @@ void printExhibitName(bool all, string searchName = "")
 				}
 			}
 			cout << "\n* Press ENTER to continue...";
-			cin >> main_input;
+			cin >> int_input;
 			cin.clear();
 			cin.ignore(10000, '\n');
 			system("clear");
@@ -264,7 +253,8 @@ void managerSearchExhibitsMenu()
 }
 
 
-void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
+void viewExhibits()	//When Exhibit Manager View/Searches for an exhibit
+{  	
 	int noTables = 0;		//counts how many exhibits are there
 	
 
@@ -276,13 +266,11 @@ void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 	cout << "   3. <- Go Back\n" << endl;
 	cout << "* Enter command number: ";
 	
-	cin >> main_input;
-	if (!checkInputSize(main_input) && !checkInputSize(main_input))
+	cin >> int_input;
+	
+	system("clear");
+	switch (int_input)
 	{
-		int int_input = stoi(main_input);
-		system("clear");
-		switch (int_input)
-		{
 		case 1:
 			printExhibitName(true, "");
 			break;
@@ -297,17 +285,10 @@ void viewExhibits(){  		//When Exhibit Manager View/Searches for an exhibit
 			system("clear");
 			cout << "***Not a valid command, try again***\n" << endl;
 			break;
-		}
-		viewExhibits();
 	}
-	else
-	{
-		cin.clear();
-		cin.ignore(10000, '\n');
-		system("clear");
-		cout << "***Not a valid command, try again***\n" << endl;
-		viewExhibits();
-	}
+	viewExhibits();
+	
+	
 
 }
 
@@ -331,7 +312,7 @@ void deleteExhibit()
 
 	system("clear"); //clean terminal
 
-	cout << "Deleted " << deleteName << '.'<< endl;
+	cout << "Deleted " << deleteName << '\n'<< endl;
 	
 }
 
@@ -345,44 +326,33 @@ void exhibitMenu()
 	cout << "   4. <- Go Back\n" << endl;
 	cout << "* Enter command number: ";
 	
-	cin >> main_input;
-	if (!checkInputSize(main_input) && !checkInputSize(main_input))
-	{
-		int int_input = stoi(main_input);
-		cout << endl;
-		system("clear");
-		switch (int_input)
-		{
-		case 1:
-			registerNewExhibit();
-			break;
-		case 2:
-			viewExhibits();
-			break;
-		case 3:
-			deleteExhibit();
-			break;
-		case 4:
-			return;
-		default:
-			cin.clear();
-			cin.ignore(10000, '\n');
-			system("clear");
-			cout << "***Not a valid command, try again***\n" << endl;
+	cin >> int_input;
 
-			break;
-		}
-
-		exhibitMenu();
-	}
-	else
+	cout << endl;
+	system("clear");
+	switch (int_input)
 	{
+	case 1:
+		registerNewExhibit();
+		break;
+	case 2:
+		viewExhibits();
+		break;
+	case 3:
+		deleteExhibit();
+		break;
+	case 4:
+		return;
+	default:
 		cin.clear();
 		cin.ignore(10000, '\n');
 		system("clear");
 		cout << "***Not a valid command, try again***\n" << endl;
-		exhibitMenu();
+
+		break;
 	}
+
+	exhibitMenu();
 
 }
 
@@ -399,46 +369,36 @@ void exhibitManagerMenu()
 	cout << "   6. <- Go Back\n" << endl;
 	cout << "* Enter command number: ";
 	
-	cin >> main_input;
-	if (!checkInputSize(main_input) && !checkInputSize(main_input))
+	cin >> int_input;
+	cout << endl;
+	system("clear");
+	switch (int_input)
 	{
-		int int_input = stoi(main_input);
-		cout << endl;
-		system("clear");
-		switch (int_input)
-		{
-		case 1:
-			exhibitMenu();
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		case 5:
-			break;
-		case 6:
-			return;
-			break;
-		default:
-			cin.clear();
-			cin.ignore(10000, '\n');
-			system("clear");
-			cout << "***Not a valid command, try again***\n" << endl;
-			break;
-		}
-
-		exhibitManagerMenu();
-	}
-	else
-	{
+	case 1:
+		exhibitMenu();
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	case 5:
+		break;
+	case 6:
+		return;
+		break;
+	default:
 		cin.clear();
 		cin.ignore(10000, '\n');
 		system("clear");
 		cout << "***Not a valid command, try again***\n" << endl;
-		exhibitManagerMenu();
+		break;
 	}
+
+	exhibitManagerMenu();
+
+
 
 }
 
@@ -450,6 +410,7 @@ void exhibitPWScreen()
 	cin>>pw;
 	if (pw.compare(ManagerPW) == 0)
 	{
+		system("clear");
 		exhibitManagerMenu();
 	}
 	else
@@ -457,8 +418,8 @@ void exhibitPWScreen()
 		cin.clear();
 		cin.ignore(10000, '\n');
 		system("clear");
-		cout << "***Not a Valid Password***" << endl;
-		mainMenu();
+		cout << "***Not a Valid Password***\n" << endl;
+		
 	}
 }
 
@@ -473,39 +434,31 @@ void mainMenu()
 	cout << "   4. Exit and Save\n" << endl;
 	cout << "* Enter command number: ";
 	
-	cin >> main_input;
-	if (!checkInputSize(main_input) && !checkInputSize(main_input))
-	{
-		int int_input = stoi(main_input);
-		cout << endl;
-		system("clear");
-		switch (int_input)
-		{
+	cin >> int_input;
 
-		case 1:
-			exhibitPWScreen();
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		case 4:
-			return;
-		default:
-			cin.clear();
-			cin.ignore(10000, '\n');
-			cout << "***Not a valid command, try again***\n" << endl;
-			break;
-		}
-		mainMenu();
-	}
-	else
+	cout << endl;
+	system("clear");
+	switch (int_input)
 	{
+
+	case 1:
+		exhibitPWScreen();
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		return;
+	default:
 		cin.clear();
 		cin.ignore(10000, '\n');
 		cout << "***Not a valid command, try again***\n" << endl;
-		mainMenu();
+		break;
 	}
+	mainMenu();
+	
+
 
 
 }
