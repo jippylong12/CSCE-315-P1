@@ -1,17 +1,11 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <cstring>
-#include <limits>
-#include <vector>
-#include <sstream>
-#include <map>
-#include "DBsystem.h"
-#include <algorithm>
-
+#include "App.h"
 using namespace std;
 
+/*
 
+        PROJECT 1 APPLICATION - "App.cpp"
+
+*/
 
 //error checking for menu navigation
 int checkInputSize(string input)
@@ -31,21 +25,8 @@ int checkIsDigit(string input)
 //UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
 //UPDATE exhibitors SET email = "Max" WHERE age > 5;
 
-DBsystem db;
-string tables[5] = {"exhibitors","booth","services","attendees","inventory"};
 
-int int_input;
-string str_input = "";
-string ManagerPW = "asdf";
-void mainMenu();
-void registerNewExhibit();
-void viewExhibits();
-void exhibitMenu();
-void exhibitManagerMenu();
-void exhibitPWScreen();
-void exhibitorMenu();
-void exhibitorExhibitbyName();
-void exhibitorNumAttendees();
+
 
 
 
@@ -218,10 +199,12 @@ void managerSearchExhibitsMenu()
 
 	cout << "Search by Criteria? (1 Yes. 0 No.)\n";
 	cin >> case2Option;
-	if (case2Option)
+	cin.ignore();       //Need this here or else input for Header gets cut off
+    if (case2Option)
 	{
 		cout << "Enter Criteria. Enter 1 at header stage when done." << endl;
-		while (1) //get header, op, and condition for search
+        
+        while (1) //get header, op, and condition for search
 		{
 			cout << "Header: ";
 			getline (cin,viewHeader); //get header lhs
@@ -234,7 +217,8 @@ void managerSearchExhibitsMenu()
 			cout << endl;
 			OP.push_back(viewOP);
 
-			cout << "Condtion: ";
+            cin.ignore(); //Input getting cut off
+            cout << "Condition: ";
 			getline(cin, viewCondition); //get condition rhs
 			cout << endl;
 			conditions.push_back(viewCondition);
@@ -378,6 +362,8 @@ void exhibitorMenu()
 	switch (int_input)
 	{
 		case 1:
+            db.OPEN("exhibitors");              //restore the db
+            system("clear");
 			exhibitorExhibitbyName();
 			break;
 		case 2:
@@ -397,8 +383,46 @@ void exhibitorMenu()
 
 void exhibitorExhibitbyName()
 {
-	cout << "Enter the Name of the Exhibit: ";
-	cin >> str_input;
+	bool exhibitNameFound = 0;
+
+    cout << "Enter the Name of the Exhibit: ";
+	
+    cin.ignore();
+    getline(cin,str_input);
+
+    
+    
+    for (int i = 0; i < db.getDB()["exhibitors"]->getRowLength(); ++i){
+        //Search through all org_names in exhibitors
+       if(db.getDB()["exhibitors"]->getTable()[i][0].compare(str_input)==0){
+            exhibitNameFound = 1;
+       }
+    }
+    
+    if(exhibitNameFound==0){
+        cout << "You were not found in the database! \n";
+        return;
+    }else{
+        DBsystem tempDB;
+        
+        vector<string> showHeader;          //Search by org_name
+        showHeader.push_back("org_name");
+    
+        vector<string> OP;                  //Remove all tables that are not the org name
+        OP.push_back("!=");
+    
+        vector<string> conditions;          //Search for the ACUTAL org_name entry
+        conditions.push_back(str_input);
+    
+    
+        db.DELETE("exhibitors", showHeader, conditions, OP);
+        db.SHOW("exhibitors");
+    }
+    
+    
+    
+    
+    
 }
 
 void exhibitorNumAttendees()
