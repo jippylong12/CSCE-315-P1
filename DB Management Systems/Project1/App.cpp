@@ -219,7 +219,7 @@ void managerSearchExhibitsMenu()
 		while (1) //get header, op, and condition for search
 		{
 			cout << "Header: ";
-			cin >> viewHeader; //get header lhs
+			getline (cin,viewHeader); //get header lhs
 			if (viewHeader == "1") break; //break if we have 1
 			cout << endl;
 			headers.push_back(viewHeader); //push back into vector
@@ -230,7 +230,7 @@ void managerSearchExhibitsMenu()
 			OP.push_back(viewOP);
 
 			cout << "Condtion: ";
-			cin >> viewCondition; //get condition rhs
+			getline(cin, viewCondition); //get condition rhs
 			cout << endl;
 			conditions.push_back(viewCondition);
 		}
@@ -239,8 +239,10 @@ void managerSearchExhibitsMenu()
 	}
 	else
 	{
+		cin.clear();
+		cin.ignore(10000, '\n');
 		cout << "Enter the Exhibit name: " << endl;
-		cin >> viewCondition; //get input
+		getline(cin, viewCondition); //get input
 		headers.push_back("org_name");
 		OP.push_back("==");
 		conditions.push_back(viewCondition);
