@@ -406,6 +406,68 @@ void exhibitorNumAttendees()
 	
 }
 
+void attendeeName()
+{
+	cout << "[Attendee Info by Name]\n"<<endl;
+	cout << "Enter the attendee name: ";
+	cin.ignore();
+	getline(cin, str_input);
+	
+	//using the str_input, serach through the attendee.db and get the values.
+	//Make sure to add error chekcing for wrong input or name that is not on the table.
+
+}
+
+void attendeeBooths()
+{
+	cout << "[Attendee Booth by Name]\n"<<endl;
+	cout << "Enter the attendee name: ";
+	cin.ignore();
+	getline(cin, str_input);
+}
+
+void attendeeBoothInfo()
+{
+	attendeeName();
+	attendeeBooths();
+}
+
+void attendeeMenu()
+{
+	cout << "[Attendee Menu]\n"<<endl;
+	cout << "Select option:"<<endl<<endl;
+	cout << "  1. View Info by Name"<<endl;
+	cout << "  2. View Visited Booths by Name"<<endl;
+	cout << "  3. View both Info and Booths by Name"<<endl;
+	cout << "  4. <-- Go Back"<<endl<<endl;
+	
+	cout<< "* Enter command number: ";
+	cin >> int_input;
+	cout<<endl;
+	system ("clear");
+	switch (int_input)
+	{
+		case 1:
+			attendeeName();
+			break;
+		case 2:
+			attendeeBooths();
+			break;
+		case 3:
+			attendeeBoothInfo();
+			break;
+		case 4:
+			return;
+		default:
+			cin.clear();
+			cin.ignore(10000, '\n');
+			system("clear");
+			cout << "***Not a valid command, try again***\n" << endl;
+			break;
+	}
+	attendeeMenu();
+}
+
 void exhibitManagerMenu()
 {
 	
@@ -498,6 +560,7 @@ void mainMenu()
 		exhibitorMenu();
 		break;
 	case 3:
+		attendeeMenu();
 		break;
 	case 4:
 		return;
