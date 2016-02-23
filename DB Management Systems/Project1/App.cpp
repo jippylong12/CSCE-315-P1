@@ -197,7 +197,9 @@ void managerSearchExhibitsMenu()
 	OP.clear();
 	conditions.clear();
 
+	cin.ignore();
 	cout << "Search by Criteria? (1 Yes. 0 No.)\n";
+	
 	cin >> case2Option;
 	cin.ignore();       //Need this here or else input for Header gets cut off
     if (case2Option)
