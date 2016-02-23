@@ -466,11 +466,39 @@ void exhibitorNumAttendees()
 
 void attendeeName()
 {
-	cout << "[Attendee Info by Name]\n"<<endl;
-	cout << "Enter the attendee name: ";
-	cin.ignore();
-	getline(cin, str_input);
 	
+	//cin.ignore();
+	//getline(cin, str_input);
+	cout << "Hi, " + currAttendeeName + ".  Here is your info: " << endl;
+    string newTableName = "ATTENDEE INFO FOR: " + currAttendeeName;//create new name
+    
+        vector<string> orgHeader;               //Search by attendee name
+        orgHeader.push_back("name");
+    
+        vector<string> OP;                      //Take all entries that have the name
+        OP.push_back("==");
+    
+        vector<string> orgName;                 //Search for the ACUTAL name entries
+        orgName.push_back(currAttendeeName);
+    
+        //Used code from managerSearchExhibits
+        //Will select and show the corresponding info for the current attendee.
+    
+        Table* pointer = db.SELECT(newTableName, "attendees", orgHeader, OP, orgName); //get select table and assign a pointer to it
+    
+        if (pointer->getRowLength() < 1) //if there is not anything to show
+        {
+            cout << "You currently have no information in the database! \n"; //there must be no table
+            return;
+        }
+        else //otherwise we have something to show
+        {
+            db.SHOW(pointer->getTableName());   //so show it
+
+            delete pointer;                     //get rid of the table in memory since we don't need it
+
+            return;
+        }
 	//using the str_input, serach through the attendee.db and get the values.
 	//Make sure to add error chekcing for wrong input or name that is not on the table.
 
@@ -478,10 +506,38 @@ void attendeeName()
 
 void attendeeBooths()
 {
-	cout << "[Attendee Booth by Name]\n"<<endl;
-	cout << "Enter the attendee name: ";
-	cin.ignore();
-	getline(cin, str_input);
+	cout << "[Exhibitors " + currAttendeeName +" has visited]\n";
+    //Need to search through attendees
+    //find currentAttendee name
+    //find their booths visited
+        vector<string> orgHeader;               //Search by attendee name
+        orgHeader.push_back("name");
+    
+        vector<string> OP;                      //Take all entries that have the name
+        OP.push_back("==");
+    
+        vector<string> orgName;                 //Search for the ACUTAL name entries
+        orgName.push_back(currAttendeeName);
+    
+        //Will select and show the corresponding info for the current attendee.
+    
+    
+        Table* pointer = db.SELECT("", "attendees", orgHeader, OP, orgName); //get select table and assign a pointer to it
+    
+        //Now, we can search through this table to grab their exhibits_visited
+    
+    vector<string> exhibitsVisited;
+    if(pointer->getRowLength()!=0){   //search through the attendee info in attendees.db.  If there is no info for the attendee, there will be no exhibits visited.
+        for (int i = 0; i < pointer->getRowLength(); ++i){
+            cout << i+1 << ". " << pointer->getTable()[i][6] << endl;       //index 6 because it is the 7th column
+        }
+    }else cout << "You have not visited any exhibits. \n" << endl;
+
+	
+    
+    
+    
+    
 }
 
 void attendeeBoothInfo()
@@ -492,7 +548,7 @@ void attendeeBoothInfo()
 
 void attendeeMenu()
 {
-	cout << "[Attendee Menu]\n"<<endl;
+	cout << "[Attendee Menu for " + currAttendeeName + "]"<<endl;
 	cout << "Select option:"<<endl<<endl;
 	cout << "  1. View Info by Name"<<endl;
 	cout << "  2. View Visited Booths by Name"<<endl;
@@ -618,6 +674,7 @@ void attendeePWScreen()
 	cout << "Please input the username: ";
 	getline(cin, username);
 	IDtuples.push_back(username);
+    currAttendeeName = username;
 
 	cout << "Please input the password: ";
 	getline(cin, pw);

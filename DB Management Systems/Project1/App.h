@@ -20,6 +20,7 @@
     string str_input = "";
     string ManagerPW = "asdf";
     string exhibitorName = "";      //This will store the current exhibitor
+    string currAttendeeName = "";       //This will store the current attendee
 
 
 
