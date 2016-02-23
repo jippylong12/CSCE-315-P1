@@ -14,20 +14,26 @@
 
     DBsystem db;
     string tables[5] = {"exhibitors","booth","services","attendees","inventory"};
+	string verificationTables[3] = { "managerCredentials","exhibitorsCredentials","attendeesCredentials" }; //for access level
 
     int int_input;
     string str_input = "";
     string ManagerPW = "asdf";
+    string exhibitorName = "";      //This will store the current exhibitor
 
 
 
 //-----------General Menu Functions-----------//
 
     void mainMenu();
-    void exhibitPWScreen();             //To get into exhibitorManager()
-    int checkInputSize(string);
+	int checkInputSize(string);
     int checkIsDigit(string);
 
+//-----------Clearance Functions-----------//
+	void managerPWScreen();
+	void exhibitorPWScreen();
+	void attendeePWScreen();
+	int verifyNameAndPassword(string tableName,vector<string> IDtuples);
 
 //-----------Exhibitor MANAGER Menu Functions-------------//
 
@@ -38,21 +44,21 @@
     void viewExhibits();            //Manager view
     void deleteExhibit();           //Manager delete
 
-    /*  Needing functions for these manager operations:
-            Booths
-            Services
-            Attendees
-            Inventory
-    */
+    // Needing functions for these manager operations:
+            //Booths
+            //Services
+            //Attendees
+            //Inventory
 
 
 
 //-----------Exhibitor Menu Functions-------------------//
 
-    void exhibitorMenu();
-    void exhibitorExhibitbyName();
-    void exhibitorNumAttendees();
-
+    void exhibitorMenu(); //main menu
+    void exhibitorExhibitbyName(); //show table of exhibits depending on exhibitor
+    void exhibitorNumAttendees(); //show table of all attenddess that have visited
+    double invoiceCalculator(); //calculates invoice given exhibitor
+    void showTotalRevenue(); //add up all the fees
 
 
 //-----------Attendee Menu Funcitons--------------------//
