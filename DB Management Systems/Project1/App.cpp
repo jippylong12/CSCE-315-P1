@@ -197,7 +197,9 @@ void managerSearchExhibitsMenu()
 	OP.clear();
 	conditions.clear();
 
+	cin.ignore();
 	cout << "Search by Criteria? (1 Yes. 0 No.)\n";
+	
 	cin >> case2Option;
 	cin.ignore();       //Need this here or else input for Header gets cut off
     if (case2Option)
@@ -419,8 +421,7 @@ void exhibitorExhibitbyName()
         orgName.push_back(str_input);
     
     	managerSearchExhibits(orgHeader, OP, orgName);
-        //db.SEARCH(orgHeader, OP, orgName);
-        //db.SHOW("exhibitors");
+      
     }
     
     
@@ -431,6 +432,11 @@ void exhibitorExhibitbyName()
 
 void exhibitorNumAttendees()
 {
+	cout << "Enter the name of the exhibit you want to see attendees for: ";
+	cin.ignore();
+	getline(cin, str_input);		//org_name
+	
+	cout << "Viewing attendees for... " + str_input << endl;
 	
 }
 
