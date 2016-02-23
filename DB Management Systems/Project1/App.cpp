@@ -285,21 +285,25 @@ void viewExhibits()	//When Exhibit Manager View/Searches for an exhibit
 
 void deleteExhibit()
 {
+	cin.clear();
+	cin.ignore(10000, '\n');
 	system("clear");
 	cout << "[Delete Exhibit]\n" << endl;
 	
 	cout << "* Enter name of Exhibit: ";
 	
-	cin >> str_input;
+	getline(cin, str_input);
 	string deleteName = str_input; //grab the tablename for output
 	str_input = "DELETE FROM exhibitors WHERE org_name == " + str_input + ";";
 	cout << endl;
 	
 	db.DBParser.sendNewInput(str_input);
     db.execute(); 
+	db.DBParser.contain.clear();
     
     db.DBParser.sendNewInput("SAVE exhibitors;");
     db.execute(); 
+	db.DBParser.contain.clear();
 
 	system("clear"); //clean terminal
 
