@@ -1,0 +1,15 @@
+X m-Close 
+X m-Save 
+X m-Show 
+X m-Create 
+p-Update //done
+p-Insert 
+p-Delete 
+p-Exit //done
+b-Select
+b-Project 
+b-Rename 
+b-Union 
+m-Difference 
+m-Cross product 
+XOpen 
