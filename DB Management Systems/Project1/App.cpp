@@ -351,13 +351,26 @@ void exhibitMenu()
 
 }
 
+void showTotalRevenue() //adds up all the fees
+{
+	
+}
+
+
+double invoiceCalculator()
+{
+	
+}
+
 void exhibitorMenu()
 {
 	cout << "[Exhibitor Menu]\n"<<endl;
 	cout << "Select option:"<<endl;
 	cout << "  1. View My Info"<<endl;
 	cout << "  2. View Your Attendees"<<endl;
-	cout << "  3. <-- Go Back"<<endl<<endl;
+	cout << "  3. View Invoice"<<endl;
+	cout << "  4. View Total Revenue"<<endl;
+	cout << "  5. <-- Go Back"<<endl<<endl;
 	
 	cout<< "* Enter command number: ";
 	cin >> int_input;
@@ -371,7 +384,11 @@ void exhibitorMenu()
 		case 2:
 			exhibitorNumAttendees();
 			break;
-		case 3:
+		case 3: 
+			invoiceCalculator(); //not implemented yet
+		case 4:
+			showTotalRevenue();
+		case 5:
 			return;
 		default:
 			cin.clear();

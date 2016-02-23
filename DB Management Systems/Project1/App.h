@@ -44,21 +44,21 @@
     void viewExhibits();            //Manager view
     void deleteExhibit();           //Manager delete
 
-    /*  Needing functions for these manager operations:
-            Booths
-            Services
-            Attendees
-            Inventory
-    */
+    // Needing functions for these manager operations:
+            //Booths
+            //Services
+            //Attendees
+            //Inventory
 
 
 
 //-----------Exhibitor Menu Functions-------------------//
 
-    void exhibitorMenu();
-    void exhibitorExhibitbyName();
-    void exhibitorNumAttendees();
-
+    void exhibitorMenu(); //main menu
+    void exhibitorExhibitbyName(); //show table of exhibits depending on exhibitor
+    void exhibitorNumAttendees(); //show table of all attenddess that have visited
+    double invoiceCalculator(); //calculates invoice given exhibitor
+    void showTotalRevenue(); //add up all the fees
 
 
 //-----------Attendee Menu Funcitons--------------------//
