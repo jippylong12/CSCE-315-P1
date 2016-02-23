@@ -14,6 +14,7 @@
 
     DBsystem db;
     string tables[5] = {"exhibitors","booth","services","attendees","inventory"};
+	string verificationTables[3] = { "managerCredentials","exhibitorsCredentials","attendeesCredentials" }; //for access levels
 
     int int_input;
     string str_input = "";
@@ -24,10 +25,14 @@
 //-----------General Menu Functions-----------//
 
     void mainMenu();
-    void exhibitPWScreen();             //To get into exhibitorManager()
-    int checkInputSize(string);
+	int checkInputSize(string);
     int checkIsDigit(string);
 
+//-----------Clearance Functions-----------//
+	void managerPWScreen();
+	void exhibitorPWScreen();
+	void attendeePWScreen();
+	int verifyNameAndPassword(string tableName,vector<string> IDtuples);
 
 //-----------Exhibitor MANAGER Menu Functions-------------//
 

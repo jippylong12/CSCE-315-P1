@@ -542,23 +542,149 @@ void exhibitManagerMenu()
 
 }
 
-//high level clearance
-void exhibitPWScreen()
+int verifyNameAndPassword(string tableName,vector<string> IDtuples)
+{
+	string username = IDtuples[0]; //we pushed username fist
+	string password = IDtuples[1]; //password 2nd
+
+	//check for username 
+	//if success break and check for password
+	//if fails at any point send message and return 1
+	for (int i = 0; i < db.database[tableName]->getRowLength(); ++i)
+	{
+		if (username == db.database[tableName]->getTable()[i][0]) //0 because it should be in the first column
+		{
+			if (password == db.database[tableName]->getTable()[i][1]) //1 because that is where the password should be
+			{
+				return 0;
+			}
+			else
+			{
+				cout << "Wrong Password.\n";
+				cout << "Press ENTER to continue. \n";
+				return 1;
+			}
+		}
+	}
+
+	//if we get to this point then we did not find a matching username
+	cout << "Could not find username. \n";
+	cout << "Press ENTER to continue. \n";
+	return 1; //failure
+}
+
+
+void attendeePWScreen()
 {
 	string pw = ""; //password
-	cout<<"Please input the password: ";
-	cin>>pw;
-	if (pw.compare(ManagerPW) == 0)
+	string username = "";
+	vector<string> IDtuples;
+	int test; //if 0 pass 1 fail
+
+	cin.clear();
+	cin.ignore(10000, '\n');
+	IDtuples.clear(); //just to be safe
+
+	cout << "Please input the username: ";
+	getline(cin, username);
+	IDtuples.push_back(username);
+
+	cout << "Please input the password: ";
+	getline(cin, pw);
+	IDtuples.push_back(pw);
+
+
+	test = verifyNameAndPassword("attendeesCredentials",IDtuples);
+
+	if (!test) //not test because 0 is pass 
 	{
 		system("clear");
-		exhibitManagerMenu();
+		attendeeMenu();
 	}
-	else
+	else //failed verifcation
 	{
 		cin.clear();
 		cin.ignore(10000, '\n');
 		system("clear");
-		cout << "***Not a Valid Password***\n" << endl;
+		cout << "***Verification Failed. Please Try again.***\n" << endl;
+
+	}
+}
+
+void exhibitorPWScreen()
+{
+	string pw = ""; //password
+	string username = "";
+	vector<string> IDtuples;
+	int test; //if 0 pass 1 fail
+
+	cin.clear();
+	cin.ignore(10000, '\n');
+	IDtuples.clear(); //just to be safe
+
+	cout << "Please input the username: ";
+	getline(cin, username);
+	IDtuples.push_back(username);
+
+	cout << "Please input the password: ";
+	getline(cin, pw);
+	IDtuples.push_back(pw);
+
+
+	test = verifyNameAndPassword("exhibitorsCredentials",IDtuples);
+
+	if (!test) //not test because 0 is pass 
+	{
+		system("clear");
+		exhibitorMenu();
+	}
+	else //failed verifcation
+	{
+		cin.clear();
+		cin.ignore(10000, '\n');
+		system("clear");
+		cout << "***Verification Failed. Please Try again.***\n" << endl;
+
+	}
+}
+
+
+//high level clearance
+void managerPWScreen()
+{
+	string pw = ""; //password
+	string username = "";
+	vector<string> IDtuples;
+	int test; //if 0 pass 1 fail
+
+
+	cin.clear();
+	cin.ignore(10000, '\n');
+	IDtuples.clear(); //just to be safe
+
+	cout << "Please input the username: ";
+	getline(cin, username);
+	IDtuples.push_back(username);
+
+	cout << "Please input the password: ";
+	getline(cin, pw);
+	IDtuples.push_back(pw);
+
+
+	test = verifyNameAndPassword("managerCredentials",IDtuples);
+
+	if (!test) //not test because 0 is pass 
+	{
+		system("clear");
+		exhibitManagerMenu();
+	}
+	else //failed verifcation
+	{
+		cin.clear();
+		cin.ignore(10000, '\n');
+		system("clear");
+		cout << "***Verification Failed. Please Try again.***\n" << endl;
+		return;
 		
 	}
 }
@@ -582,13 +708,13 @@ void mainMenu()
 	{
 
 	case 1:
-		exhibitPWScreen();
+		managerPWScreen();
 		break;
 	case 2:
-		exhibitorMenu();
+		exhibitorPWScreen();
 		break;
 	case 3:
-		attendeeMenu();
+		attendeePWScreen();
 		break;
 	case 4:
 		return;
@@ -611,12 +737,19 @@ int main()
 	
 	try{
 		
+		//open 5 main databases
 		for(int i = 0; i < 5; i++)
 		{
 			db.DBParser.sendNewInput("OPEN " + tables[i] + ";");
     		db.execute(); 
 		}
-		
+		//open verfication DBs
+		for (int i = 0; i < 3; ++i)
+		{
+			db.DBParser.sendNewInput("OPEN " + verificationTables[i] + ';');
+			db.execute();
+		}
+
 		system("clear"); //gives terminal clean look
 	    mainMenu();
 	
