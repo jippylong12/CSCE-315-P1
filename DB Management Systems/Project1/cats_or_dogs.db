@@ -1,4 +1,0 @@
-CREATE TABLE cats_or_dogs (name VARCHAR(20), kind VARCHAR(8), age INTEGER) PRIMARY KEY (name, kind);
-INSERT INTO cats_or_dogs VALUES FROM ("Spot", "dog", 10);
-INSERT INTO cats_or_dogs VALUES FROM ("Snoopy", "dog", 3);
-INSERT INTO cats_or_dogs VALUES FROM ("Joe", "cat", 4);

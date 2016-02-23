@@ -12,3 +12,6 @@ INSERT INTO exhibitors VALUES FROM ("fdsafdsa", "fdsafdsaf", "vbcbxcvbxc", "bvcx
 INSERT INTO exhibitors VALUES FROM ("Helllo", "something", "something", "something", "something", "something", "thingsome", "something", "thingsome", something);
 INSERT INTO exhibitors VALUES FROM ("fdsafdsa", "fdsafdsa", "fdsafasd", "fdsafdsa", "fdsafdsa", "fdsafdsa", "fdsafdsa", "fdsafdsa", "fdsafdsa", fdsafdsa);
 INSERT INTO exhibitors VALUES FROM ("fdsafsda", "fdsafdas", "cvxzvc", "vcxzvxz", "vcxzvccxzvzx", "vcxzvcxzvz", "cvxzvcxzv", "cxzvczxvxcz", "vcxzv c vcxzv xz vcxzv", vcxzvcxzv);
+INSERT INTO exhibitors VALUES FROM ("marky12", "a", "b", "c", "d", "e", "f", "g", "h", i);
+INSERT INTO exhibitors VALUES FROM ("froob", "Hell", "Hitler", "penis@yahoo.org", "911", "411", "Stolen Electronics", "Fat Guy", "Black market official reseller", www.com);
+INSERT INTO exhibitors VALUES FROM ("b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", b10);

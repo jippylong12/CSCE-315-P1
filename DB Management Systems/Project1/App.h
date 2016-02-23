@@ -14,11 +14,12 @@
 
     DBsystem db;
     string tables[5] = {"exhibitors","booth","services","attendees","inventory"};
-	string verificationTables[3] = { "managerCredentials","exhibitorsCredentials","attendeesCredentials" }; //for access levels
+	string verificationTables[3] = { "managerCredentials","exhibitorsCredentials","attendeesCredentials" }; //for access level
 
     int int_input;
     string str_input = "";
     string ManagerPW = "asdf";
+    string exhibitorName = "";      //This will store the current exhibitor
 
 
 

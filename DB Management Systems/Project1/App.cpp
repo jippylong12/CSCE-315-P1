@@ -22,7 +22,7 @@ int checkIsDigit(string input)
 	return isdigit(input[0]); //returns 0 if true
 }
 
-//UPDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition 
+//PDATE relation-name SET attribute-name = literal { , attribute-name = literal } WHERE condition
 //UPDATE exhibitors SET email = "Max" WHERE age > 5;
 
 
@@ -155,7 +155,7 @@ void printExhibitName(bool all, string searchName = "")
 				
 				if(searchName.compare(temp.substr(s,e-s))==0){				//Get all proper headers and print
 					string str = temp.substr(s,temp.length());
-					for (unsigned int i = 0; i < strlen(chars); ++i)		//Do some formatting
+					for (unsigned int i = 0; i < strlen(chars); ++i)		//Do some formating
 					 {
 						str.erase(std::remove(str.begin(), str.end(), chars[i]), str.end());
 					 }
@@ -355,8 +355,8 @@ void exhibitorMenu()
 {
 	cout << "[Exhibitor Menu]\n"<<endl;
 	cout << "Select option:"<<endl;
-	cout << "  1. View Exhibit by Entering Name"<<endl;
-	cout << "  2. View Attendees by Exhibit"<<endl;
+	cout << "  1. View My Info"<<endl;
+	cout << "  2. View Your Attendees"<<endl;
 	cout << "  3. <-- Go Back"<<endl<<endl;
 	
 	cout<< "* Enter command number: ";
@@ -366,8 +366,6 @@ void exhibitorMenu()
 	switch (int_input)
 	{
 		case 1:
-            db.OPEN("exhibitors");              //restore the db
-            system("clear");
 			exhibitorExhibitbyName();
 			break;
 		case 2:
@@ -389,16 +387,16 @@ void exhibitorExhibitbyName()
 {
 	bool exhibitNameFound = 0;
 
-    cout << "Enter the Name of the Exhibit: ";
+    cout << "Hi, " + exhibitorName << endl;
 	
-    cin.ignore();
-    getline(cin,str_input);
+    //cin.ignore();
+    //getline(cin,str_input);
 
     
     
     for (int i = 0; i < db.getDB()["exhibitors"]->getRowLength(); ++i){
         //Search through all org_names in exhibitors
-       if(db.getDB()["exhibitors"]->getTable()[i][0].compare(str_input)==0){
+       if(db.getDB()["exhibitors"]->getTable()[i][0].compare(exhibitorName)==0){
             exhibitNameFound = 1;
        }
     }
@@ -407,7 +405,7 @@ void exhibitorExhibitbyName()
         cout << "You were not found in the database! \n";
         return;
     }else{
-        DBsystem tempDB;
+        //DBsystem tempDB;
         
         vector<string> orgHeader;          //Search by org_name
         orgHeader.push_back("org_name");
@@ -416,11 +414,10 @@ void exhibitorExhibitbyName()
         OP.push_back("==");
     
         vector<string> orgName;          //Search for the ACUTAL org_name entry
-        orgName.push_back(str_input);
+        orgName.push_back(exhibitorName);
     
     	managerSearchExhibits(orgHeader, OP, orgName);
-        //db.SEARCH(orgHeader, OP, orgName);
-        //db.SHOW("exhibitors");
+        
     }
     
     
@@ -431,7 +428,40 @@ void exhibitorExhibitbyName()
 
 void exhibitorNumAttendees()
 {
-	
+	cout << "Hi, " + exhibitorName + ".  Your attendees: " << endl;
+    string newTableName = "ATTENDEES FOR: " + exhibitorName;//create new name
+    
+        vector<string> orgHeader;               //Search by exhibits visted
+        orgHeader.push_back("exhibits_visited");
+    
+        vector<string> OP;                      //Take all entries that have visited said exhibit
+        OP.push_back("==");
+    
+        vector<string> orgName;                 //Search for the ACUTAL exhibits visited entries
+        orgName.push_back(exhibitorName);
+    
+        //Used code from managerSearchExhibits
+        //Will select and show the corresponding attendees for the current exhibitor.
+    
+        Table* pointer = db.SELECT(newTableName, "attendees", orgHeader, OP, orgName); //get select table and assign a pointer to it
+    
+        if (pointer->getRowLength() < 1) //if there is not anything to show
+        {
+            cout << "There is no table with that name. \n"; //there must be no table
+            return;
+        }
+        else //otherwise we have something to show
+        {
+            db.SHOW(pointer->getTableName());   //so show it
+
+            delete pointer;                     //get rid of the table in memory since we don't need it
+
+            return;
+        }
+    
+    
+    
+    
 }
 
 void attendeeName()
@@ -625,11 +655,11 @@ void exhibitorPWScreen()
 	cout << "Please input the username: ";
 	getline(cin, username);
 	IDtuples.push_back(username);
+    exhibitorName = username;
 
 	cout << "Please input the password: ";
 	getline(cin, pw);
 	IDtuples.push_back(pw);
-
 
 	test = verifyNameAndPassword("exhibitorsCredentials",IDtuples);
 
@@ -669,7 +699,6 @@ void managerPWScreen()
 	cout << "Please input the password: ";
 	getline(cin, pw);
 	IDtuples.push_back(pw);
-
 
 	test = verifyNameAndPassword("managerCredentials",IDtuples);
 
@@ -736,7 +765,7 @@ int main()
 {	
 	
 	try{
-		
+		//char path[] = "DBMS/";
 		//open 5 main databases
 		for(int i = 0; i < 5; i++)
 		{
