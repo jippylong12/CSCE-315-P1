@@ -13,7 +13,7 @@
 //-----------Things we need---------//
 
     DBsystem db;
-    string tables[5] = {"exhibitors","booth","services","attendees","inventory"};
+    string tables[5] = {"exhibitors","exhibitorsBooths","services","attendees","inventory"};
 	string verificationTables[3] = { "managerCredentials","exhibitorsCredentials","attendeesCredentials" }; //for access level
 
     int int_input;
