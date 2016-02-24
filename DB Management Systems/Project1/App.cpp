@@ -555,14 +555,71 @@ void assignBoothLocations(){
 	db.UPDATE("exhibitorsBooths", headerNameRow, replaceRow, operand1, operand2, OP);//first update call for row
 	db.UPDATE("exhibitorsBooths", headerNameCol, replaceRow, operand1, operand2, OP);//second update call for columns
 
-	db.SAVE("exhibitorsBooths");
+	db.SAVE("exhibitorsBooths"); //save changes
 
 	cout << "Done updating\n";
 }
 
 void deleteBoothLocations(){
 	cout << "Deleting booth..." << endl;
-	
+	//intialize variales for Delete Call
+	string orgName = ""; //what booth will be deleted
+	string row = "";
+	string column = "";
+
+	////initialize vectors
+	//vector <string> headerNameRow;
+	//vector <string> headerNameCol;
+	//vector <string> operand1;
+	//vector <string> operand2;
+	//vector <string> replaceRow;
+	//vector <string> replaceColumn;
+	//vector <string> OP;
+
+
+	////clear changing vectors
+	//operand2.clear();
+	//replaceColumn.clear();
+	//replaceRow.clear();
+
+
+	////push_back headers - These should not change 
+	//operand1.push_back("org_name");
+	//headerNameRow.push_back("row"); //UPDATE Call 1
+	//headerNameCol.push_back("column"); //UPDATE CALL 2
+	//OP.push_back("=="); //for both calls
+
+	//					//clear the cin
+	//cin.clear();
+	//cin.ignore(10000, '\n');
+
+	////thses should change and the vectors need to be cleared. 
+
+	////get name of Organization
+	//cout << "Which Organization booth would you like to update? \n";
+	//getline(cin, orgName); //get the name
+	//operand2.push_back(orgName);
+
+	////get row
+	//cout << "What is the new row?\n";
+	//cin >> row; //get the row
+	//if (stoi(row) > 50 || stoi(row) < 0)
+	//{
+	//	cout << "Not a valid row number \n";
+	//	return;
+	//}
+	//replaceRow.push_back(row);
+
+
+	////get column
+	//cout << "What is the new column\n";
+	//cin >> column; //get the column
+	//if (stoi(column) > 20 || stoi(column) < 0)
+	//{
+	//	cout << "Not a valid column number \n";
+	//	return;
+	//}
+	//replaceColumn.push_back(column);
 }
 
 void viewBoothLocations(){		//View all or search
