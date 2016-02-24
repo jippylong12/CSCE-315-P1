@@ -492,6 +492,72 @@ void boothMenu(){
 
 void assignBoothLocations(){
 	cout << "Assigning booth..." << endl;
+
+	//intialize variales for UPDATE Call
+	string orgName = "";
+	string row = "";
+	string column = "";
+
+	//initialize vectors
+	vector <string> headerNameRow;
+	vector <string> headerNameCol;
+	vector <string> operand1;
+	vector <string> operand2;
+	vector <string> replaceRow;
+	vector <string> replaceColumn;
+	vector <string> OP;
+
+
+	//clear changing vectors
+	operand2.clear();
+	replaceColumn.clear();
+	replaceRow.clear();
+
+
+	//push_back headers - These should not change 
+	operand1.push_back("org_name");
+	headerNameRow.push_back("row"); //UPDATE Call 1
+	headerNameCol.push_back("column"); //UPDATE CALL 2
+	OP.push_back("=="); //for both calls
+
+						//clear the cin
+	cin.clear();
+	cin.ignore(10000, '\n');
+
+	//thses should change and the vectors need to be cleared. 
+
+	//get name of Organization
+	cout << "Which Organization booth would you like to update? \n";
+	getline(cin, orgName); //get the name
+	operand2.push_back(orgName);
+
+	//get row
+	cout << "What is the new row?\n";
+	cin >> row; //get the row
+	if (stoi(row) > 50 || stoi(row) < 0)
+	{
+		cout << "Not a valid row number \n";
+		return;
+	}
+	replaceRow.push_back(row);
+
+
+	//get column
+	cout << "What is the new column\n";
+	cin >> column; //get the column
+	if (stoi(column) > 20 || stoi(column) < 0)
+	{
+		cout << "Not a valid column number \n";
+		return;
+	}
+	replaceColumn.push_back(column);
+
+	db.UPDATE("exhibitorsBooths", headerNameRow, replaceRow, operand1, operand2, OP);//first update call for row
+	db.UPDATE("exhibitorsBooths", headerNameCol, replaceRow, operand1, operand2, OP);//second update call for columns
+
+	db.SAVE("exhibitorsBooths");
+
+	cout << "Done updating\n";
 }
 
 void deleteBoothLocations(){
@@ -547,7 +613,7 @@ void servicesMenu(){
 }
 
 void assignBoothServices(){
-	cout << "Assign booth services.." << endl;
+
 	
 }
 
@@ -1390,7 +1456,7 @@ int main()
 		for(int i = 0; i < 5; i++)
 		{
 			db.DBParser.sendNewInput("OPEN " + tables[i] + ";");
-    		db.execute(); 
+     		db.execute(); 
 		}
 		//open verfication DBs
 		for (int i = 0; i < 3; ++i)
