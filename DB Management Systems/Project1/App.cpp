@@ -838,9 +838,129 @@ void viewInventory(){
 //Manager Revenue
 void showTotalRevenue(){
 	//Revenue initialized in App.h
-	cout << "Revenue generated: " << revenue << endl;
+	
+	 cout << "Revenue generated: " << revenue << endl;
+	 double tempPrice = 0;
+	 double total = 0;
+	 
+	 vector<string> inventoryList;
+	 vector<string> servicesList;
+	 
+	 
+	 vector<string> orgHeader;               //Search by exhibitsName (will have the corresponding item)
+     orgHeader.push_back("org_name");
+     
+     vector<string> itemHeader;
+     itemHeader.push_back("item");
+    
+     vector<string> OP;                      //Take all entries that have the exhibitorName
+     OP.push_back("!=");
+    
+     vector<string> orgName;                 //Search for the ACUTAL exhibits visited entries
+     orgName.push_back("-1");
+     
+    Table* ptr = db.SELECT("", "exhibitors", orgHeader, OP, orgName ); //grab all exhibitor names
+    //db.SHOW(ptr -> getTableName());
+    
+    vector <string> orgNames;
+    
+    for (int i = 0; i < ptr -> getRowLength(); ++i)
+    {
+    	orgNames.push_back(ptr -> getTable()[i][0]);
+    	cout<<orgNames[i]<<endl;
+    }
+    delete ptr;
+    
+    
+    
+    for (int f = 0; f < orgNames.size(); ++f)
+    {
+    	orgName.clear();
+    	orgHeader.clear();
+    	OP.clear();
+    	inventoryList.clear();
+    	servicesList.clear();
+    	orgName.push_back(orgNames[f]);
+    	orgHeader.push_back("exhibitorName");
+    	exhibitorName = orgNames[f];
+    	OP.push_back("==");
+    	
+    	
+		Table* pointer = db.SELECT("", "inventory", orgHeader, OP,  orgName); //get select table and assign a pointer to it
+	    if (pointer->getRowLength() < 1) //if there is not anything to show
+        {
+            cout << "There is no table with that name. \n"; //there must be no table
+            return;
+        }
+        else //otherwise we have something to show
+        {
+            //db.SHOW(pointer->getTableName());   //so show it
+
+            //delete pointer;                     //get rid of the table in memory since we don't need it
+
+            //return 0;
+        }
+
+		for (int i = 0; i < pointer->getRowLength(); ++i)
+		{
+			inventoryList.push_back(pointer->getTable()[i][0]);			//This will grab the items list
+			servicesList.push_back(pointer-> getTable()[i][2]);
+		}
+		
+		cout << "Inventory List for " << exhibitorName << ":" << endl;
+		for (int i = 0; i < inventoryList.size(); ++i)
+		{
+			cout <<"item: "<< inventoryList[i] <<"  service: "<<servicesList[i]<< endl;
+		}
+		
+		delete pointer;
+		
+		//Find the prices using the servicesList.
+		
+		//db.SHOW(pointer1 -> getTableName());
+		for (int a = 0; a < servicesList.size(); ++a)
+		{
+			cout<<servicesList[a]<<endl;
+			//itemHeader.push_back("item");
+		}
+		//cout<<endl<<"size of servicesList: "<<servicesList.size()<<"  size of itemHeader: "<<itemHeader.size()<<endl;
+		for (int i = 0; i < servicesList.size(); ++i)
+		{
+			//cout<<endl<<servicesList[i]<<endl;
+		}
+		//Table* pointer1 = db.SELECT("", "services", itemHeader, OP,  servicesList); //get select table and assign a pointer to it
+		//db.SHOW(pointer1 -> getTableName());
+		for(int a = 0; a<servicesList.size(); ++a)
+		{
+			vector <string> tempServicesList;
+			tempServicesList.push_back(servicesList[a]);
+			Table* pointer1 = db.SELECT("", "services", itemHeader, OP,  tempServicesList);
+			
+			
+			for (int i = 0; i < pointer1->getRowLength(); ++i)
+			{
+				if (pointer1 -> getTable()[i][0].compare(servicesList[a]) == 0)
+				{
+					tempPrice = stod(pointer -> getTable()[i][3]);
+					cout << "Before string to double conversion: "<< pointer1 -> getTable()[i][3]<<endl;;
+					cout << "After string to double Conversion: " <<stod(pointer1 -> getTable()[i][3])<<endl;
+				}
+				else
+				{
+					tempPrice = 0;
+				}
+				total += tempPrice;
+			}
+		delete pointer1;
+	}
+    }
+    
+	//
+	
+	cout<<"The total revenue is: $"<<total<<endl;
 	
 	
+	//delete pointer1;
 	
 }
 
