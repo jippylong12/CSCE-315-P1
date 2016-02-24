@@ -1,1 +1,12 @@
-CREATE TABLE services (electricity VARCHAR(100), furniture_type VARCHAR(100), furniture_num INTEGER, electronics_type VARCHAR(100), electronics_num INTEGER, bar_code_scanner VARCHAR(100), advertisement_type VARCHAR(100), advertisement_num INTEGER, insurance INTEGER) PRIMARY KEY (electricity);
+CREATE TABLE inventory (item VARCHAR(100), exhibitorName VARCHAR(100)) PRIMARY KEY (item, exhibitorName);
+INSERT INTO inventory VALUES FROM ("TV1", "froob");
+INSERT INTO inventory VALUES FROM ("TV2", "moob");
+INSERT INTO inventory VALUES FROM ("TV3", "froob");
+INSERT INTO inventory VALUES FROM ("TV4", "froob");
+INSERT INTO inventory VALUES FROM ("TV5", "froob");
+INSERT INTO inventory VALUES FROM ("CHAIR1", "froob");
+INSERT INTO inventory VALUES FROM ("CHAIR2", "froob");
+INSERT INTO inventory VALUES FROM ("CHAIR3", "froob");
+INSERT INTO inventory VALUES FROM ("CHAIR4", "froob");
+INSERT INTO inventory VALUES FROM ("500W", "froob");
+INSERT INTO inventory VALUES FROM ("BOOTH", "froob");

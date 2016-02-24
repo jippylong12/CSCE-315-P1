@@ -26,10 +26,6 @@ int checkIsDigit(string input)
 //UPDATE exhibitors SET email = "Max" WHERE age > 5;
 
 
-
-
-
-
 int managerSearchExhibits(vector<string> headers, vector<string> OP, vector<string> conditions)
 {
 	string newTableName = "SEARCH QUERY";//create new name
@@ -39,6 +35,29 @@ int managerSearchExhibits(vector<string> headers, vector<string> OP, vector<stri
 	if (pointer->getRowLength() < 1) //if there is not anything to show
 	{
 		cout << "There is no table with that name. \n"; //there must be no table
+		return 1;
+	}
+	else //otherwise we have something to show
+	{
+		db.SHOW(pointer->getTableName()); //so show it
+
+		delete pointer; //get rid of the table in memory since we don't need it 
+
+		return 0;
+	}
+
+}
+
+//Works with "attendees.db"
+int managerSearchAttendees(vector<string> headers, vector<string> OP, vector<string> conditions)
+{
+	string newTableName = "SEARCH QUERY";//create new name
+
+	Table* pointer = db.SELECT(newTableName, "attendees", headers, OP, conditions); //get select table and assign a pointer to it
+	
+	if (pointer->getRowLength() < 1) //if there is not anything to show
+	{
+		cout << "Their data was not found. \n"; //there must be no table
 		return 1;
 	}
 	else //otherwise we have something to show
@@ -177,6 +196,84 @@ void printExhibitName(bool all, string searchName = "")
 	
 
 }
+
+
+void printAttendeeName(bool all, string searchName = ""){
+
+	
+	ifstream file;
+	file.open("attendees.db");
+	string temp = "";
+		cout << endl;
+	system("clear");
+	if(all)
+	{
+		if (file.is_open()) 
+		{
+			cout << "[All Attendees]\n" << endl;
+			getline(file, temp); // skips CREATE line
+			int count = 1;
+			while (getline(file, temp)) 
+			{
+				int s = temp.find("\"") + 1;
+				int e = temp.find("\"",s);
+				cout << count << ". " << temp.substr(s,e-s) << endl;
+				count++;
+			}
+			cout << "\n* Press ENTER to continue...";
+			
+			cin.clear();
+			cin.get();
+			cin.clear();
+			cin.ignore(10000, '\n');
+			system("clear");
+		}
+		
+
+ 	}
+ 	else{		//Searching for a specific exhibitor
+ 	
+ 		if (file.is_open()) 
+		{
+			cout << "[Searching Attendees...]\n" << endl;
+			getline(file, temp); // skips CREATE line
+			int count = 1;
+			cout << "\t";
+			for (int i = 0; i < 10; ++i){
+					cout << '[' << db.database["attendees"]->getHeaders()[i] << ']' << "    " ;
+			}
+			cout << endl;
+			while (getline(file, temp)) 
+			{
+				int s = temp.find("\"") + 1;
+				int e = temp.find("\"",s);
+		
+				char chars[] = "\"),;";										//Grab characters to remove
+				
+				if(searchName.compare(temp.substr(s,e-s))==0){				//Get all proper headers and print
+					string str = temp.substr(s,temp.length());
+					for (unsigned int i = 0; i < strlen(chars); ++i)		//Do some formating
+					 {
+						str.erase(std::remove(str.begin(), str.end(), chars[i]), str.end());
+					 }
+					cout << count << ". " << str << endl;
+					count++;
+				}
+			}
+			cout << "\n* Press ENTER to continue...";
+			cin >> int_input;
+			cin.clear();
+			cin.ignore(10000, '\n');
+			system("clear");
+		}
+ 		
+ 	}
+ 	
+ 	file.close();
+	
+}
+
+
 
 
 void managerSearchExhibitsMenu()
@@ -472,7 +569,8 @@ void attendeeManagerMenu(){
 	cout << "   1. Register an attendee" << endl;
 	cout << "   2. Delete an attendee" << endl;
 	cout << "   3. Search for an attendee(s)" << endl;
-	cout << "   4. <- Go Back\n" << endl;
+	cout << "   4. List all attendee(s)" << endl;
+	cout << "   5. <- Go Back\n" << endl;
 	cout << "* Enter command number: ";
 	
 	cin >> int_input;
@@ -491,6 +589,8 @@ void attendeeManagerMenu(){
 		managerSearchAttendee();
 		break;
 	case 4:
+		printAttendeeName(true, "");
+	case 5:
 		return;
 	default:
 		cin.clear();
@@ -503,16 +603,157 @@ void attendeeManagerMenu(){
 
 	attendeeManagerMenu();
 }
+
 void managerRegisterAttendee(){		//should be like registering an exhibit
-	cout << "Register an attendee" << endl; 
+
+	string values[9] = {"Name","Organization","Address","email", "Registration Fee","Category","Exhibits Visited","Badge Status","org_description"};
+	
+	cout << "[Register New Attendee]\n" << endl;
+	cout << "-Enter the details of the Attendee-" << endl;
+	
+		cin.ignore();				//needed this here because input was getting cut off
+
+	str_input = "INSERT INTO attendees VALUES FROM (";
+	for(int i = 0; i < 8; ++i)
+	{
+		string userInput;
+		cout << values[i] + ": ";
+		getline(cin,userInput);
+		str_input += "\"" + userInput + "\"";
+		if(i < 8) //for the first nine items
+		{
+			str_input += ", "; //put a comma
+		}	
+	}
+	str_input += ");"; //on the last item we don't need a comma
+	
+	cout<<str_input << endl;
+	
+	//tables[3] is attendees
+	
+	db.DBParser.sendNewInput("CLOSE " + tables[3] + ";");
+	db.execute();
+	
+	db.DBParser.sendNewInput("OPEN " + tables[3] + ";");
+	db.execute();
+	
+	db.DBParser.sendNewInput(str_input);
+	db.execute();
+	str_input.clear();
+	
+	
+	
+	db.DBParser.sendNewInput("SAVE " + tables[3] + ";");
+	db.execute(); 
+	
+	system("clear");
+	
+	cout << "* New Attendee has been added! *\n" << endl;;
+
+
+
+
+
 
 	
 }
 void managerDeleteAttendee(){
 	cout << "Delete an attendee" << endl;
+	cin.clear();
+	cin.ignore(10000, '\n');
+	system("clear");
+	cout << "[Delete Attendee]\n" << endl;
+	
+	cout << "* Enter name of the Attendee: ";
+	
+	getline(cin, str_input);
+	string deleteName = str_input; //grab the tablename for output
+	str_input = "DELETE FROM attendees WHERE name == " + str_input + ";";
+	cout << endl;
+	
+	db.DBParser.sendNewInput(str_input);
+    db.execute(); 
+	db.DBParser.contain.clear();
+    
+    db.DBParser.sendNewInput("SAVE attendees;");
+    db.execute(); 
+	db.DBParser.contain.clear();
+
+	system("clear"); //clean terminal
+
+	cout << "Deleted " << deleteName << "!\n"<< endl;
+
+	
+	
 }
 void managerSearchAttendee(){
-	cout << "Seraching for an attendee..." << endl;
+	//cout << "Seraching for an attendee..." << endl;
+		//for searching for exhibit
+	int case2Option = 0;
+	string viewHeader ="";
+	string viewOP= "";
+	string viewCondition = "";
+
+	vector<string> headers;
+	vector<string> OP;
+	vector<string> conditions;
+
+	//clear out vectors
+	headers.clear();
+	OP.clear();
+	conditions.clear();
+
+	cout << "Search by Criteria? (1 Yes. 0 No.)\n";
+
+	cin >> case2Option;
+ 
+    if (case2Option)
+	{
+		cout << "Enter Criteria. Enter 1 at header stage when done." << endl;
+        cin.ignore();			//Need this here or else input for Header gets cut off
+
+        while (1) //get header, op, and condition for search
+		{
+			cout << "Header: ";
+			getline (cin,viewHeader); //get header lhs
+			if (viewHeader == "1") break; //break if we have 1
+			cout << endl;
+			headers.push_back(viewHeader); //push back into vector
+
+			cout << "Operation: ";
+			cin >> viewOP; //get operation
+			cout << endl;
+			OP.push_back(viewOP);
+
+            cin.ignore(); //Input getting cut off
+            cout << "Condition: ";
+			getline(cin, viewCondition); //get condition rhs
+			cout << endl;
+			conditions.push_back(viewCondition);
+		}
+		system("clear");//clear out the screen
+		managerSearchAttendees(headers, OP, conditions);
+	}
+	else
+	{
+		cin.clear();
+		cin.ignore(10000, '\n');
+		cout << "Enter the attendee name: " << endl;
+		getline(cin, viewCondition); //get input
+		headers.push_back("name");	 //push back "name" 
+		OP.push_back("==");
+		conditions.push_back(viewCondition);
+		system("clear");//clear out the screen
+		managerSearchAttendees(headers, OP, conditions); //will call select and then SHOW and then delete the temp table.
+	}
+
+
+	
+	
+	
+	
+	
+	
 }
 //End Manager Attendee Menu
 
@@ -566,6 +807,16 @@ void viewInventory(){
 }
 //End Manager Inventory Menu
 
+
+
+//Manager Revenue
+void showTotalRevenue(){
+	//Revenue initialized in App.h
+	cout << "Revenue generated: " << revenue << endl;
+	
+	
+	
+}
 
 
 //-----------------------------------------------------------------------------------//
@@ -628,10 +879,7 @@ double invoiceCalculator()
 //show total revenue (add up all the fees).
 //Will work with services.db
 //Should the manager do this?
-void showTotalRevenue()
-{
-	
-}
+
 
 void addAttendee(){
 
@@ -899,7 +1147,8 @@ void exhibitManagerMenu()
 	cout << "   3. Services" << endl;
 	cout << "   4. Attendees" << endl;
 	cout << "   5. Inventory" << endl;
-	cout << "   6. <- Go Back\n" << endl;
+	cout << "   6. Show Total Revenue" << endl;
+	cout << "   7. <- Go Back\n" << endl;
 	cout << "* Enter command number: ";
 	
 	cin >> int_input;
@@ -923,6 +1172,9 @@ void exhibitManagerMenu()
 		inventoryMenu();
 		break;
 	case 6:
+		showTotalRevenue();
+		break;
+	case 7:
 		return;
 		break;
 	default:
