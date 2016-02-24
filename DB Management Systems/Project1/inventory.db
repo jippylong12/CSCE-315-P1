@@ -1,1 +1,1 @@
-CREATE TABLE inventory (electronics VARCHAR(100), furniture VARCHAR(100)) PRIMARY KEY (electronics, furniture);
+CREATE TABLE services (electricity VARCHAR(100), furniture_type VARCHAR(100), furniture_num INTEGER, electronics_type VARCHAR(100), electronics_num INTEGER, bar_code_scanner VARCHAR(100), advertisement_type VARCHAR(100), advertisement_num INTEGER, insurance INTEGER) PRIMARY KEY (electricity);

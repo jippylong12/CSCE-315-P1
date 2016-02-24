@@ -1,0 +1,1 @@
+CREATE TABLE old_dogs (name VARCHAR(20), kind VARCHAR(8), age INTEGER) PRIMARY KEY (name, kind);

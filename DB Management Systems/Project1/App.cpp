@@ -197,15 +197,15 @@ void managerSearchExhibitsMenu()
 	OP.clear();
 	conditions.clear();
 
-	cin.ignore();
 	cout << "Search by Criteria? (1 Yes. 0 No.)\n";
-	
+
 	cin >> case2Option;
-	cin.ignore();       //Need this here or else input for Header gets cut off
+ 
     if (case2Option)
 	{
 		cout << "Enter Criteria. Enter 1 at header stage when done." << endl;
-        
+        cin.ignore();			//Need this here or else input for Header gets cut off
+
         while (1) //get header, op, and condition for search
 		{
 			cout << "Header: ";
@@ -353,16 +353,293 @@ void exhibitMenu()
 
 }
 
-void showTotalRevenue() //adds up all the fees
-{
+//Begin Manager Booth Menu
+void boothMenu(){
+	cout << "[Booth Menu]\n" << endl;
+	cout << "   1. Assign Booth Locations" << endl;
+	cout << "   2. Delete Booth Locations" << endl;
+	cout << "   3. View Booth Locations" << endl;
+	cout << "   4. <- Go Back\n" << endl;
+	cout << "* Enter command number: ";
+	
+	cin >> int_input;
+
+	cout << endl;
+	system("clear");
+	switch (int_input)
+	{
+	case 1:
+		assignBoothLocations();
+		break;
+	case 2:
+		deleteBoothLocations();
+		break;
+	case 3:
+		viewBoothLocations();
+		break;
+	case 4:
+		return;
+	default:
+		cin.clear();
+		cin.ignore(10000, '\n');
+		system("clear");
+		cout << "***Not a valid command, try again***\n" << endl;
+
+		break;
+	}
+
+	boothMenu();
+	
 	
 }
+
+void assignBoothLocations(){
+	cout << "Assigning booth..." << endl;
+}
+
+void deleteBoothLocations(){
+	cout << "Deleting booth..." << endl;
+	
+}
+
+void viewBoothLocations(){		//View all or search
+	cout << "Viewing..." << endl;
+	
+}
+//End Manager Booth Menu
+
+
+//Begin Manager Services Menu
+void servicesMenu(){
+	cout << "[Services Menu]\n" << endl;
+	cout << "   1. Assign Services to an Exhibit Booth" << endl;
+	cout << "   2. Delete Services for an Exhibit(s) Booth" << endl;
+	cout << "   3. View Services for Exhibits" << endl;
+	cout << "   4. <- Go Back\n" << endl;
+	cout << "* Enter command number: ";
+	
+	cin >> int_input;
+
+	cout << endl;
+	system("clear");
+	switch (int_input)
+	{
+	case 1:
+		assignBoothServices();
+		break;
+	case 2:
+		viewBoothServices();
+		break;
+	case 3:
+		deleteBoothServices();
+		break;
+	case 4:
+		return;
+	default:
+		cin.clear();
+		cin.ignore(10000, '\n');
+		system("clear");
+		cout << "***Not a valid command, try again***\n" << endl;
+
+		break;
+	}
+
+	servicesMenu();
+	
+	
+}
+
+void assignBoothServices(){
+	cout << "Assign booth services.." << endl;
+	
+}
+
+void deleteBoothServices(){
+	cout << "Deleting booth services" << endl;
+	
+}
+
+void viewBoothServices(){
+	cout << "Viewing booth service " << endl;
+}
+//End Manager Services Menu
+
+
+
+//Begin Manager Attendee Menu
+void attendeeManagerMenu(){
+	cout << "[Manager Attendee Menu]\n" << endl;
+	cout << "   1. Register an attendee" << endl;
+	cout << "   2. Delete an attendee" << endl;
+	cout << "   3. Search for an attendee(s)" << endl;
+	cout << "   4. <- Go Back\n" << endl;
+	cout << "* Enter command number: ";
+	
+	cin >> int_input;
+
+	cout << endl;
+	system("clear");
+	switch (int_input)
+	{
+	case 1:
+		managerRegisterAttendee();
+		break;
+	case 2:
+		managerDeleteAttendee();
+		break;
+	case 3:
+		managerSearchAttendee();
+		break;
+	case 4:
+		return;
+	default:
+		cin.clear();
+		cin.ignore(10000, '\n');
+		system("clear");
+		cout << "***Not a valid command, try again***\n" << endl;
+
+		break;
+	}
+
+	attendeeManagerMenu();
+}
+void managerRegisterAttendee(){		//should be like registering an exhibit
+	cout << "Register an attendee" << endl; 
+
+	
+}
+void managerDeleteAttendee(){
+	cout << "Delete an attendee" << endl;
+}
+void managerSearchAttendee(){
+	cout << "Seraching for an attendee..." << endl;
+}
+//End Manager Attendee Menu
+
+
+
+//Begin Manager Inventory Menu
+void inventoryMenu(){
+	cout << "[Manager Inventory Menu]\n" << endl;
+	cout << "   1. Add To Inventory" << endl;
+	cout << "   2. Delete From Inventory" << endl;
+	cout << "   3. List Current Inventory" << endl;
+	cout << "   4. <- Go Back\n" << endl;
+	cout << "* Enter command number: ";
+	
+	cin >> int_input;
+
+	cout << endl;
+	system("clear");
+	switch (int_input)
+	{
+	case 1:
+		addInventory();
+		break;
+	case 2:
+		deleteInventory();
+		break;
+	case 3:
+		viewInventory();
+		break;
+	case 4:
+		return;
+	default:
+		cin.clear();
+		cin.ignore(10000, '\n');
+		system("clear");
+		cout << "***Not a valid command, try again***\n" << endl;
+
+		break;
+	}
+
+	inventoryMenu();
+}
+void addInventory(){			//Insert into inventory
+	
+}
+void deleteInventory(){
+	
+}
+void viewInventory(){
+	
+}
+//End Manager Inventory Menu
+
+
+
+//-----------------------------------------------------------------------------------//
+
+
+//Exhibitor Menu//
 
 
 double invoiceCalculator()
 {
+
+	//show invoice for exhibitor (booth, service, and the cost for each subitem, and total cost).
+	//Check through inventory.db and match exhibitor name with item.  Grab all of the relevant items and print
+	//Go through services match the items with the price and grab the price
+	 
+	 vector<string> inventoryList;
+	 
+	 
+	 vector<string> orgHeader;               //Search by exhibitsName (will have the corresponding item)
+     orgHeader.push_back("exhibitorName");
+    
+     vector<string> OP;                      //Take all entries that have the exhibitorName
+     OP.push_back("==");
+    
+     vector<string> orgName;                 //Search for the ACUTAL exhibits visited entries
+     orgName.push_back(exhibitorName);
+    
+	
+	
+	 Table* pointer = db.SELECT("", "inventory", orgHeader, OP, orgName); //get select table and assign a pointer to it
+    
+        if (pointer->getRowLength() < 1) //if there is not anything to show
+        {
+            cout << "There is no table with that name. \n"; //there must be no table
+            return 1;
+        }
+        else //otherwise we have something to show
+        {
+            db.SHOW(pointer->getTableName());   //so show it
+
+            //delete pointer;                     //get rid of the table in memory since we don't need it
+
+            //return 0;
+        }
+
+	for (int i = 0; i < pointer->getRowLength(); ++i){
+		inventoryList.push_back(pointer->getTable()[i][0]);			//This will grab the items list
+	}
+	
+	cout << "Inventory List for " << exhibitorName << ":" << endl;
+	for (int i = 0; i < inventoryList.size(); ++i){
+		cout << inventoryList[i] << endl;
+	}
+	
+	delete pointer;
 	
 }
+
+
+//show total revenue (add up all the fees).
+//Will work with services.db
+//Should the manager do this?
+void showTotalRevenue()
+{
+	
+}
+
+void addAttendee(){
+
+}
+void deleteAttendee(){
+	
+}
+
 
 void exhibitorMenu()
 {
@@ -372,7 +649,10 @@ void exhibitorMenu()
 	cout << "  2. View Your Attendees"<<endl;
 	cout << "  3. View Invoice"<<endl;
 	cout << "  4. View Total Revenue"<<endl;
-	cout << "  5. <-- Go Back"<<endl<<endl;
+	cout << "  5. Add Attendee For Your Exhibit" << endl;
+	cout << "  6. Delete Attendee From Your Exhibit" << endl;
+	cout << "  7. <-- Go Back"<<endl<<endl;
+	
 	
 	cout<< "* Enter command number: ";
 	cin >> int_input;
@@ -388,9 +668,17 @@ void exhibitorMenu()
 			break;
 		case 3: 
 			invoiceCalculator(); //not implemented yet
+			break;
 		case 4:
 			showTotalRevenue();
+			break;
 		case 5:
+			addAttendee();
+			break;
+		case 6:
+			deleteAttendee();
+			break;
+		case 7:
 			return;
 		default:
 			cin.clear();
@@ -623,12 +911,16 @@ void exhibitManagerMenu()
 		exhibitMenu();
 		break;
 	case 2:
+		boothMenu();		//assign, delete, and list booth location(s) for a given exhibitor
 		break;
-	case 3:
+	case 3:		
+		servicesMenu();		//assign, delete, and list booth services to exhibitor
 		break;
 	case 4:
+		attendeeManagerMenu();
 		break;
 	case 5:
+		inventoryMenu();
 		break;
 	case 6:
 		return;
