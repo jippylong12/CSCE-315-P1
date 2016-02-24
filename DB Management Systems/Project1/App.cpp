@@ -591,10 +591,10 @@ void servicesMenu(){
 		assignBoothServices();
 		break;
 	case 2:
-		viewBoothServices();
+		deleteBoothServices();
 		break;
 	case 3:
-		deleteBoothServices();
+		viewBoothServices();
 		break;
 	case 4:
 		return;
@@ -624,6 +624,32 @@ void deleteBoothServices(){
 
 void viewBoothServices(){
 	cout << "Viewing booth service " << endl;
+   vector<string> orgHeader;               //Search by attendee name
+        orgHeader.push_back("name");
+    
+        vector<string> OP;                      //Take all entries that have the name
+        OP.push_back("==");
+    
+        vector<string> orgName;                 //Search for the ACUTAL name entries
+        orgName.push_back(exhibitorName);
+    
+        //Will select and show the corresponding info for the current attendee.
+    
+    
+        Table* pointer = db.SELECT("", "services", orgHeader, OP, orgName); //get select table and assign a pointer to it
+    
+        //Now, we can search through this table to grab their exhibits_visited
+    
+    vector<string> exhibitsVisited;
+    if(pointer->getRowLength()!=0){   //search through the attendee info in attendees.db.  If there is no info for the attendee, there will be no exhibits visited.
+        for (int i = 0; i < pointer->getRowLength(); ++i){
+            cout << i+1 << ". " << pointer->getTable()[i][6] << endl;       //index 6 because it is the 7th column
+        }
+    }else cout << "You have not visited any exhibits. \n" << endl;
+
+	
+    
+    
 }
 //End Manager Services Menu
 
@@ -891,33 +917,42 @@ void showTotalRevenue(){
 //Exhibitor Menu//
 
 
-double invoiceCalculator()
+void invoiceCalculator()
 {
 
 	//show invoice for exhibitor (booth, service, and the cost for each subitem, and total cost).
 	//Check through inventory.db and match exhibitor name with item.  Grab all of the relevant items and print
 	//Go through services match the items with the price and grab the price
 	 
+	 
+	 double tempPrice = 0;
+	 double total = 0;
+	 
 	 vector<string> inventoryList;
+	 vector<string> servicesList;
 	 
 	 
 	 vector<string> orgHeader;               //Search by exhibitsName (will have the corresponding item)
      orgHeader.push_back("exhibitorName");
+     
+     vector<string> itemHeader;
+     itemHeader.push_back("item");
     
      vector<string> OP;                      //Take all entries that have the exhibitorName
      OP.push_back("==");
     
      vector<string> orgName;                 //Search for the ACUTAL exhibits visited entries
      orgName.push_back(exhibitorName);
+     
     
 	
 	
-	 Table* pointer = db.SELECT("", "inventory", orgHeader, OP, orgName); //get select table and assign a pointer to it
+	 Table* pointer = db.SELECT("", "inventory", orgHeader, OP,  orgName); //get select table and assign a pointer to it
     
         if (pointer->getRowLength() < 1) //if there is not anything to show
         {
             cout << "There is no table with that name. \n"; //there must be no table
-            return 1;
+            return;
         }
         else //otherwise we have something to show
         {
@@ -930,14 +965,60 @@ double invoiceCalculator()
 
 	for (int i = 0; i < pointer->getRowLength(); ++i){
 		inventoryList.push_back(pointer->getTable()[i][0]);			//This will grab the items list
+		servicesList.push_back(pointer-> getTable()[i][2]);
 	}
 	
 	cout << "Inventory List for " << exhibitorName << ":" << endl;
 	for (int i = 0; i < inventoryList.size(); ++i){
-		cout << inventoryList[i] << endl;
+		cout <<"item: "<< inventoryList[i] <<"  service: "<<servicesList[i]<< endl;
 	}
 	
 	delete pointer;
+	
+	//Find the prices using the servicesList.
+	
+	//db.SHOW(pointer1 -> getTableName());
+	for (int a = 0; a < servicesList.size(); ++a)
+	{
+		cout<<servicesList[a]<<endl;
+		//itemHeader.push_back("item");
+	}
+	cout<<endl<<"size of servicesList: "<<servicesList.size()<<"  size of itemHeader: "<<itemHeader.size()<<endl;
+	for (int i = 0; i < servicesList.size(); ++i)
+	{
+		cout<<endl<<servicesList[i]<<endl;
+	}
+	//Table* pointer1 = db.SELECT("", "services", itemHeader, OP,  servicesList); //get select table and assign a pointer to it
+	//db.SHOW(pointer1 -> getTableName());
+	for(int a = 0; a<servicesList.size(); ++a)
+	{
+		vector <string> tempServicesList;
+		tempServicesList.push_back(servicesList[a]);
+		Table* pointer1 = db.SELECT("", "services", itemHeader, OP,  tempServicesList);
+		
+		
+		for (int i = 0; i < pointer1->getRowLength(); ++i)
+		{
+			if (pointer1 -> getTable()[i][0].compare(servicesList[a]) == 0)
+			{
+				tempPrice = stod(pointer -> getTable()[i][3]);
+				cout << "Before string to double conversion: "<< pointer1 -> getTable()[i][3]<<endl;;
+				cout << "After string to double Conversion: " <<stod(pointer1 -> getTable()[i][3])<<endl;
+			}
+			else
+			{
+				tempPrice = 0;
+			}
+			total += tempPrice;
+		}
+		delete pointer1;
+	}
+	//
+	
+	cout<<"The total invoice is: $"<<total<<endl;
+	
+	
+	//delete pointer1;
 	
 }
 
@@ -962,10 +1043,9 @@ void exhibitorMenu()
 	cout << "  1. View My Info"<<endl;
 	cout << "  2. View Your Attendees"<<endl;
 	cout << "  3. View Invoice"<<endl;
-	cout << "  4. View Total Revenue"<<endl;
-	cout << "  5. Add Attendee For Your Exhibit" << endl;
-	cout << "  6. Delete Attendee From Your Exhibit" << endl;
-	cout << "  7. <-- Go Back"<<endl<<endl;
+	cout << "  4. Add Attendee For Your Exhibit" << endl;
+	cout << "  5. Delete Attendee From Your Exhibit" << endl;
+	cout << "  6. <-- Go Back"<<endl<<endl;
 	
 	
 	cout<< "* Enter command number: ";
@@ -984,15 +1064,12 @@ void exhibitorMenu()
 			invoiceCalculator(); //not implemented yet
 			break;
 		case 4:
-			showTotalRevenue();
-			break;
-		case 5:
 			addAttendee();
 			break;
-		case 6:
+		case 5:
 			deleteAttendee();
 			break;
-		case 7:
+		case 6:
 			return;
 		default:
 			cin.clear();

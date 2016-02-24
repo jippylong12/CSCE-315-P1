@@ -88,8 +88,7 @@
     void exhibitorExhibitbyName(); //show table of exhibits depending on exhibitor
     void exhibitorNumAttendees(); //show table of all attenddess that have visited
     
-    double invoiceCalculator(); //calculates invoice given exhibitor
-    
+    void invoiceCalculator(); //calculates invoice given exhibitor
     
     void addAttendee();     //Adds attendees for given exhibitor
     void deleteAttendee();  //Deletes attendee for given exhibitor
