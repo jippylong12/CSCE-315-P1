@@ -1,4 +1,4 @@
-CREATE TABLE services (item VARCHAR(100), type VARCHAR(100), quantity INTEGER, price INTEGER) PRIMARY KEY (item, price);
+CREATE TABLE inventory (item VARCHAR(100), exhibitorName VARCHAR(100), quantity INTEGER, price INTEGER) PRIMARY KEY (item, price);
 INSERT INTO services VALUES FROM ("500W", "electricity", 100, 100);
 INSERT INTO services VALUES FROM ("1000W", "electricity", 100, 200);
 INSERT INTO services VALUES FROM ("1500W", "electricity", 100, 300);
@@ -17,3 +17,5 @@ INSERT INTO services VALUES FROM ("large banner", "advertisement", 100, 200);
 INSERT INTO services VALUES FROM ("small banner", "advertisement", 100, 100);
 INSERT INTO services VALUES FROM ("1 million coverage", "insurance", 100, 50000);
 INSERT INTO services VALUES FROM ("10 million coverage", "insurance", 100, 100000);
+INSERT INTO services VALUES FROM ("economy", "booth", 100, 1000);
+INSERT INTO services VALUES FROM ("premium", "booth", 100, 2000);
