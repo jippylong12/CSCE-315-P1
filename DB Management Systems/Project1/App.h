@@ -21,7 +21,8 @@
     string ManagerPW = "asdf";
     string exhibitorName = "";          //This will store the current exhibitor
     string currAttendeeName = "";       //This will store the current attendee
-
+    
+    double revenue = 0;
 
 
 //-----------General Menu Functions-----------//
@@ -41,10 +42,11 @@
     void exhibitManagerMenu();      //Main exhibit manager menu
 
     void exhibitMenu();
-    void registerNewExhibit();      //Manager register
-    void viewExhibits();            //Manager view
-    void deleteExhibit();           //Manager delete
-
+    void registerNewExhibit();      //Manager register menu
+    void viewExhibits();            //Manager view menu
+    void deleteExhibit();           //Manager delete menu
+    int managerSearchExhibits();    //Function that actually searches exhibits
+    
     //Needing functions for these manager operations:
     
     //Booths
@@ -64,13 +66,18 @@
     void attendeeManagerMenu();     //Manager can change attendees for exhibitor
     void managerRegisterAttendee();
     void managerDeleteAttendee();
-    void managerSearchAttendee();   //Search for attendee based on a certain criteria
+    void managerSearchAttendee();   //Menu for searching for an attendee based on a certain criteria
+    int managerSearchAttendees();   //Function that does the searching
     
     //Inventory
     void inventoryMenu();           //Manager can change inventory for an exhibitor
     void addInventory();
     void deleteInventory();
     void viewInventory();
+    
+    
+    //Revenue
+    void showTotalRevenue();        //add up all the fees
     
 
 
@@ -82,7 +89,6 @@
     void exhibitorNumAttendees(); //show table of all attenddess that have visited
     
     void invoiceCalculator(); //calculates invoice given exhibitor
-    void showTotalRevenue(); //add up all the fees
     
     void addAttendee();     //Adds attendees for given exhibitor
     void deleteAttendee();  //Deletes attendee for given exhibitor
