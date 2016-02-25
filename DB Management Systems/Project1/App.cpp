@@ -702,29 +702,24 @@ void deleteBoothServices(){
 }
 
 void viewBoothServices(){
-	cout << "Viewing booth service " << endl;
-   vector<string> orgHeader;               //Search by attendee name
-        orgHeader.push_back("name");
+		cout << "Viewing booth service " << endl;
+   		vector<string> orgHeader;               //Search by attendee name
+        orgHeader.push_back("item");
     
         vector<string> OP;                      //Take all entries that have the name
-        OP.push_back("==");
+        OP.push_back("!=");
     
         vector<string> orgName;                 //Search for the ACUTAL name entries
-        orgName.push_back(exhibitorName);
+        orgName.push_back("-1");
     
         //Will select and show the corresponding info for the current attendee.
     
     
-        Table* pointer = db.SELECT("", "services", orgHeader, OP, orgName); //get select table and assign a pointer to it
+        Table* pointer = db.SELECT("Booth Services", "services", orgHeader, OP, orgName); //get select table and assign a pointer to it
     
         //Now, we can search through this table to grab their exhibits_visited
     
-    vector<string> exhibitsVisited;
-    if(pointer->getRowLength()!=0){   //search through the attendee info in attendees.db.  If there is no info for the attendee, there will be no exhibits visited.
-        for (int i = 0; i < pointer->getRowLength(); ++i){
-            cout << i+1 << ". " << pointer->getTable()[i][6] << endl;       //index 6 because it is the 7th column
-        }
-    }else cout << "You have not visited any exhibits. \n" << endl;
+    	db.SHOW(pointer -> getTableName());
 
 	
     
@@ -1177,8 +1172,8 @@ void showTotalRevenue(){
 				if (pointer1 -> getTable()[i][0].compare(servicesList[a]) == 0)
 				{
 					tempPrice = stod(pointer -> getTable()[i][3]);
-					cout << "Before string to double conversion: "<< pointer1 -> getTable()[i][3]<<endl;;
-					cout << "After string to double Conversion: " <<stod(pointer1 -> getTable()[i][3])<<endl;
+					//cout << "Before string to double conversion: "<< pointer1 -> getTable()[i][3]<<endl;;
+					//cout << "After string to double Conversion: " <<stod(pointer1 -> getTable()[i][3])<<endl;
 				}
 				else
 				{
