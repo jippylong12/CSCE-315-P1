@@ -71,6 +71,28 @@ int managerSearchAttendees(vector<string> headers, vector<string> OP, vector<str
 
 }
 
+int managerSearchInventory(vector<string> headers, vector<string> OP, vector<string> conditions)
+{
+	string newTableName = "All Inventory";//create new name
+
+	Table* pointer = db.SELECT(newTableName, "inventory", headers, OP, conditions); //get select table and assign a pointer to it
+	
+	if (pointer->getRowLength() < 1) //if there is not anything to show
+	{
+		cout << "Their data was not found. \n"; //there must be no table
+		return 1;
+	}
+	else //otherwise we have something to show
+	{
+		db.SHOW(pointer->getTableName()); //so show it
+
+		delete pointer; //get rid of the table in memory since we don't need it 
+
+		return 0;
+	}
+
+}
+
 
 void registerNewExhibit()
 {
@@ -945,13 +967,103 @@ void inventoryMenu(){
 
 	inventoryMenu();
 }
-void addInventory(){			//Insert into inventory
+void addInventory()
+{			
+	//Insert into inventory
+	
+	string values[3] = {"item","exhibitorName", "type"};
+	
+	cout << "[Add New Inventory]\n" << endl;
+	cout << "-Enter the details of the Inventory item-" << endl;
+	
+		cin.ignore();				//needed this here because input was getting cut off
+
+	str_input = "INSERT INTO inventory VALUES FROM (";
+	for(int i = 0; i < 3; ++i)
+	{
+		string userInput;
+		cout << values[i] + ": ";
+		getline(cin,userInput);
+		str_input += "\"" + userInput + "\"";
+		if(i < 2) //for the first nine items
+		{
+			str_input += ", "; //put a comma
+		}	
+	}
+	str_input += ");"; //on the last item we don't need a comma
+	
+	cout<<str_input << endl;
+	
+	//tables[3] is attendees
+	
+	db.DBParser.sendNewInput("CLOSE " + tables[4] + ";");
+	db.execute();
+	
+	db.DBParser.sendNewInput("OPEN " + tables[4] + ";");
+	db.execute();
+	
+	db.DBParser.sendNewInput(str_input);
+	db.execute();
+	str_input.clear();
+	
+	
+	
+	db.DBParser.sendNewInput("SAVE " + tables[4] + ";");
+	db.execute(); 
+	
+	system("clear");
+	
+	cout << "* New Item has been added! *\n" << endl;;
+
+	
+	
+	
+	
+	
+	
 	
 }
-void deleteInventory(){
+void deleteInventory()
+{
+	cout << "Delete an item from Inventory" << endl;
+	cin.clear();
+	cin.ignore(10000, '\n');
+	system("clear");
+	cout << "[Delete an Item from Inventory]\n" << endl;
+	
+	cout << "* Enter name of the item: ";
+	
+	getline(cin, str_input);
+	string deleteName = str_input; //grab the tablename for output
+	str_input = "DELETE FROM inventory WHERE item == " + str_input + ";";
+	cout << endl;
+	
+	db.DBParser.sendNewInput(str_input);
+    db.execute(); 
+	db.DBParser.contain.clear();
+    
+    db.DBParser.sendNewInput("SAVE inventory;");
+    db.execute(); 
+	db.DBParser.contain.clear();
+
+	system("clear"); //clean terminal
+
+	cout << "Deleted " << deleteName << "!\n"<< endl;
 	
 }
-void viewInventory(){
+void viewInventory()
+{
+	vector<string> header;
+	header.push_back("item");
+	
+	vector<string> OP;
+	OP.push_back("!=");
+	
+	vector<string> cond;
+	cond.push_back("-1");		//Comparing to this will show evertyihg
+	
+	
+	managerSearchInventory(header, OP, cond);
 	
 }
 //End Manager Inventory Menu
