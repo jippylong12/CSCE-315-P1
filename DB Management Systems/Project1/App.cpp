@@ -693,12 +693,80 @@ void servicesMenu(){
 
 void assignBoothServices()
 {
+	string values[4] = {"Item","Type","Quantity","Price"};
+	
+	cout << "[Assign New Service]\n" << endl;
+	cout << "-Enter the details of the Service-" << endl;
+	
+		cin.ignore();				//needed this here because input was getting cut off
+
+	str_input = "INSERT INTO services VALUES FROM (";
+	for(int i = 0; i < 4; ++i)
+	{
+		string userInput;
+		cout << values[i] + ": ";
+		getline(cin,userInput);
+		str_input += "\"" + userInput + "\"";
+		if(i < 3) //for the first 3 items
+		{
+			str_input += ", "; //put a comma
+		}	
+	}
+	str_input += ");"; //on the last item we don't need a comma
+	
+	cout<<str_input << endl;
+	
+	//tables[3] is attendees
+	
+	db.DBParser.sendNewInput("CLOSE " + tables[2] + ";");
+	db.execute();
+	
+	db.DBParser.sendNewInput("OPEN " + tables[2] + ";");
+	db.execute();
+	
+	db.DBParser.sendNewInput(str_input);
+	db.execute();
+	str_input.clear();
+	
+	
+	
+	db.DBParser.sendNewInput("SAVE " + tables[2] + ";");
+	db.execute(); 
+	
+	system("clear");
+	
+	cout << "* New Service has been added! *\n" << endl;;
+
+	
 
 	
 }
 
 void deleteBoothServices(){
 	cout << "Deleting booth services" << endl;
+	cin.clear();
+	cin.ignore(10000, '\n');
+	system("clear");
+	cout << "[Delete Booth Service]\n" << endl;
+	
+	cout << "* Enter name of the item to be deleted: ";
+	
+	getline(cin, str_input);
+	string deleteName = str_input; //grab the tablename for output
+	str_input = "DELETE FROM services WHERE item == " + str_input + ";";
+	cout << endl;
+	
+	db.DBParser.sendNewInput(str_input);
+    db.execute(); 
+	db.DBParser.contain.clear();
+    
+    db.DBParser.sendNewInput("SAVE services;");
+    db.execute(); 
+	db.DBParser.contain.clear();
+
+	system("clear"); //clean terminal
+
+	cout << "Deleted " << deleteName << "!\n"<< endl;
 	
 }
 
