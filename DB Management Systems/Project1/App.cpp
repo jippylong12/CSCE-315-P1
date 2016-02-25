@@ -691,7 +691,8 @@ void servicesMenu(){
 	
 }
 
-void assignBoothServices(){
+void assignBoothServices()
+{
 
 	
 }
@@ -701,7 +702,8 @@ void deleteBoothServices(){
 	
 }
 
-void viewBoothServices(){
+void viewBoothServices()
+{
 	cout << "Viewing booth service " << endl;
    vector<string> orgHeader;               //Search by attendee name
         orgHeader.push_back("name");
@@ -1074,7 +1076,7 @@ void viewInventory()
 void showTotalRevenue(){
 	//Revenue initialized in App.h
 	
-	 cout << "Revenue generated: " << revenue << endl;
+	 //cout << "Revenue generated: " << revenue << endl;
 	 double tempPrice = 0;
 	 double total = 0;
 	 
@@ -1098,12 +1100,13 @@ void showTotalRevenue(){
     //db.SHOW(ptr -> getTableName());
     
     vector <string> orgNames;
-    
+    cout<<"Names: "<<endl;
     for (int i = 0; i < ptr -> getRowLength(); ++i)
     {
     	orgNames.push_back(ptr -> getTable()[i][0]);
     	cout<<orgNames[i]<<endl;
     }
+    cout<<endl<<endl;
     delete ptr;
     
     
@@ -1142,10 +1145,10 @@ void showTotalRevenue(){
 			servicesList.push_back(pointer-> getTable()[i][2]);
 		}
 		
-		cout << "Inventory List for " << exhibitorName << ":" << endl;
+		//cout << "Inventory List for " << exhibitorName << ":" << endl;
 		for (int i = 0; i < inventoryList.size(); ++i)
 		{
-			cout <<"item: "<< inventoryList[i] <<"  service: "<<servicesList[i]<< endl;
+			//cout <<"item: "<< inventoryList[i] <<"  service: "<<servicesList[i]<< endl;
 		}
 		
 		delete pointer;
@@ -1155,7 +1158,7 @@ void showTotalRevenue(){
 		//db.SHOW(pointer1 -> getTableName());
 		for (int a = 0; a < servicesList.size(); ++a)
 		{
-			cout<<servicesList[a]<<endl;
+			//cout<<servicesList[a]<<endl;
 			//itemHeader.push_back("item");
 		}
 		//cout<<endl<<"size of servicesList: "<<servicesList.size()<<"  size of itemHeader: "<<itemHeader.size()<<endl;
@@ -1177,8 +1180,9 @@ void showTotalRevenue(){
 				if (pointer1 -> getTable()[i][0].compare(servicesList[a]) == 0)
 				{
 					tempPrice = stod(pointer -> getTable()[i][3]);
-					cout << "Before string to double conversion: "<< pointer1 -> getTable()[i][3]<<endl;;
-					cout << "After string to double Conversion: " <<stod(pointer1 -> getTable()[i][3])<<endl;
+					cout << "The price of "<<tempServicesList[i]<<" is: "<<tempPrice<<endl;
+					//cout << "Before string to double conversion: "<< pointer1 -> getTable()[i][3]<<endl;;
+					//cout << "After string to double Conversion: " <<stod(pointer1 -> getTable()[i][3])<<endl;
 				}
 				else
 				{
@@ -1245,7 +1249,7 @@ void invoiceCalculator()
         }
         else //otherwise we have something to show
         {
-            db.SHOW(pointer->getTableName());   //so show it
+            //db.SHOW(pointer->getTableName());   //so show it
 
             //delete pointer;                     //get rid of the table in memory since we don't need it
 
@@ -1257,9 +1261,9 @@ void invoiceCalculator()
 		servicesList.push_back(pointer-> getTable()[i][2]);
 	}
 	
-	cout << "Inventory List for " << exhibitorName << ":" << endl;
+	//cout << "Inventory List for " << exhibitorName << ":" << endl;
 	for (int i = 0; i < inventoryList.size(); ++i){
-		cout <<"item: "<< inventoryList[i] <<"  service: "<<servicesList[i]<< endl;
+		//cout <<"item: "<< inventoryList[i] <<"  service: "<<servicesList[i]<< endl;
 	}
 	
 	delete pointer;
@@ -1269,13 +1273,13 @@ void invoiceCalculator()
 	//db.SHOW(pointer1 -> getTableName());
 	for (int a = 0; a < servicesList.size(); ++a)
 	{
-		cout<<servicesList[a]<<endl;
+		//cout<<servicesList[a]<<endl;
 		//itemHeader.push_back("item");
 	}
-	cout<<endl<<"size of servicesList: "<<servicesList.size()<<"  size of itemHeader: "<<itemHeader.size()<<endl;
+	//cout<<endl<<"size of servicesList: "<<servicesList.size()<<"  size of itemHeader: "<<itemHeader.size()<<endl;
 	for (int i = 0; i < servicesList.size(); ++i)
 	{
-		cout<<endl<<servicesList[i]<<endl;
+		//cout<<endl<<servicesList[i]<<endl;
 	}
 	//Table* pointer1 = db.SELECT("", "services", itemHeader, OP,  servicesList); //get select table and assign a pointer to it
 	//db.SHOW(pointer1 -> getTableName());
@@ -1291,8 +1295,7 @@ void invoiceCalculator()
 			if (pointer1 -> getTable()[i][0].compare(servicesList[a]) == 0)
 			{
 				tempPrice = stod(pointer -> getTable()[i][3]);
-				cout << "Before string to double conversion: "<< pointer1 -> getTable()[i][3]<<endl;;
-				cout << "After string to double Conversion: " <<stod(pointer1 -> getTable()[i][3])<<endl;
+				cout << "The price of "<<tempServicesList[i]<<" is: "<<tempPrice<<endl;
 			}
 			else
 			{
@@ -1302,13 +1305,9 @@ void invoiceCalculator()
 		}
 		delete pointer1;
 	}
-	//
 	
 	cout<<"The total invoice is: $"<<total<<endl;
-	
-	
-	//delete pointer1;
-	
+
 }
 
 
