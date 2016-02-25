@@ -149,6 +149,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\DB Management Systems\Project1\App.h" />
     <ClInclude Include="..\..\DB Management Systems\Project1\Container.h" />
     <ClInclude Include="..\..\DB Management Systems\Project1\DBsystem.h" />
     <ClInclude Include="..\..\DB Management Systems\Project1\Parser.h" />

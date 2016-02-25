@@ -48,6 +48,30 @@ int managerSearchExhibits(vector<string> headers, vector<string> OP, vector<stri
 
 }
 
+int SearchBooths(vector<string> headers, vector<string> OP, vector<string> conditions)
+{
+	string newTableName = "SEARCH QUERY";//create new name
+
+	Table* pointer = db.SELECT(newTableName, "exhibitorsBooths", headers, OP, conditions); //get select table and assign a pointer to it
+
+	if (pointer->getRowLength() < 1) //if there is not anything to show
+	{
+		cout << "Their data was not found. \n"; //there must be no table
+		return 1;
+	}
+	else //otherwise we have something to show
+	{
+		db.SHOW(pointer->getTableName()); //so show it
+
+		delete pointer; //get rid of the table in memory since we don't need it 
+
+		return 0;
+	}
+
+}
+
+
+
 //Works with "attendees.db"
 int managerSearchAttendees(vector<string> headers, vector<string> OP, vector<string> conditions)
 {
@@ -472,13 +496,67 @@ void exhibitMenu()
 
 }
 
+
+void createBoothLocation()
+{
+	//Insert into booth
+
+	string values[4] = { "org_name","row", "column", "type"};
+
+	cout << "[Add New Booth]\n" << endl;
+	cout << "-Enter the details of the Booth " << endl;
+
+	cin.ignore();				//needed this here because input was getting cut off
+
+	str_input = "INSERT INTO exhibitorsBooths VALUES FROM (";
+	for (int i = 0; i < 4; ++i)
+	{
+		string userInput;
+		cout << values[i] + ": ";
+		getline(cin, userInput);
+		str_input += "\"" + userInput + "\"";
+		if (i < 3) //for the first nine items
+		{
+			str_input += ", "; //put a comma
+		}
+	}
+	str_input += ");"; //on the last item we don't need a comma
+
+	cout << str_input << endl;
+
+	//tables[1] is attendees
+
+	db.DBParser.sendNewInput("CLOSE " + tables[1] + ";");
+	db.execute();
+
+	db.DBParser.sendNewInput("OPEN " + tables[1] + ";");
+	db.execute();
+
+	db.DBParser.sendNewInput(str_input);
+	db.execute();
+	str_input.clear();
+
+
+
+	db.DBParser.sendNewInput("SAVE " + tables[1] + ";");
+	db.execute();
+
+	system("clear");
+
+	cout << "* New Item has been added! *\n" << endl;;
+
+	cout << "Done inserting.\n";
+}
+
+
 //Begin Manager Booth Menu
 void boothMenu(){
 	cout << "[Booth Menu]\n" << endl;
-	cout << "   1. Assign Booth Locations" << endl;
-	cout << "   2. Delete Booth Locations" << endl;
-	cout << "   3. View Booth Locations" << endl;
-	cout << "   4. <- Go Back\n" << endl;
+	cout << "   1. Create a Booth Location" << endl;
+	cout << "   2. Assign Booth Locations" << endl;
+	cout << "   3. Delete Booth Locations" << endl;
+	cout << "   4. View Booth Locations" << endl;
+	cout << "   5. <- Go Back\n" << endl;
 	cout << "* Enter command number: ";
 	
 	cin >> int_input;
@@ -487,16 +565,19 @@ void boothMenu(){
 	system("clear");
 	switch (int_input)
 	{
-	case 1:
-		assignBoothLocations();
+	case 1: 
+		createBoothLocation();
 		break;
 	case 2:
-		deleteBoothLocations();
+		assignBoothLocations();
 		break;
 	case 3:
-		viewBoothLocations();
+		deleteBoothLocations();
 		break;
 	case 4:
+		viewBoothLocationsMenu();
+		break;
+	case 5:
 		return;
 	default:
 		cin.clear();
@@ -542,7 +623,7 @@ void assignBoothLocations(){
 	headerNameCol.push_back("column"); //UPDATE CALL 2
 	OP.push_back("=="); //for both calls
 
-						//clear the cin
+	//clear the cin
 	cin.clear();
 	cin.ignore(10000, '\n');
 
@@ -586,67 +667,113 @@ void deleteBoothLocations(){
 	cout << "Deleting booth..." << endl;
 	//intialize variales for Delete Call
 	string orgName = ""; //what booth will be deleted
-	string row = "";
-	string column = "";
 
-	////initialize vectors
-	//vector <string> headerNameRow;
-	//vector <string> headerNameCol;
-	//vector <string> operand1;
-	//vector <string> operand2;
-	//vector <string> replaceRow;
-	//vector <string> replaceColumn;
-	//vector <string> OP;
+	//initialize vectors
+	vector <string> headerNameRow;
+	vector <string> operand1;
+	vector <string> operand2;
+	vector <string> OP;
 
 
-	////clear changing vectors
-	//operand2.clear();
-	//replaceColumn.clear();
-	//replaceRow.clear();
+	//clear changing vectors
+	operand2.clear();
 
+	//push_back headers - These should not change 
+	operand1.push_back("org_name");
+	headerNameRow.push_back("row");
+	OP.push_back("=="); //for both calls
 
-	////push_back headers - These should not change 
-	//operand1.push_back("org_name");
-	//headerNameRow.push_back("row"); //UPDATE Call 1
-	//headerNameCol.push_back("column"); //UPDATE CALL 2
-	//OP.push_back("=="); //for both calls
+	//clear the cin
+	cin.clear();
+	cin.ignore(10000, '\n');
 
-	//					//clear the cin
-	//cin.clear();
-	//cin.ignore(10000, '\n');
+	//get name of Organization
+	cout << "Which Organization booth would you like to delete? \n";
+	getline(cin, orgName); //get the name
+	operand2.push_back(orgName);
 
-	////thses should change and the vectors need to be cleared. 
+	//thses should change and the vectors need to be cleared. 
 
-	////get name of Organization
-	//cout << "Which Organization booth would you like to update? \n";
-	//getline(cin, orgName); //get the name
-	//operand2.push_back(orgName);
-
-	////get row
-	//cout << "What is the new row?\n";
-	//cin >> row; //get the row
-	//if (stoi(row) > 50 || stoi(row) < 0)
-	//{
-	//	cout << "Not a valid row number \n";
-	//	return;
-	//}
-	//replaceRow.push_back(row);
-
-
-	////get column
-	//cout << "What is the new column\n";
-	//cin >> column; //get the column
-	//if (stoi(column) > 20 || stoi(column) < 0)
-	//{
-	//	cout << "Not a valid column number \n";
-	//	return;
-	//}
-	//replaceColumn.push_back(column);
+	db.DELETE("exhibitorsBooths", operand1, operand2, OP); //run delete
+	db.SAVE("exhibitorsBooths");
 }
 
-void viewBoothLocations(){		//View all or search
-	cout << "Viewing..." << endl;
-	
+
+void showAllBooths()
+{
+	db.SHOW("exhibitorsBooths");
+}
+
+void searchBoothMenu()
+{
+	string viewHeader = "";
+	string viewOP = "";
+	string viewCondition = "";
+
+	vector<string> headers;
+	vector<string> OP;
+	vector<string> conditions;
+
+	cout << "Enter Criteria. Enter 1 at header stage when done." << endl;
+	cin.ignore();			//Need this here or else input for Header gets cut off
+
+	while (1) //get header, op, and condition for search
+	{
+		cout << "Header: ";
+		getline(cin, viewHeader); //get header lhs
+		if (viewHeader == "1") break; //break if we have 1
+		cout << endl;
+		headers.push_back(viewHeader); //push back into vector
+
+		cout << "Operation: ";
+		cin >> viewOP; //get operation
+		cout << endl;
+		OP.push_back(viewOP);
+
+		cin.ignore(); //Input getting cut off
+		cout << "Condition: ";
+		getline(cin, viewCondition); //get condition rhs
+		cout << endl;
+		conditions.push_back(viewCondition);
+	}
+	system("clear");//clear out the screen
+	SearchBooths(headers, OP, conditions);
+}
+
+
+
+
+void viewBoothLocationsMenu()
+{		//View all or search
+
+	cout << "[View/Search for a Booth(s)]\n" << endl;
+	cout << "   1. View all Booth's Names" << endl;
+	cout << "   2. Search for a Booth(s)" << endl;
+	cout << "   3. <- Go Back\n" << endl;
+	cout << "* Enter command number: ";
+
+	cin >> int_input;
+
+	system("clear");
+	switch (int_input)
+	{
+	case 1:
+		showAllBooths();
+		break;
+	case 2:
+		searchBoothMenu();
+		break;
+	case 3: // go back
+		return;
+	default:
+		cin.clear();
+		cin.ignore(10000, '\n');
+		system("clear");
+		cout << "***Not a valid command, try again***\n" << endl;
+		break;
+	}
+	viewBoothLocationsMenu();
+
 }
 //End Manager Booth Menu
 
@@ -691,7 +818,8 @@ void servicesMenu(){
 	
 }
 
-void assignBoothServices(){
+void assignBoothServices()
+{
 
 	
 }

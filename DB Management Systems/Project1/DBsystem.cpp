@@ -860,16 +860,15 @@ int DBsystem::DELETE(string nameDelete, vector<string> deleteOperand1, vector<st
 				 }
 				 else
 				 {
-
-				 }
-				 if (tempTable[j][whereColPos[k]] == deleteOperand2[k]) //check the column in the right row
-				 {
-					 whereTrue = 1;
-				 }
-				 else
-				 {
-					 whereTrue = 0;
-					 break; //we break because we know we don't need to check other arguements
+					 if (tempTable[j][whereColPos[k]] == deleteOperand2[k]) //check the column in the right row
+					 {
+						 whereTrue = 1;
+					 }
+					 else
+					 {
+						 whereTrue = 0;
+						 break; //we break because we know we don't need to check other arguements
+					 }
 				 }
 			 }
 			 else if (deleteOP[k] == "!=") //!=

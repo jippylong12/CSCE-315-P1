@@ -51,9 +51,12 @@
     
     //Booths
     void boothMenu();               //Menu where manager can change booth
+	void createBoothLocation();     //Create a booth
     void assignBoothLocations();    //Assign booth locations
     void deleteBoothLocations();    //Delete booth locations    
-    void viewBoothLocations();      //List booth locations
+    void viewBoothLocationsMenu();  //Menu for viewing booths
+	void showAllBooths();			//List all booths
+	void searchBoothMenu();			//search by criteria
     
     //Services
     void servicesMenu();            //Menu where manager can change booth services
@@ -87,7 +90,6 @@
     void exhibitorMenu(); //main menu
     void exhibitorExhibitbyName(); //show table of exhibits depending on exhibitor
     void exhibitorNumAttendees(); //show table of all attenddess that have visited
-    
     void invoiceCalculator(); //calculates invoice given exhibitor
     
     //void addAttendee();     //Decided that only the manager can do this
