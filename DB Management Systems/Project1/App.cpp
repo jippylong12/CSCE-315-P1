@@ -1023,29 +1023,14 @@ void invoiceCalculator()
 }
 
 
-//show total revenue (add up all the fees).
-//Will work with services.db
-//Should the manager do this?
-
-
-void addAttendee(){
-
-}
-void deleteAttendee(){
-	
-}
-
-
 void exhibitorMenu()
 {
 	cout << "[Exhibitor Menu]\n"<<endl;
 	cout << "Select option:"<<endl;
 	cout << "  1. View My Info"<<endl;
 	cout << "  2. View Your Attendees"<<endl;
-	cout << "  3. View Invoice"<<endl;
-	cout << "  4. Add Attendee For Your Exhibit" << endl;
-	cout << "  5. Delete Attendee From Your Exhibit" << endl;
-	cout << "  6. <-- Go Back"<<endl<<endl;
+	cout << "  3. View Your Invoice"<<endl;
+	cout << "  4. <-- Go Back"<<endl<<endl;
 	
 	
 	cout<< "* Enter command number: ";
@@ -1064,12 +1049,6 @@ void exhibitorMenu()
 			invoiceCalculator(); //not implemented yet
 			break;
 		case 4:
-			addAttendee();
-			break;
-		case 5:
-			deleteAttendee();
-			break;
-		case 6:
 			return;
 		default:
 			cin.clear();

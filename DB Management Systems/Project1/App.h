@@ -90,8 +90,8 @@
     
     void invoiceCalculator(); //calculates invoice given exhibitor
     
-    void addAttendee();     //Adds attendees for given exhibitor
-    void deleteAttendee();  //Deletes attendee for given exhibitor
+    //void addAttendee();     //Decided that only the manager can do this
+    //void deleteAttendee();  //Decided that only the manager can do this
     
 
 //----------------Attendee Menu Funcitons--------------------//
