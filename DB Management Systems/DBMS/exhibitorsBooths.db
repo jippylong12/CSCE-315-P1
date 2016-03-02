@@ -1,6 +1,0 @@
-CREATE TABLE exhibitorsBooths (org_name VARCHAR(20), row INTEGER, column INTEGER, type VARCHAR(100)) PRIMARY KEY (org_name, row, column);
-INSERT INTO exhibitorsBooths VALUES FROM ("Fancy Pants", "6", "2", Premium);
-INSERT INTO exhibitorsBooths VALUES FROM ("froob", "3", "3", Premium);
-INSERT INTO exhibitorsBooths VALUES FROM ("B", "1", "3", Economy);
-INSERT INTO exhibitorsBooths VALUES FROM ("C", "1", "4", Premium);
-INSERT INTO exhibitorsBooths VALUES FROM ("D", "1", "5", Economy);
